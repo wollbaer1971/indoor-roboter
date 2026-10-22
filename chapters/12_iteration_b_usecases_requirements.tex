@@ -1,0 +1,194 @@
+\chapter{Iteration B: Use Cases und System Requirements}
+\label{chap:iteration-b}
+
+\section{Ziel der Iteration}
+
+Iteration B ueberfuehrt die Systemdefinition aus Baseline A.1 in eine erste belastbare Use-Case- und Requirements-Baseline. Die Betriebsfaelle aus Iteration A werden verdichtet, beschrieben und als Quelle fuer testbare Anforderungen genutzt. Ziel ist noch nicht die Auswahl konkreter Hardware, Sensorik oder Softwarepakete, sondern die klaerere Beschreibung dessen, was das System leisten und nachweisen muss.
+
+Die Leitfrage dieser Iteration lautet:
+\begin{quote}
+Welche beobachtbaren Systemleistungen muss der Mobile Material Robot im Zielsystem und im MVP erbringen, und wie kann spaeter nachgewiesen werden, dass diese Leistungen erfuellt sind?
+\end{quote}
+
+\section{Eingangsbasis aus Iteration A}
+
+Iteration B basiert auf der \emph{System Definition Baseline A.1}. Besonders relevant sind:
+\begin{itemize}
+  \item Systemzweck: autonomer Transport von Werkstuecktraegern in einem produktionsaehnlichen Schulbereich,
+  \item Systemgrenze: Roboter als System of Interest, Web-App, Ladestation, Werkstuecktraeger, Transfersystem und Umgebung als externe Schnittstellen,
+  \item Betriebsumgebung: mehrere Raeume, Flur, offene Tueren, semi-dynamische Umgebung,
+  \item Randbedingungen: ca. $0{,}5\,\mathrm{m/s}$, ca. 2 h Betriebsdauer, Web-App als erste Auftragsschnittstelle,
+  \item Open-Issue-Register: offene Quantifizierungen und Architekturentscheidungen bleiben sichtbar.
+\end{itemize}
+
+\section{Verdichtung der Betriebsfaelle zu Use Cases}
+
+Die 16 Betriebsfaelle aus Iteration A werden fuer Iteration B zu zehn Use Cases verdichtet. Dadurch bleiben die Use Cases ueberschaubar, decken aber weiterhin den End-to-End-Ablauf des Demonstrators ab.
+
+\begin{longtable}{L{0.16\textwidth} L{0.28\textwidth} L{0.30\textwidth} L{0.14\textwidth}}
+\toprule
+Use Case & Name & Abgedeckte Betriebsfaelle & MVP \\
+\midrule
+UC-B-001 & Transportauftrag erteilen & OP-01 & Ja \\
+UC-B-002 & Werkstuecktraeger bereitstellen & OP-02, OP-03 & Teilweise \\
+UC-B-003 & Autonome Transportmission ausfuehren & OP-04, OP-05, OP-06, OP-07, OP-12 & Ja \\
+UC-B-004 & Temporaeres Hindernis behandeln & OP-08, OP-09 & Ja \\
+UC-B-005 & Blockierten Fahrweg behandeln & OP-10 & Ja \\
+UC-B-006 & Person im Fahrbereich behandeln & OP-11, OP-16 & Ja, reduziert \\
+UC-B-007 & Betrieblichen Stopp ausloesen & OP-13 & Ja \\
+UC-B-008 & Rueckkehr zur Ladestation ausloesen & OP-14 & Teilweise \\
+UC-B-009 & Technischen Fehler behandeln & OP-15, OP-16 & Teilweise \\
+UC-B-010 & Karte und Umgebungsinformationen verwalten & OP-05, OP-08, OP-10 & Teilweise \\
+\bottomrule
+\end{longtable}
+
+\section{Ausgearbeitete Kern-Use-Cases}
+
+\subsection{UC-B-001: Transportauftrag erteilen}
+
+\begin{longtable}{L{0.24\textwidth} L{0.64\textwidth}}
+\toprule
+Feld & Beschreibung \\
+\midrule
+Primaerer Akteur & Bediener ueber Web-App. \\
+Ziel & Ein Transportauftrag mit Start- und Zielstandort wird eindeutig an den Roboter uebergeben. \\
+Vorbedingungen & Web-App ist erreichbar; Roboter ist betriebsbereit oder meldet einen Zustand, in dem keine Annahme moeglich ist; Start und Ziel sind im System bekannt. \\
+Normalablauf & Bediener waehlt Start und Ziel; Web-App sendet Auftrag; Roboter validiert Auftrag; Roboter meldet Annahme oder Ablehnung; Missionsstatus wird angezeigt. \\
+Alternativen & Ziel unbekannt; Roboter nicht bereit; Ladestand unzureichend; Fahrbereich gesperrt; Auftrag wird abgelehnt und begruendet gemeldet. \\
+Ergebnis & Auftrag ist angenommen und besitzt einen Status oder wurde nachvollziehbar abgelehnt. \\
+Abgeleitete Requirements & REQ-B-MIS-001, REQ-B-UI-001, REQ-B-STA-001. \\
+\bottomrule
+\end{longtable}
+
+\subsection{UC-B-003: Autonome Transportmission ausfuehren}
+
+\begin{longtable}{L{0.24\textwidth} L{0.64\textwidth}}
+\toprule
+Feld & Beschreibung \\
+\midrule
+Primaerer Akteur & Bediener als Auftraggeber; Roboter als autonom ausfuehrendes System. \\
+Ziel & Der Roboter faehrt autonom vom Startbereich zum Zielbereich und erreicht dabei mehrere Raeume ueber Flur und offene Tueren. \\
+Vorbedingungen & Auftrag ist angenommen; Grundkarte ist geladen; Roboter ist lokalisiert; Ziel ist bekannt; Fahrbereich ist grundsaetzlich befahrbar. \\
+Normalablauf & Roboter plant eine Route; faehrt mit MVP-Nominalgeschwindigkeit; durchfaehrt offene Tueren und Flurabschnitte; aktualisiert Missionsstatus; meldet Ziel erreicht. \\
+Alternativen & Hindernis wird erkannt; Person befindet sich im Fahrbereich; Lokalisierung unsicher; Ziel nicht erreichbar; Roboter stoppt, plant neu oder meldet Blockade. \\
+Ergebnis & Ziel wird erreicht oder die Nichtausfuehrung wird mit Grund gemeldet. \\
+Abgeleitete Requirements & REQ-B-NAV-001, REQ-B-NAV-002, REQ-B-NAV-003, REQ-B-PERF-001, REQ-B-LOC-001. \\
+\bottomrule
+\end{longtable}
+
+\subsection{UC-B-004: Temporaeres Hindernis behandeln}
+
+\begin{longtable}{L{0.24\textwidth} L{0.64\textwidth}}
+\toprule
+Feld & Beschreibung \\
+\midrule
+Primaerer Akteur & Umgebung als Ereignisquelle; indirekt Bediener und Personen im Fahrbereich. \\
+Ziel & Der Roboter verhindert Kollisionen und setzt die Mission fort, falls dies sicher moeglich ist. \\
+Vorbedingungen & Roboter befindet sich in Fahrt oder Planung; Sensorik liefert aktuelle Umgebungsinformationen. \\
+Normalablauf & Hindernis wird erkannt; lokale Umgebung wird aktualisiert; Roboter stoppt, weicht aus oder plant lokal neu; Mission wird fortgesetzt. \\
+Alternativen & Hindernis ist zu nah; Hindernis blockiert alle sinnvollen Wege; Wahrnehmung ist unsicher; Roboter geht in sicheren Zustand und meldet Blockade. \\
+Ergebnis & Keine Kollision; Mission fortgesetzt oder kontrolliert blockiert. \\
+Abgeleitete Requirements & REQ-B-PER-001, REQ-B-NAV-004, REQ-B-SAFE-001, REQ-B-MAP-002. \\
+\bottomrule
+\end{longtable}
+
+\subsection{UC-B-006: Person im Fahrbereich behandeln}
+
+\begin{longtable}{L{0.24\textwidth} L{0.64\textwidth}}
+\toprule
+Feld & Beschreibung \\
+\midrule
+Primaerer Akteur & Person im Fahrbereich. \\
+Ziel & Personen im Fahrbereich werden bei der Bewegungsentscheidung sicherheitsrelevant beruecksichtigt. \\
+Vorbedingungen & Roboter faehrt oder plant eine Bewegung; Personen koennen den Fahrbereich betreten. \\
+Normalablauf & Roboter erkennt eine sicherheitsrelevante Situation; Bewegung wird reduziert, gestoppt oder umgeplant; Status wird gemeldet. \\
+Alternativen & Erkennung unsicher; Person bleibt im Fahrbereich; Situation ist nicht sicher aufloesbar; Roboter bleibt im sicheren Zustand. \\
+Ergebnis & Keine gefaehrdende Bewegung gegenueber Personen; Zustand ist nachvollziehbar. \\
+Abgeleitete Requirements & REQ-B-SAFE-002, REQ-B-SAFE-003, REQ-B-STA-001. \\
+\bottomrule
+\end{longtable}
+
+\section{Requirement-Baseline B.1}
+
+Die folgende Tabelle bildet eine erste Requirements-Baseline B.1. Sie ersetzt die Anforderungen aus Iteration A nicht, sondern praezisiert sie und macht ihre Quelle, Akzeptanzidee und Verifikation sichtbarer.
+
+\begin{longtable}{L{0.17\textwidth} L{0.14\textwidth} L{0.32\textwidth} L{0.23\textwidth}}
+\toprule
+ID & Typ & Requirement & Akzeptanz- und Verifikationsidee \\
+\midrule
+REQ-B-MIS-001 & Funktional & Das System muss einen Transportauftrag mit eindeutigem Start- und Zielstandort annehmen oder begruendet ablehnen. & Test: gueltiger, ungueltiger und nicht ausfuehrbarer Auftrag ueber Web-App. \\
+REQ-B-UI-001 & Schnittstelle & Die erste Version muss Transportauftraege ueber eine Web-App ausloesen koennen. & Test: Bediener waehlt Start und Ziel; Roboter erhaelt Auftrag. \\
+REQ-B-STA-001 & Funktional & Das System muss den Auftragsstatus mindestens als bereit, angenommen, unterwegs, Ziel erreicht, blockiert, gestoppt oder Fehler melden. & Integrationstest mit Statusfolge je Use Case. \\
+REQ-B-NAV-001 & Funktional & Das System muss einen definierten Zielstandort autonom anfahren. & Systemtest: Ziel wird ohne manuelle Fahrzeugsteuerung erreicht. \\
+REQ-B-NAV-002 & Funktional & Das System muss eine Route durch mehrere Raeume, einen Flur und mindestens eine offene Tuer ausfuehren koennen. & Systemtest im Schul-Demonstrationsbereich oder Testaufbau. \\
+REQ-B-NAV-003 & Funktional & Das System muss erkennen und melden, wenn Ziel oder Route nicht erreichbar sind. & Test: Route blockieren; Status blockiert oder nicht erreichbar erwarten. \\
+REQ-B-LOC-001 & Funktional & Das System muss seine Pose im definierten Betriebsbereich bestimmen. & Test mit noch festzulegender Positions- und Orientierungsabweichung. \\
+REQ-B-PER-001 & Funktional & Das System muss Hindernisse im relevanten Fahrbereich erfassen und fuer die lokale Navigation bereitstellen. & Test: Hindernis erscheint in lokaler Umgebungsdarstellung. \\
+REQ-B-MAP-001 & Funktional & Das System muss eine freigegebene Grundkarte des Betriebsbereichs laden und fuer Navigation verwenden. & Test: Karte laden und Zielroute planen. \\
+REQ-B-MAP-002 & Constraint & Das System muss temporaere Hindernisse von dauerhaften Karteninformationen unterscheiden. & Test: Hindernis blockiert Route lokal, veraendert aber die Langzeitkarte nicht automatisch. \\
+REQ-B-NAV-004 & Funktional & Das System muss bei einem temporaeren Hindernis stoppen, lokal umplanen oder eine Blockade melden. & Test: Hindernis in Fahrweg platzieren; erwartete Reaktion pruefen. \\
+REQ-B-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. & Test: keine Kollision; Bewegung endet kontrolliert; Status wird gemeldet. \\
+REQ-B-SAFE-002 & Safety & Das System muss Personen im Fahrbereich als sicherheitsrelevante Umgebungselemente behandeln. & Safety-Testkonzept offen; zunaechst reduzierte MVP-Reaktion: stoppen und melden. \\
+REQ-B-SAFE-003 & Safety & Das System muss betrieblichen Stopp, SafetyStop und EmergencyStop begrifflich und funktional trennen. & Review und spaeterer Safety-Test; EmergencyStop bleibt Open Issue. \\
+REQ-B-PERF-001 & Leistung & Die MVP-Nominalgeschwindigkeit soll ca. $0{,}5\,\mathrm{m/s}$ betragen. & Messfahrt mit noch festzulegender Toleranz. \\
+REQ-B-PWR-001 & Nichtfunktional & Die erste Version soll ein definiertes Unterrichtsprofil von ca. 2 h abdecken. & Dauertest mit noch zu definierendem Fahr-/Warte-/Demonstrationsprofil. \\
+REQ-B-TRN-001 & Schnittstelle & Der Roboter muss einen manuell aufgesetzten Werkstuecktraeger als Payload mitfuehren koennen. & Mechanischer Test offen, abhaengig von OI-MECH-001 und OI-MECH-002. \\
+REQ-B-ENE-001 & Funktional & Das System muss eine Rueckkehr zur Ladestation als Ziel oder Betriebsbefehl behandeln koennen. & MVP-Test: Fahrziel Ladestation erreichen; Docking/Laden offen. \\
+\bottomrule
+\end{longtable}
+
+\section{MVP-Markierung der Iteration B}
+
+\begin{longtable}{L{0.20\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\toprule
+Requirement & MVP-Status & Begruendung \\
+\midrule
+REQ-B-MIS-001 & MVP & Auftragserteilung ist Startpunkt des End-to-End-Demonstrators. \\
+REQ-B-UI-001 & MVP & Web-App ist die festgelegte erste Auftragsschnittstelle. \\
+REQ-B-STA-001 & MVP & Status ist fuer Unterricht, Test und Fehlersuche notwendig. \\
+REQ-B-NAV-001 & MVP & Autonomes Zielanfahren ist Kernfaehigkeit. \\
+REQ-B-NAV-002 & MVP & Mehrere Raeume, Flur und offene Tuer bilden den realistischen Demonstrationskontext. \\
+REQ-B-NAV-003 & MVP & Blockierte Wege muessen kontrolliert behandelt werden. \\
+REQ-B-LOC-001 & MVP & Ohne Lokalisierung ist Navigation nicht nachweisbar. \\
+REQ-B-PER-001 & MVP & Hinderniswahrnehmung ist Kern der semi-dynamischen Umgebung. \\
+REQ-B-MAP-001 & MVP & Grundkarte ist Eingangsvoraussetzung des Navigationskonzepts. \\
+REQ-B-MAP-002 & MVP reduziert & Trennung temporaer/dauerhaft muss sichtbar sein; voller Kartenfreigabeprozess spaeter. \\
+REQ-B-SAFE-002 & MVP reduziert & Im MVP mindestens Stoppen und Melden; vollstaendige Safety-Architektur spaeter. \\
+REQ-B-TRN-001 & MVP reduziert & Werkstuecktraeger als Payload beruecksichtigen; aktive Uebergabe spaeter. \\
+REQ-B-ENE-001 & Teilweise & Rueckkehr als Fahrziel; automatisches Docking/Laden spaeter. \\
+\bottomrule
+\end{longtable}
+
+\section{Open-Issue-Auswirkung}
+
+Iteration B loest einige Open Issues teilweise auf, fuehrt andere aber bewusst weiter.
+
+\begin{longtable}{L{0.16\textwidth} L{0.40\textwidth} L{0.28\textwidth}}
+\toprule
+Open Issue & Stand nach Iteration B & Naechste Aktion \\
+\midrule
+OI-MECH-001 & Weiter offen. Requirement REQ-B-TRN-001 macht die Payload-Faehigkeit sichtbar, quantifiziert sie aber nicht. & Daten des Transfersystems beschaffen. \\
+OI-MECH-002 & Weiter offen. Use Case UC-B-002 beschreibt die Bereitstellung, nicht die mechanische Konstruktion. & Mechanische Schnittstellenanforderungen ableiten. \\
+OI-NAV-001 & Teilweise bearbeitet. REQ-B-MAP-001 fordert eine freigegebene Grundkarte. & Kartenprozess in Architekturphase definieren. \\
+OI-NAV-002 & Teilweise bearbeitet. REQ-B-MAP-002 fordert die Trennung temporaer/dauerhaft. & Regeln fuer Kartenupdate-Freigabe modellieren. \\
+OI-SAFE-001 & Weiter offen. REQ-B-SAFE-003 trennt Begriffe, ersetzt aber kein Safety-Konzept. & Safety-Konzept in Iteration D/F erstellen. \\
+OI-SAFE-002 & Weiter offen. REQ-B-PERF-001 haelt $0{,}5\,\mathrm{m/s}$ fest, Toleranzen und Bremsweg fehlen. & Mess- und Safety-Annahmen festlegen. \\
+OI-ENE-001 & Teilweise bearbeitet. REQ-B-PWR-001 fordert ein 2-h-Unterrichtsprofil. & Profil quantitativ definieren. \\
+OI-ENE-002 & Teilweise bearbeitet. REQ-B-ENE-001 deckt Rueckkehr als Fahrziel ab. & Docking/Laden im MVP-Schnitt entscheiden. \\
+OI-UI-001 & Teilweise bearbeitet. UC-B-001 und REQ-B-UI-001 legen Auftragserteilung fest. & UI-Rollen und Diagnoseumfang spezifizieren. \\
+OI-TEST-001 & Vorbereitet. Requirements besitzen Verifikationsideen. & Testumgebung in Iteration F ausarbeiten. \\
+\bottomrule
+\end{longtable}
+
+\section{Definition of Done fuer Iteration B}
+
+Iteration B gilt fuer diese Arbeitsfassung als abgeschlossen, wenn:
+\begin{itemize}
+  \item die Betriebsfaelle aus Iteration A auf eine ueberschaubare Use-Case-Struktur verdichtet sind,
+  \item die wichtigsten Use Cases mit Vorbedingungen, Normalablaeufen, Alternativen und Ergebnissen beschrieben sind,
+  \item jedes zentrale MVP-Verhalten mindestens eine Candidate Requirement besitzt,
+  \item jede Candidate Requirement eine Akzeptanz- oder Verifikationsidee hat,
+  \item Open Issues nicht verschwinden, sondern mit Requirements, Entscheidungen oder spaeteren Aktionen verknuepft sind.
+\end{itemize}
+
+Die naechste Iteration ist Iteration C. Sie sollte den formalen MVP-Schnitt festlegen: welche Requirements in MVP 1 verpflichtend sind, welche nur als Schnittstelle sichtbar bleiben und welche bewusst auf spaetere Releases verschoben werden.

@@ -1,0 +1,93 @@
+\chapter{Methodik und Entwicklungsablauf}
+
+\section{Grundprinzip}
+
+Die Entwicklung folgt einem inkrementellen MBSE-Prozess. Zuerst werden Zweck, Kontext und Systemgrenze verstanden. Danach werden Stakeholder-Beduerfnisse in testbare Anforderungen ueberfuehrt. Aus Anforderungen entstehen Use Cases, Funktionen, logische und physische Architekturen, Schnittstellen, \ros-Elemente und Verifikationsfaelle.
+
+Das Lehrbuch beschreibt MBSE nicht als Produktion moeglichst vieler Diagramme, sondern als systematische Verknuepfung von Informationen: Stakeholder-Bedarf, Anforderung, Funktion, Systemelement und Testfall muessen nachvollziehbar miteinander verbunden sein \cite[Kap.~2]{becker2026sysml}. Diese Traceability ist fuer das Roboterprojekt besonders wichtig, weil Aenderungen an Navigation, Safety, Sensorik oder Energieversorgung mehrere Entwicklungsbereiche gleichzeitig betreffen koennen.
+
+\section{Iterativer Ablauf}
+
+Der Entwicklungsablauf wird in Iterationen organisiert. Jede Iteration erzeugt konkrete Artefakte und aktualisiert dieses Dokument.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/tikz/development_flow}}
+  \caption{Inkrementeller Entwicklungsablauf vom Systemzweck bis zur Verifikation}
+  \label{fig:development-flow}
+\end{figure}
+
+\begin{longtable}{L{0.16\textwidth} L{0.30\textwidth} L{0.42\textwidth}}
+\toprule
+Iteration & Schwerpunkt & Ergebnisartefakte \\
+\midrule
+A & Systemdefinition & Zielsystem, Systemgrenze, Einsatzumgebung, Stakeholder, Annahmen, erste Risiken \\
+B & Requirements und Use Cases & Stakeholder Needs, Requirements, Use Cases, Akzeptanzkriterien \\
+C & MVP-Definition & MVP-Scope, Nicht-MVP, Erfolgskriterien, MVP-Traceability \\
+D & Systemarchitektur & Funktionen, logische Architektur, physische Architektur, Schnittstellen, Betriebsmodi \\
+E & Implementierungsarchitektur & HW/SW-Allokation, Rechnerarchitektur, Sensorik, Elektronik, \ros-Mapping \\
+F & Verifikation & Testfaelle, Simulation, Integrationsstrategie, Systemtests, Traceability-Matrix \\
+\bottomrule
+\end{longtable}
+
+\section{Single Source of Truth}
+
+Das Gesamtmodell bleibt die fachliche Referenz. Der MVP wird nicht als separates Modell erstellt, sondern als markierter Ausschnitt des Zielsystems. Jedes relevante Element erhaelt daher mindestens:
+\begin{itemize}
+  \item eine stabile ID,
+  \item einen Status: \emph{MVP}, \emph{Release 1}, \emph{Future} oder \emph{Offen},
+  \item eine Prioritaet: \emph{Must}, \emph{Should}, \emph{Could},
+  \item eine Quelle oder Begruendung,
+  \item eine geplante Nachweismethode.
+\end{itemize}
+
+\section{Rolle von KI im Prozess}
+
+KI wird als Engineering-Partner eingesetzt, nicht als alleinige Freigabeinstanz. Sie unterstuetzt beim Strukturieren, Generieren und Pruefen von Artefakten. Formale Modellpruefung, Berechnungen, Simulation, Compiler, Tests, CAD-/EDA-Pruefungen und menschliche Reviews bleiben entscheidend.
+
+Die Projektregel lautet:
+\begin{quote}
+KI darf Entwicklungsartefakte vorschlagen und konsistent halten. Technische Gueltigkeit entsteht erst durch nachvollziehbare Anforderungen, begruendete Entscheidungen, formale Modellierung, Berechnung, Simulation, Test und Review.
+\end{quote}
+
+\section{Qualitaetskriterien fuer Artefakte}
+
+Ein Artefakt gilt erst dann als belastbar, wenn folgende Fragen beantwortet sind:
+\begin{itemize}
+  \item Welche Anforderung oder welches Stakeholder-Beduerfnis begruendet das Artefakt?
+  \item Welche Alternative wurde betrachtet?
+  \item Warum wurde die aktuelle Loesung gewaehlt?
+  \item Welche Schnittstellen, Tests und Risiken entstehen daraus?
+  \item Wie wirkt sich eine spaetere Aenderung auf andere Artefakte aus?
+\end{itemize}
+
+\section{Entwicklungsprinzipien aus Iteration A}
+
+Aus der Vervollstaendigung von Iteration A werden folgende Entwicklungsprinzipien als Projektregeln uebernommen:
+
+\begin{longtable}{L{0.14\textwidth} L{0.28\textwidth} L{0.44\textwidth}}
+\toprule
+ID & Prinzip & Bedeutung \\
+\midrule
+DP-01 & Requirement vor Loesung & Technologien werden erst festgelegt, wenn Anforderungen sie begruenden. \\
+DP-02 & Gesamtmodell vor MVP & Das Gesamtprojekt wird modelliert; der MVP ist eine Teilmenge davon. \\
+DP-03 & Keine Wegwerfarchitektur & MVP-Komponenten sollen moeglichst in die spaetere Architektur ueberfuehrbar sein. \\
+DP-04 & Traceability & Needs, Requirements, Use Cases, Funktionen, Architektur, Implementierung und Verifikation werden verknuepft. \\
+DP-05 & Entscheidungen dokumentieren & Groessere Architekturentscheidungen erhalten einen Decision Record. \\
+DP-06 & Unsicherheit sichtbar machen & Requirements, Decisions, Assumptions, Open Issues und Risks werden getrennt dokumentiert. \\
+DP-07 & Schrittweise Verifikation & Nicht erst der fertige Roboter wird getestet; Teilmodelle, Simulationen, Baugruppen und Software werden frueh geprueft. \\
+\bottomrule
+\end{longtable}
+
+\section{Artefakttypen und Umgang mit Unsicherheit}
+
+Fuer die weitere Entwicklung wird strikt unterschieden zwischen:
+\begin{itemize}
+  \item \emph{Requirement}: nachzuweisende Forderung an das System,
+  \item \emph{Decision}: getroffene und begruendete Architektur- oder Prozessentscheidung,
+  \item \emph{Assumption}: vorlaeufige Annahme, die spaeter bestaetigt oder ersetzt werden muss,
+  \item \emph{Open Issue}: offene Frage mit Auswirkung auf Anforderungen, Architektur oder Tests,
+  \item \emph{Risk}: moegliches Ereignis oder technische Unsicherheit mit negativer Auswirkung.
+\end{itemize}
+
+Diese Trennung ist wichtig, damit offene Fragen nicht versehentlich als Anforderungen erscheinen und Loesungsideen nicht zu frueh als feste Randbedingungen behandelt werden.

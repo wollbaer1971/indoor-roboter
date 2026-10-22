@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+  block/.style={draw, rounded corners=2pt, align=center, minimum width=38mm, minimum height=9mm, fill=gray!8},
+  data/.style={draw, rounded corners=2pt, align=center, minimum width=38mm, minimum height=9mm, fill=blue!6},
+  decision/.style={draw, diamond, aspect=2.2, align=center, inner sep=1pt, fill=yellow!12},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+\node[data] (base) {Basisinformationen\\Langzeitkarte};
+\node[data, below=9mm of base] (sensor) {aktuelle\\Sensorinformationen};
+\coordinate (inputmid) at ($(base)!0.5!(sensor)$);
+\node[block, right=24mm of inputmid] (fusion) {Umgebungsmodell\\zur Laufzeit};
+\node[decision, right=22mm of fusion] (kind) {Aenderung\\temporaer?};
+\node[block, above right=8mm and 18mm of kind] (local) {lokale Hindernisse\\beruecksichtigen};
+\node[block, below right=8mm and 18mm of kind] (review) {Kartenupdate\\markieren / freigeben};
+\node[block, right=25mm of local] (nav) {Navigation\\und Pfadplanung};
+\node[block, below=13mm of nav] (motion) {Fahrentscheidung\\und Bewegung};
+
+\draw[arrow] (base) -- (fusion);
+\draw[arrow] (sensor) -- (fusion);
+\draw[arrow] (fusion) -- (kind);
+\draw[arrow] (kind) -- node[above, font=\small] {ja} (local);
+\draw[arrow] (kind) -- node[below, font=\small] {nein / unklar} (review);
+\draw[arrow] (local) -- (nav);
+\draw[arrow] (review) -| (nav);
+\draw[arrow] (nav) -- (motion);
+\end{tikzpicture}

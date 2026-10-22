@@ -1,0 +1,97 @@
+\chapter{Betriebsfaelle und Use Cases}
+
+\section{Use-Case-Prinzip}
+
+Use Cases beschreiben Ziele und Interaktionen aus Sicht eines Akteurs. Sie sind keine Algorithmen und ersetzen keine Architektur. Das Lehrbuch betont, dass Use Cases helfen, Systemgrenzen, Akteure, Vorbedingungen, Normalablaeufe, Ausnahmen und erwartete Ergebnisse sichtbar zu machen \cite[Kap.~7]{becker2026sysml}.
+
+\section{Betriebsfaelle aus Baseline A.1}
+
+In Iteration A werden zuerst reale Betriebssituationen gesammelt. Diese werden in Iteration B zu vollstaendigen Use Cases und anschliessend zu Requirements verfeinert.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/tikz/operating_cases}}
+  \caption{End-to-End-Betriebsablauf des ersten Demonstrators}
+  \label{fig:operating-cases}
+\end{figure}
+
+\begin{longtable}{L{0.14\textwidth} L{0.42\textwidth} L{0.30\textwidth}}
+\toprule
+ID & Betriebsfall & Rolle fuer Iteration B \\
+\midrule
+OP-01 & Transportauftrag ueber Web-App erteilen & Quelle fuer Auftrags- und UI-Requirements. \\
+OP-02 & Werkstuecktraeger manuell aufsetzen & Quelle fuer mechanische Schnittstelle und Bedienprozess. \\
+OP-03 & Werkstuecktraeger durch externes Transfersystem uebergeben & Future-Schnittstelle fuer Transfersystemintegration. \\
+OP-04 & Autonome Fahrt zu einem Ziel & Zentraler Navigations-Use-Case. \\
+OP-05 & Raum verlassen und offene Tuer durchfahren & Randbedingung fuer Navigation, Abmessungen und Tests. \\
+OP-06 & Flur befahren & Betriebsumgebung mit Personen- und Hindernisrisiko. \\
+OP-07 & Anderen Raum anfahren & End-to-End-Nachweis ueber mehrere Bereiche. \\
+OP-08 & Temporaeres Hindernis erkennen & Quelle fuer Perception- und Kartenanforderungen. \\
+OP-09 & Hindernis umfahren & Quelle fuer lokale Planung und Safety-Abgrenzung. \\
+OP-10 & Blockierten Fahrweg behandeln & Quelle fuer Abbruch-, Warte- und Statuslogik. \\
+OP-11 & Person im Fahrbereich behandeln & Quelle fuer Safety- und Betriebsanforderungen. \\
+OP-12 & Ziel erreichen und Auftrag abschliessen & Quelle fuer Missionsstatus und Abnahmekriterium. \\
+OP-13 & Benutzer fordert betrieblichen Stopp & Trennung OperationalStop, SafetyStop und EmergencyStop. \\
+OP-14 & Benutzer fordert Rueckkehr zur Ladestation & Quelle fuer Energie- und Ladestationsschnittstelle. \\
+OP-15 & Technischer Fehler tritt auf & Quelle fuer Diagnose und sicheren Zustand. \\
+OP-16 & Roboter muss sicheren Zustand erreichen & Quelle fuer Safety-Architektur und Verifikation. \\
+\bottomrule
+\end{longtable}
+
+\section{Use-Case-Uebersicht fuer Iteration B}
+
+\begin{longtable}{L{0.15\textwidth} L{0.32\textwidth} L{0.34\textwidth} L{0.10\textwidth}}
+\toprule
+ID & Use Case & Ziel & MVP \\
+\midrule
+UC-001 & Transportauftrag erteilen & Bediener gibt Start und Ziel ueber die Web-App vor. & Ja \\
+UC-002 & Werkstuecktraeger bereitstellen & Mensch oder Transfersystem platziert den Werkstuecktraeger auf dem Roboter. & Teilweise \\
+UC-003 & Transportziel anfahren & Roboter faehrt autonom zu einem definierten Ziel. & Ja \\
+UC-004 & Raeume und Flur durchfahren & Roboter bewegt sich durch offene Tueren und Flurabschnitte. & Ja \\
+UC-005 & Grundkarte laden & Roboter laedt eine vorhandene Karte des Betriebsbereichs. & Ja \\
+UC-006 & Position bestimmen & Roboter lokalisiert sich in der Karte. & Ja \\
+UC-007 & Hindernis behandeln & Roboter erkennt Hindernisse und reagiert durch Stoppen, Umfahren oder Neuplanung. & Ja \\
+UC-008 & Blockierten Fahrweg behandeln & Roboter erkennt, dass keine sinnvolle Umfahrung moeglich ist, und meldet Blockade. & Ja \\
+UC-009 & Betrieblichen Stopp ausloesen & Benutzer stoppt den laufenden Betrieb kontrolliert. & Ja \\
+UC-010 & Rueckkehr zur Ladestation ausloesen & Roboter faehrt auf Benutzerbefehl oder spaeter automatisch zur Ladestation. & Teilweise \\
+UC-011 & Batterie laden & Roboter laedt autonom oder assistiert. & Spaeter \\
+UC-012 & Fehler diagnostizieren & Wartung erhaelt Informationen zur Fehlersuche. & Teilweise \\
+UC-013 & Karte verwalten & Grundkarte, lokale Hindernisse und dauerhafte Aenderungen bleiben kontrollierbar. & Teilweise \\
+\bottomrule
+\end{longtable}
+
+\section{Ausgearbeiteter Use Case UC-003: Transportziel anfahren}
+
+\begin{longtable}{L{0.24\textwidth} L{0.64\textwidth}}
+\toprule
+Feld & Beschreibung \\
+\midrule
+ID & UC-003 \\
+Name & Transportziel anfahren \\
+Primaerer Akteur & Bediener oder Auftragsquelle \\
+Ziel & Roboter erreicht einen definierten Zielstandort autonom. \\
+Vorbedingungen & Karte ist geladen; Roboter ist lokalisiert; Zielstandort ist bekannt; System befindet sich in betriebsbereitem Zustand. \\
+Normalablauf & Auftrag wird angenommen; Ziel wird validiert; globale Route wird geplant; lokale Bewegung wird fortlaufend geplant; Roboter bewegt sich zum Ziel; Status wird aktualisiert; Zielerreichung wird gemeldet. \\
+Alternativen & Hindernis wird erkannt und umfahren; Ziel ist nicht erreichbar; Lokalisierung ist unsicher; Fahrweg ist blockiert. \\
+Ergebnis & Ziel erreicht oder begruendete Nichtausfuehrung mit Statusmeldung. \\
+Verknuepfte Requirements & REQ-MIS-001, REQ-MAP-001, REQ-LOC-001, REQ-NAV-001, REQ-NAV-002, REQ-STA-001 \\
+\bottomrule
+\end{longtable}
+
+\section{Ausgearbeiteter Use Case UC-007: Hindernis behandeln}
+
+\begin{longtable}{L{0.24\textwidth} L{0.64\textwidth}}
+\toprule
+Feld & Beschreibung \\
+\midrule
+ID & UC-007 \\
+Name & Hindernis behandeln \\
+Primaerer Akteur & Umgebung als externes Ereignis; indirekt Personen im Fahrbereich \\
+Ziel & Der Roboter vermeidet Kollisionen und setzt die Mission fort, falls dies sicher moeglich ist. \\
+Vorbedingungen & Roboter befindet sich in Fahrt oder geplanter Bewegung; Sensorik liefert Umgebungsdaten. \\
+Normalablauf & Hindernis wird erkannt; Hindernis wird in lokaler Karte beruecksichtigt; lokale Bewegung wird angepasst; Mission laeuft weiter. \\
+Alternativen & Keine sichere Umfahrung moeglich; Hindernis befindet sich zu nah; Sensorik unsicher; Roboter stoppt und meldet Blockade. \\
+Ergebnis & Umfahrung oder sicherer Stopp mit Statusmeldung. \\
+Verknuepfte Requirements & REQ-MAP-002, REQ-NAV-002, REQ-SAFE-001, REQ-STA-001 \\
+\bottomrule
+\end{longtable}

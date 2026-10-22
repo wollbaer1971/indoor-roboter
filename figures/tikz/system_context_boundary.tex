@@ -1,0 +1,30 @@
+\begin{tikzpicture}[
+  actor/.style={draw, rounded corners=2pt, align=center, minimum width=29mm, minimum height=8mm, fill=gray!8},
+  system/.style={draw, rounded corners=3pt, align=center, minimum width=58mm, minimum height=44mm, fill=blue!5, thick},
+  inside/.style={align=center, font=\small},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+\node[system] (robot) {Mobile Material Robot\\[1mm]
+  \begin{tabular}{c}
+  Mission / Auftrag\\
+  Navigation / Lokalisierung\\
+  Perception / Karte\\
+  Motion / Energie\\
+  Transport Interface\\
+  Safety / Diagnose
+  \end{tabular}};
+
+\node[actor, above=17mm of robot] (web) {Web-App\\Browser};
+\node[actor, left=25mm of robot] (carrier) {Werkstuecktraeger\\Payload};
+\node[actor, below left=16mm and 18mm of robot] (transfer) {externes\\Transfersystem};
+\node[actor, right=24mm of robot] (env) {Fahrumgebung\\Raeume, Flur, Tueren};
+\node[actor, below right=16mm and 18mm of robot] (people) {Personen und\\Hindernisse};
+\node[actor, below=18mm of robot] (charge) {Ladestation};
+
+\draw[arrow] (web) -- node[right, font=\small] {Transportauftrag\\Status} (robot);
+\draw[arrow] (carrier) -- node[above, font=\small] {mechanische\\Auflage} (robot);
+\draw[arrow] (transfer) -- node[below left, font=\small] {Uebergabe\\spaeter} (robot);
+\draw[arrow] (robot) -- node[above, font=\small] {Bewegung\\Wahrnehmung} (env);
+\draw[arrow] (people) -- node[below right, font=\small] {dynamische\\Ereignisse} (robot);
+\draw[arrow] (robot) -- node[right, font=\small] {Rueckkehr\\Energie} (charge);
+\end{tikzpicture}

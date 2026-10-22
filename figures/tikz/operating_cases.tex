@@ -1,0 +1,26 @@
+\begin{tikzpicture}[
+  op/.style={draw, rounded corners=2pt, align=center, minimum width=24mm, minimum height=8mm, fill=gray!8, font=\small},
+  alt/.style={draw, rounded corners=2pt, align=center, minimum width=26mm, minimum height=8mm, fill=yellow!12, font=\small},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+\node[op] (load) {Werkstueck-\\traeger aufsetzen};
+\node[op, right=7mm of load] (order) {Auftrag\\Web-App};
+\node[op, right=7mm of order] (localize) {Karte laden\\lokalisieren};
+\node[op, right=7mm of localize] (drive) {autonom\\fahren};
+\node[op, right=7mm of drive] (door) {offene Tuer\\Flur};
+\node[op, right=7mm of door] (target) {Ziel erreichen\\abschliessen};
+
+\node[alt, below=12mm of drive] (obstacle) {Hindernis\\erkannt};
+\node[alt, below=12mm of obstacle] (blocked) {umfahren,\\neu planen\\oder stoppen};
+\node[alt, below=12mm of target] (charge) {Rueckkehr\\Ladestation};
+
+\draw[arrow] (load) -- (order);
+\draw[arrow] (order) -- (localize);
+\draw[arrow] (localize) -- (drive);
+\draw[arrow] (drive) -- (door);
+\draw[arrow] (door) -- (target);
+\draw[arrow] (drive) -- (obstacle);
+\draw[arrow] (obstacle) -- (blocked);
+\draw[arrow] (blocked.east) -| (target.south);
+\draw[arrow] (target) -- (charge);
+\end{tikzpicture}

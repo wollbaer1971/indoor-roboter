@@ -1,0 +1,68 @@
+\chapter{Verifikation, Validierung und Traceability}
+
+\section{Verifikationsprinzip}
+
+Ein Systemmodell ist nur dann nuetzlich, wenn es bis zum Nachweis fuehrt. Verifikation prueft, ob das System die spezifizierten Anforderungen erfuellt. Validierung prueft, ob das entwickelte System das tatsaechliche Problem der Stakeholder loest. Diese Unterscheidung entspricht dem im Lehrbuch beschriebenen Verifikations- und Validierungsverstaendnis \cite[Kap.~19]{becker2026sysml}.
+
+\section{Initiale Testfaelle}
+
+\begin{longtable}{L{0.14\textwidth} L{0.24\textwidth} L{0.22\textwidth} L{0.24\textwidth}}
+\toprule
+ID & Testfall & Verifiziert & Erwartetes Ergebnis \\
+\midrule
+TC-MAP-001 & Grundkarte laden & REQ-MAP-001 & Karte ist verfuegbar und konsistent referenziert. \\
+TC-MAP-002 & Karteninformation trennen & REQ-MAP-003 & Temporaere Hindernisse werden lokal beruecksichtigt, ohne die Langzeitkarte automatisch zu veraendern. \\
+TC-LOC-001 & Lokalisierung in Karte & REQ-LOC-001 & Roboterpose wird innerhalb definierter Toleranz geschaetzt. \\
+TC-NAV-001 & Autonomes Zielanfahren & REQ-NAV-001 & Roboter erreicht Ziel ohne manuelle Steuerung. \\
+TC-OBS-001 & Hindernis frontal & REQ-MAP-002, REQ-NAV-002, REQ-SAFE-001 & Hindernis wird erkannt; Roboter stoppt oder faehrt sicher ausweichend. \\
+TC-OBS-002 & Blockierter Fahrweg & REQ-SAFE-001, REQ-STA-001 & Roboter stoppt und meldet Blockade. \\
+TC-STA-001 & Missionsstatus melden & REQ-STA-001 & Statuswechsel werden korrekt ausgegeben. \\
+TC-PWR-001 & Niedriger Energiezustand & REQ-PWR-001 & Warnung wird erzeugt und Mission kann bewertet werden. \\
+TC-PWR-002 & Unterrichtsprofil 2 h & REQ-PWR-002 & Roboter erreicht ein definiertes Demonstrationsprofil von ca. 2 h ohne Zwischenladen. \\
+TC-UI-001 & Web-App-Auftrag & REQ-UI-001 & Start und Ziel werden ueber Web-App gewaehlt und vom Roboter als Auftrag angenommen. \\
+TC-UI-002 & Grundbefehle & REQ-UI-002 & Status, betrieblicher Stopp und Rueckkehr zur Ladestation erzeugen nachvollziehbare Systemreaktionen. \\
+TC-NAV-002 & Raeume-Flur-Tuer-Test & REQ-NAV-004, REQ-NAV-005 & Roboter durchfaehrt mindestens zwei Raeume, einen Flurabschnitt und eine offene Tuer. \\
+TC-PERF-001 & Nominalgeschwindigkeit & REQ-PERF-001 & Fahrprofil wird mit ca. $0{,}5\,\mathrm{m/s}$ innerhalb definierter Toleranz ausgefuehrt. \\
+TC-TRC-001 & Traceability-Review & REQ-ARCH-001 & Jede MVP-Anforderung ist mit Funktion, Element, Schnittstelle und Test verknuepft. \\
+\bottomrule
+\end{longtable}
+
+\section{Testfallstruktur}
+
+Jeder Testfall wird spaeter in folgender Struktur beschrieben:
+\begin{itemize}
+  \item Test-ID,
+  \item verifizierte Requirement-ID,
+  \item Ziel,
+  \item Vorbedingungen,
+  \item Testaufbau oder Simulationsumgebung,
+  \item Stimulus oder Ablauf,
+  \item erwartetes Ergebnis,
+  \item Bewertungskriterium,
+  \item benoetigte Messdaten,
+  \item Status und letzter Durchlauf.
+\end{itemize}
+
+\section{Traceability-Kette}
+
+Die minimale Traceability-Kette fuer dieses Projekt lautet:
+\begin{quote}
+Stakeholder Need $\rightarrow$ Requirement $\rightarrow$ Use Case oder Funktion $\rightarrow$ logisches Systemelement $\rightarrow$ Schnittstelle oder \ros-Element $\rightarrow$ Testfall.
+\end{quote}
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/tikz/traceability_chain}}
+  \caption{Minimale Traceability-Kette der Dokumentation}
+  \label{fig:traceability-chain}
+\end{figure}
+
+\section{Traceability-Regeln}
+
+\begin{itemize}
+  \item Keine MVP-Anforderung ohne Testfall.
+  \item Kein \ros-Element ohne modellierte Verantwortung.
+  \item Keine Schnittstelle ohne Producer, Consumer und Zweck.
+  \item Keine Architekturentscheidung ohne betrachtete Alternative.
+  \item Jede geaenderte Anforderung loest eine Impact-Analyse auf Funktionen, Schnittstellen, Tests und Dokumentation aus.
+\end{itemize}

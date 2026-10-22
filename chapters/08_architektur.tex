@@ -1,0 +1,75 @@
+\chapter{Systemarchitektur}
+
+\section{Architekturprinzip}
+
+Die Architektur wird zunaechst funktional und logisch beschrieben. Konkrete Komponenten, Sensoren, Rechner oder \ros-Pakete werden erst danach ausgewaehlt. Dadurch bleibt das Modell loesungsneutral genug, um Alternativen bewerten zu koennen, aber konkret genug, um Schnittstellen und Tests vorzubereiten.
+
+\section{Hauptfunktionen}
+
+\begin{longtable}{L{0.16\textwidth} L{0.30\textwidth} L{0.38\textwidth}}
+\toprule
+ID & Funktion & Zweck \\
+\midrule
+FUN-MIS-001 & Transportauftrag bearbeiten & Auftrag annehmen, pruefen, ausfuehren und Status verwalten \\
+FUN-MAP-001 & Grundkarte verwalten & Karte laden, referenzieren und fuer Lokalisierung bereitstellen \\
+FUN-LOC-001 & Position bestimmen & Roboterpose relativ zur Karte schaetzen \\
+FUN-PER-001 & Umgebung erfassen & Sensorinformationen fuer Navigation und Hindernisbehandlung bereitstellen \\
+FUN-NAV-001 & Route und Bewegung planen & Globales Ziel und lokale Hindernisse in Bewegungsbefehle ueberfuehren \\
+FUN-MOT-001 & Bewegung ausfuehren & Bewegungsbefehle in Motorsteuerung und Radbewegung umsetzen \\
+FUN-SAFE-001 & Sicheren Zustand herstellen & Bei nicht beherrschbaren Situationen stoppen oder sicheren Zustand melden \\
+FUN-STA-001 & Status und Diagnose melden & Betriebs- und Missionsinformationen fuer Nutzer, Tests und Wartung bereitstellen \\
+FUN-TRN-001 & Materialkiste handhaben & Kiste aufnehmen, sichern und abgeben \\
+\bottomrule
+\end{longtable}
+
+\section{Logische Teilsysteme}
+
+\begin{longtable}{L{0.22\textwidth} L{0.46\textwidth} L{0.18\textwidth}}
+\toprule
+Teilsystem & Verantwortung & MVP-Status \\
+\midrule
+MissionSystem & Auftragsannahme, Missionszustand, Zielverwaltung, Ablaufkoordination & Teilweise \\
+TransportSystem & Mechanische und logische Handhabung der Materialkiste & Zielsystem \\
+NavigationSystem & Lokalisierung, globale Planung, lokale Planung, Zielerreichung & MVP \\
+PerceptionSystem & Sensoranbindung, Hinderniserkennung, lokale Umgebungskarte & MVP \\
+MotionSystem & Bewegungsregelung, Motoransteuerung, Odometriedaten & MVP \\
+EnergySystem & Batterieueberwachung, Energiezustand, spaeter Laden/Docking & Minimal \\
+SafetySystem & Ueberwachung sicherheitsrelevanter Zustaende, sicherer Stopp & MVP reduziert \\
+CommunicationSystem & Status, Diagnose, Auftrags- und Datenschnittstellen & Minimal \\
+UserInterface & Bedien- und Statusschnittstelle fuer Mensch oder externes System & Minimal \\
+\bottomrule
+\end{longtable}
+
+\section{Architekturentscheidung ADR-0001}
+
+\begin{decisionbox}{Entscheidung}
+Das Gesamtmodell wird von Beginn an mit allen zentralen Zielsystem-Teilsystemen aufgebaut. Der MVP implementiert nur einen markierten Teil davon.
+\end{decisionbox}
+
+\begin{longtable}{L{0.20\textwidth} L{0.64\textwidth}}
+\toprule
+Aspekt & Inhalt \\
+\midrule
+Status & Angenommen fuer Version 0.1 \\
+Alternativen & Separates MVP-Modell; direkte Implementierung ohne Zielarchitektur; vollstaendige Zielarchitektur vor erstem Prototyp \\
+Begruendung & Ein separates MVP-Modell wuerde spaeter Doppelarbeit erzeugen. Eine direkte Implementierung wuerde Traceability verlieren. Eine vollstaendige Zielarchitektur vor dem ersten Prototyp waere zu schwerfaellig. \\
+Auswirkung & Alle Artefakte benoetigen Status- und Prioritaetsattribute. MVP-Elemente bleiben auf Zielsystem-Elemente rueckfuehrbar. \\
+Risiko & Noch nicht implementierte Zielsystembereiche koennen zu grob bleiben. Dieses Risiko wird durch offene Punkte und spaetere Iterationen kontrolliert. \\
+\bottomrule
+\end{longtable}
+
+\section{Erste Schnittstellen}
+
+\begin{longtable}{L{0.16\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.28\textwidth}}
+\toprule
+ID & Von & Nach & Inhalt \\
+\midrule
+IF-MIS-NAV-001 & MissionSystem & NavigationSystem & Zielstandort, Missionsziel, Abbruchsignal \\
+IF-NAV-MOT-001 & NavigationSystem & MotionSystem & Bewegungsbefehl, Geschwindigkeitsvorgabe, Stoppanforderung \\
+IF-MOT-NAV-001 & MotionSystem & NavigationSystem & Odometriedaten, Bewegungsstatus \\
+IF-PER-NAV-001 & PerceptionSystem & NavigationSystem & Hindernisse, lokale Karte, freie Flaechen \\
+IF-SAFE-MOT-001 & SafetySystem & MotionSystem & sicherheitsrelevanter Stopp oder Freigabe \\
+IF-ENG-MIS-001 & EnergySystem & MissionSystem & Energiezustand, Warnung niedriger Ladezustand \\
+IF-MIS-UI-001 & MissionSystem & UserInterface & Missionsstatus, Fehler, Zielerreichung \\
+\bottomrule
+\end{longtable}

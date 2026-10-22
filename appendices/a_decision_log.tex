@@ -1,0 +1,55 @@
+\chapter{Entscheidungsprotokoll}
+
+\section{Entscheidungen aus Baseline A.1}
+
+\begin{longtable}{L{0.14\textwidth} L{0.42\textwidth} L{0.14\textwidth} L{0.20\textwidth}}
+\toprule
+ID & Entscheidung & Status & Begruendung \\
+\midrule
+DEC-001 & Das Zielsystem ist ein Indoor-Demonstrator. & Angenommen & Der Einsatz erfolgt in einem produktionsaehnlichen Schulbereich. \\
+DEC-002 & Einsatzort ist ein produktionsaehnlicher Schulbereich. & Angenommen & Der didaktische Zweck ist Teil des Projekts. \\
+DEC-003 & Transportgut ist ein Werkstuecktraeger eines Transfersystems. & Angenommen & Erzeugt eine klare mechanische Schnittstelle. \\
+DEC-004 & Beladung erfolgt zunaechst extern durch Mensch oder Transfersystem. & Angenommen & Reduziert MVP-Komplexitaet und haelt Zielsystem-Schnittstelle sichtbar. \\
+DEC-005 & Der Fahrbereich umfasst mehrere Raeume und einen Flur. & Angenommen & Macht Navigation realistischer als ein einzelner Testraum. \\
+DEC-006 & Offene Tueren muessen befahrbar sein. & Angenommen & Wichtige Randbedingung fuer Abmessungen, Navigation und Test. \\
+DEC-007 & Die MVP-Geschwindigkeit liegt bei ca. $0{,}5\,\mathrm{m/s}$. & Angenommen & Niedriges Risiko, geeignet fuer Unterricht und fruehe Tests. \\
+DEC-008 & Die Zielbetriebsdauer der ersten Version liegt bei ca. 2 h. & Angenommen & Deckt einen 90-min-Unterrichtsblock mit Reserve ab. \\
+DEC-009 & Transportauftraege werden zunaechst ueber Web-App ausgeloest. & Angenommen & Einfacher Einstieg ohne Produktionsleitsystem. \\
+DEC-010 & Eine einfache Bedienoberflaeche fuer Status, Stopp und Rueckkehr zur Ladestation ist vorgesehen. & Angenommen & Erforderlich fuer Bedienbarkeit, Tests und Demonstration. \\
+DEC-011 & Rueckkehr zur Ladestation gehoert zum Zielsystem. & Angenommen & Energie- und Betriebsaspekte bleiben frueh sichtbar. \\
+DEC-012 & Hoehere Geschwindigkeit wird als spaetere Erweiterung gefuehrt. & Angenommen & Architektur soll Erweiterung nicht unnoetig blockieren. \\
+\bottomrule
+\end{longtable}
+
+\section{Architektur- und Prozessentscheidungen}
+
+\begin{longtable}{L{0.14\textwidth} L{0.22\textwidth} L{0.22\textwidth} L{0.26\textwidth}}
+\toprule
+ID & Entscheidung & Status & Begruendung \\
+\midrule
+ADR-0001 & Gesamtmodell vor MVP-Modell & Angenommen & Vermeidet Doppelarbeit und haelt MVP-Elemente rueckfuehrbar auf das Zielsystem. \\
+ADR-0002 & MVP 1 fokussiert Navigationskern & Angenommen & Prueft zentrale technische Hypothese ohne volle Komplexitaet der Kistenhandhabung. \\
+ADR-0003 & TransportSystem bleibt Teil der Zielarchitektur & Angenommen & Verhindert, dass spaetere Materialhandhabung architektonisch vergessen wird. \\
+ADR-0004 & \ros-Mapping als Architekturartefakt & Angenommen & Verbindet Modell, Implementierung und Tests; keine starre 1:1-Uebersetzung. \\
+ADR-0005 & Dokumentation als lebendes Overleaf-Projekt & Angenommen & Ermoeglicht fortlaufende Pflege, Review und spaetere Veroeffentlichung. \\
+ADR-0006 & Keine vorzeitige Festlegung auf konkrete Technologien in Iteration A & Angenommen & Anforderungen und Loesungen bleiben getrennt; \ros, Sensorik, Rechner und Fahrwerk werden spaeter begruendet entschieden. \\
+ADR-0007 & Kartenkonzept in drei Informationsarten trennen & Angenommen & Basisinformationen, aktuelle Umgebungsinformationen und dauerhaft erkannte Aenderungen werden getrennt, um fehlerhafte Kartenupdates zu vermeiden. \\
+ADR-0008 & Iteration B aus Betriebsfaellen statt aus isolierter Requirements-Liste ableiten & Angenommen & Use Cases schaffen Kontext fuer Anforderungen, Alternativen und Verifikation. \\
+\bottomrule
+\end{longtable}
+
+\section{ADR-Template}
+
+Jede neue Architekturentscheidung wird in dieser Struktur dokumentiert:
+\begin{itemize}
+  \item Kontext,
+  \item Entscheidung,
+  \item betrachtete Alternativen,
+  \item Begruendung,
+  \item Auswirkungen auf Zielsystem,
+  \item Auswirkungen auf MVP,
+  \item Risiken,
+  \item betroffene Requirements,
+  \item betroffene Tests,
+  \item Datum und Status.
+\end{itemize}

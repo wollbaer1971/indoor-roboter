@@ -1,0 +1,61 @@
+\chapter{Glossar}
+\label{chap:glossar}
+
+Dieses Glossar erklaert Abkuerzungen und Fachbegriffe, die in der Dokumentation verwendet werden. Es ist bewusst als normales Kapitel umgesetzt, damit das Projekt ohne zusaetzlichen Glossar-Build-Schritt in Overleaf kompilierbar bleibt.
+
+\section{Abkuerzungen}
+
+\begin{longtable}{L{0.20\textwidth} L{0.30\textwidth} L{0.36\textwidth}}
+\toprule
+Abkuerzung & Langform & Bedeutung im Projekt \\
+\midrule
+ADR & Architecture Decision Record & Dokumentierte Architektur- oder Prozessentscheidung mit Kontext, Alternativen, Begruendung und Auswirkungen. \\
+AI / KI & Artificial Intelligence / Kuenstliche Intelligenz & Hilfsmittel zur Erstellung, Pflege und Pruefung von Entwicklungsartefakten; keine alleinige Freigabeinstanz. \\
+HW & Hardware & Physische Bestandteile wie Mechanik, Sensorik, Aktoren, Energieversorgung und Rechner. \\
+IF & Interface & Eindeutig benannte Schnittstelle zwischen Systemelementen oder externen Akteuren. \\
+MBSE & Model-Based Systems Engineering & Modellbasierter Entwicklungsansatz, bei dem Anforderungen, Funktionen, Architektur, Schnittstellen und Tests verbunden werden. \\
+MMR & Mobile Material Robot & Kurzname des betrachteten mobilen Materialtransportroboters. \\
+MVP & Minimum Viable Product & Kleinster durchgaengiger Systemausschnitt, der die zentrale technische Hypothese nachweist. \\
+OP & Operating Case / Betriebsfall & Reale Betriebssituation als Vorstufe zu einem formalisierten Use Case. \\
+REQ & Requirement & Nachzuweisende Anforderung an das System. \\
+ROS2 & Robot Operating System 2 & Wahrscheinliche spaetere Robotik-Middleware; in Iteration A noch keine feste technische Anforderung. \\
+SN & Stakeholder Need & Beduerfnis oder Erwartung eines Stakeholders, noch nicht zwingend testbar formuliert. \\
+SoI & System of Interest & Das im Projekt betrachtete und zu entwickelnde System. \\
+SW & Software & Programme, Konfigurationen und Laufzeitlogik des Roboters. \\
+TC & Test Case & Testfall zur Verifikation einer oder mehrerer Anforderungen. \\
+UC & Use Case & Zielorientierte Beschreibung einer Interaktion zwischen Akteur und System. \\
+\bottomrule
+\end{longtable}
+
+\section{Fachbegriffe}
+
+\begin{longtable}{L{0.24\textwidth} L{0.62\textwidth}}
+\toprule
+Begriff & Erklaerung \\
+\midrule
+Anforderung & Aussage darueber, was das System leisten, einhalten oder nachweisen muss. Anforderungen sollen notwendig, eindeutig, pruefbar und moeglichst loesungsneutral sein. \\
+Annahme & Vorlaeufige Aussage, die fuer die Weiterarbeit verwendet wird, aber spaeter bestaetigt, geaendert oder durch eine Entscheidung ersetzt werden muss. \\
+Baseline & Festgehaltener, referenzierbarer Arbeitsstand eines Entwicklungsartefakts. Baseline A.1 ist der freigegebene Stand der Systemdefinition nach Iteration A. \\
+Betrieblicher Stopp & Bedienbefehl zum kontrollierten Stoppen oder Pausieren des Betriebs. Er ist nicht gleichbedeutend mit einem sicherheitsgerichteten Not-Halt. \\
+Demonstrator & System, das nicht nur eine technische Funktion ausfuehrt, sondern auch Lern-, Demonstrations- und Erklaerzwecke erfuellt. \\
+EmergencyStop / Not-Halt & Sicherheitsgerichtete Funktion zum schnellen Erreichen eines sicheren Zustands. Bedarf, Ausfuehrung und Normbezug werden spaeter in der Sicherheitsbetrachtung festgelegt. \\
+Grundkarte & Vorab bekannte Karte des Betriebsbereichs, zum Beispiel Raeume, Flure, feste Durchgaenge und bekannte Transportstandorte. \\
+Hindernis & Objekt oder Person im Fahrbereich, das die geplante Bewegung beeinflusst oder verhindert. \\
+Langzeitkarte & Dauerhaft gespeicherte Karteninformation. Sie darf nicht unkontrolliert durch temporaere Hindernisse veraendert werden. \\
+Lokalisierung & Bestimmung der Roboterposition und -orientierung innerhalb einer Karte oder eines Koordinatensystems. \\
+Mission & Logische Ausfuehrung eines Transportauftrags vom Annehmen des Auftrags bis zum Abschluss, Abbruch oder Fehlerzustand. \\
+Nicht-Ziel & Bewusst ausgeschlossener Umfang, der hilft, den Scope einer Iteration zu begrenzen. \\
+Payload & Nutzlast des Roboters; in diesem Projekt der Werkstuecktraeger einschliesslich eventuell transportierter Werkstuecke. \\
+Perception & Wahrnehmungsfunktion des Roboters, die Sensordaten interpretiert und fuer Navigation, Karte oder Safety nutzbar macht. \\
+SafetyStop & Sicherheitsbezogene Reaktion auf eine erkannte unsichere Situation. Die genaue Ausfuehrung ist Teil der spaeteren Safety-Architektur. \\
+Semi-dynamische Umgebung & Umgebung mit teilweise stabiler Struktur, aber veraenderlichen Hindernissen, Personen oder Gegenstaenden. \\
+Schnittstelle & Vereinbarter Beruehrungspunkt zwischen Systemelementen oder externen Systemen; kann mechanisch, elektrisch, informationstechnisch, energetisch oder organisatorisch sein. \\
+Systemgrenze & Gedachte Grenze, die festlegt, was zum System gehoert und was als externes System, Akteur oder Umgebung behandelt wird. \\
+Traceability & Nachvollziehbare Verknuepfung von Needs, Requirements, Use Cases, Funktionen, Architektur, Schnittstellen, Implementierung und Tests. \\
+Transfersystem & Externes System, das Werkstuecktraeger in einer produktionsaehnlichen Umgebung bewegt oder bereitstellt. \\
+Use Case & Strukturierte Beschreibung eines Ziels, eines Akteurs, der Vorbedingungen, des Normalablaufs, der Alternativen und des Ergebnisses. \\
+Validierung & Pruefung, ob das entwickelte System das tatsaechliche Problem und die Beduerfnisse der Stakeholder trifft. \\
+Verifikation & Pruefung, ob das System die spezifizierten Anforderungen erfuellt. \\
+Werkstuecktraeger & Standardisierter Traeger eines Transfersystems, der Werkstuecke aufnehmen kann und im Projekt als Transportgut dient. \\
+\bottomrule
+\end{longtable}

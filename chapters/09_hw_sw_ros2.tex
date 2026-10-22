@@ -1,0 +1,67 @@
+\chapter{Hardware-/Software-Allokation und ROS2-Mapping}
+
+\section{Allokationsprinzip}
+
+Die Hardware-/Software-Allokation wird aus Funktionen abgeleitet. Erst wenn die Funktion, ihr Nachweis und ihre Schnittstellen verstanden sind, werden konkrete Komponenten festgelegt. Dies ist besonders wichtig fuer Sensorik, Rechnerplattform, Motorregelung und Safety.
+
+\section{Vorlaeufige Allokation}
+
+\begin{longtable}{L{0.18\textwidth} L{0.26\textwidth} L{0.28\textwidth} L{0.14\textwidth}}
+\toprule
+Funktion & Hardware-Anteil & Software-Anteil & Status \\
+\midrule
+FUN-MAP-001 & Onboard-Speicher, Rechner & Kartenserver, Kartenverwaltung, Versionierung & MVP \\
+FUN-LOC-001 & Sensorik, Encoder, IMU, Rechner & Lokalisierungsalgorithmus, Transformationsbaum & MVP \\
+FUN-PER-001 & LiDAR/Kamera/weitere Sensorik & Sensortreiber, Filterung, Hindernisextraktion & MVP \\
+FUN-NAV-001 & Rechner & globale Planung, lokale Planung, Recovery-Verhalten & MVP \\
+FUN-MOT-001 & Motoren, Motorcontroller, Encoder & hardwarenahe Regelung, \ros-Anbindung & MVP \\
+FUN-SAFE-001 & Sensorik, Not-Halt, ggf. Safety-Hardware & Ueberwachung, Stopp-Logik, Fehlerstatus & MVP reduziert \\
+FUN-TRN-001 & Mechanik der Aufnahme, Aktoren, Sensorik & Handhabungslogik, Verriegelungsstatus & Zielsystem \\
+\bottomrule
+\end{longtable}
+
+\section{ROS2-Mapping}
+
+Das Lehrbuch beschreibt das Mapping von \sysml-Elementen auf \ros-Elemente als Architekturentscheidung, nicht als starre Uebersetzungsregel \cite[Kap.~16]{becker2026sysml}. Ein \sysml-Element kann mehrere Nodes beeinflussen, und ein Node kann mehrere modellierte Verantwortlichkeiten buendeln.
+
+\begin{longtable}{L{0.20\textwidth} L{0.20\textwidth} L{0.22\textwidth} L{0.22\textwidth}}
+\toprule
+\sysml-Element & \ros-Element & Schnittstellenidee & Verknuepfte Anforderungen \\
+\midrule
+MissionSystem & \texttt{mission\_manager\_node} & Auftrag, Ziel, Mission State & REQ-MIS-001, REQ-STA-001 \\
+NavigationSystem & Nav2-Stack, \texttt{navigation\_node} & Zielaktion, Pfad, Bewegungsbefehl & REQ-NAV-001, REQ-NAV-002 \\
+MapManagement & \texttt{map\_server} & Karte laden und bereitstellen & REQ-MAP-001 \\
+LocalizationFunction & \texttt{localization\_node} & Pose, Transformationsdaten & REQ-LOC-001 \\
+PerceptionSystem & \texttt{sensor\_driver\_node}, \texttt{obstacle\_processing\_node} & Sensordaten, Hindernisse, lokale Karte & REQ-MAP-002, REQ-NAV-002 \\
+MotionSystem & \texttt{motion\_controller\_node}, MCU-Firmware & \texttt{cmd\_vel}, Odometry, Motorstatus & REQ-NAV-001 \\
+SafetySystem & \texttt{safety\_monitor\_node} plus Hardware-Stopp & Stoppsignal, Fehlerstatus & REQ-SAFE-001 \\
+EnergySystem & \texttt{battery\_monitor\_node} & Batterie- und Warnstatus & REQ-PWR-001 \\
+\bottomrule
+\end{longtable}
+
+\section{Vorlaeufige ROS2-Schnittstellen}
+
+\begin{longtable}{L{0.18\textwidth} L{0.20\textwidth} L{0.16\textwidth} L{0.30\textwidth}}
+\toprule
+Name & Typ & Richtung & Zweck \\
+\midrule
+\texttt{/goal\_pose} & Topic/Action offen & Mission zu Navigation & Zielvorgabe fuer Navigation \\
+\texttt{/cmd\_vel} & Topic & Navigation zu Motion & Geschwindigkeitsvorgabe \\
+\texttt{/odom} & Topic & Motion zu Navigation & Odometriedaten \\
+\texttt{/map} & Topic/Service & Map zu Navigation & Grundkarte \\
+\texttt{/local\_obstacles} & Topic & Perception zu Navigation & erkannte Hindernisse \\
+\texttt{/mission\_state} & Topic & Mission zu UI/Logging & Missionsstatus \\
+\texttt{/safety\_state} & Topic & Safety zu Mission/Motion & Safety-Zustand und Stoppgrund \\
+\texttt{/battery\_state} & Topic & Energy zu Mission/UI & Energiezustand \\
+\bottomrule
+\end{longtable}
+
+\section{Noch nicht entschiedene Alternativen}
+
+\begin{itemize}
+  \item Rechnerplattform: Raspberry Pi, Jetson, x86 oder Kombination mit MCU.
+  \item Sensorik: 2D-LiDAR, Tiefenkamera, Stereo, Ultraschall oder kombinierte Sensorik.
+  \item Motorregelung: reine Motorcontroller-Loesung, MCU-Firmware oder integrierte Servoregler.
+  \item Navigation: ROS2 Nav2 als Referenz, Eigenanteile fuer lokale Hindernislogik, alternative SLAM-/Lokalisierungspakete.
+  \item Simulation: Gazebo, Isaac Sim oder reduzierter Testsimulator fuer fruehe MVP-Tests.
+\end{itemize}

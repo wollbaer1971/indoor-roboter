@@ -1,0 +1,53 @@
+\chapter{Open-Issue-Register}
+\label{chap:open-points}
+
+\section{Zweck des Registers}
+
+Dieses Register listet alle Punkte, die in der \emph{System Definition Baseline A.1} bewusst offen bleiben. Die offenen Punkte sind nicht aus Versehen ungeklaert. Sie werden zurueckgestellt, weil Iteration A nur den Systemzweck, den Kontext, die Systemgrenze, zentrale Randbedingungen und die fachliche Ausgangsbasis festlegt.
+
+Die weitere Bearbeitung erfolgt in spaeteren Iterationen:
+\begin{itemize}
+  \item Iteration B: Use Cases und testbare System Requirements,
+  \item Iteration C: formaler MVP-Schnitt und Erfolgskriterien,
+  \item Iteration D: logische und physische Systemarchitektur,
+  \item Iteration E: HW/SW-Allokation, ROS2, Elektronik und Mechanik,
+  \item Iteration F: Verifikation, Testumgebung und Traceability-Abschluss.
+\end{itemize}
+
+\section{Open Issues nach Baseline A.1}
+
+\begin{longtable}{L{0.13\textwidth} L{0.30\textwidth} L{0.22\textwidth} L{0.17\textwidth} L{0.08\textwidth}}
+\toprule
+ID & Offener Punkt & Warum zurueckgestellt & Geplante Aufloesung & Prio. \\
+\midrule
+OI-MECH-001 & Konkretes Transfersystem, Abmessungen, Eigenmasse, maximale Werkstueckmasse, Gesamtmasse und Schwerpunktbereich des Werkstuecktraegers festlegen. & Diese Werte haengen vom realen Transfersystem ab und sollen nicht geraten werden. & Iteration B/C: Requirements und MVP-Schnitt; Iteration E: Mechanik. & Hoch \\
+OI-MECH-002 & Mechanische Transportaufnahme definieren: Auflage, Fixierung, Toleranzen, Verrutschen, manuelles Handling. & Die Aufnahme muss aus Payload-Daten, Safety-Betrachtung und Use Cases abgeleitet werden. & Iteration D/E: Architektur und Mechanik. & Hoch \\
+OI-NAV-001 & Kartenerstellung, Kartenfreigabe und Versionierung fuer die Grundkarte definieren. & Iteration A trennt nur die Informationsarten; der Kartenprozess braucht Requirements und Betriebskonzept. & Iteration B/D: Requirements und Navigationsarchitektur. & Hoch \\
+OI-NAV-002 & Regeln festlegen, wann eine erkannte Aenderung temporaer bleibt oder als dauerhaftes Kartenupdate markiert wird. & Eine vorschnelle Festlegung koennte falsche Kartenupdates oder zu starre Navigation erzeugen. & Iteration B/D/F: Requirements, Architektur, Tests. & Hoch \\
+OI-SAFE-001 & Sicherheitskonzept fuer Personen im Fahrbereich, SafetyStop und EmergencyStop klaeren. & SafetyStop, EmergencyStop und betrieblicher Stopp muessen normativ und technisch getrennt betrachtet werden. & Iteration B/D/F: Safety-Requirements, Architektur, Verifikation. & Hoch \\
+OI-SAFE-002 & Mindestabstaende, Bremsweg, Hindernisdetektionsdistanz und Geschwindigkeitstoleranz fuer $0{,}5\,\mathrm{m/s}$ festlegen. & Messwerte haengen von Masse, Bremsverhalten, Sensorik, Regelung und Safety-Konzept ab. & Iteration B/F: quantifizierte Requirements und Tests. & Hoch \\
+OI-ENE-001 & Nutzungsprofil fuer den 2-h-Unterrichtsbetrieb definieren. & Die 2 h sind als Ziel festgelegt; das pruefbare Lastprofil muss noch beschrieben werden. & Iteration B/F: Energie-Requirement und Testprofil. & Mittel \\
+OI-ENE-002 & Entscheiden, ob Rueckkehr zur Ladestation nur Anfahren, automatisches Docking oder automatisches Laden umfasst. & Die Rueckkehrfunktion ist Zielsystembestandteil, aber der MVP-Umfang muss noch geschnitten werden. & Iteration C/D: MVP-Scope und Architektur. & Mittel \\
+OI-UI-001 & Informationsumfang und Rollen der Web-App bestimmen: Auftrag, Status, Stopp, Rueckkehr, Fehler, Diagnose. & Iteration A legt die Web-App als Schnittstelle fest, aber nicht alle UI-Funktionen. & Iteration B/C: Use Cases und MVP-Scope. & Mittel \\
+OI-IT-001 & Netzwerk, Zugriffsschutz, Datenhaltung und Update-Konzept fuer den Demonstrator klaeren. & IT-Details sollen aus Betrieb, Datenschutz, Unterrichtsnutzung und Web-App-Architektur folgen. & Iteration D/E: Kommunikations- und IT-Architektur. & Mittel \\
+OI-TEST-001 & Testumgebung fuer Raeume, Flur, offene Tuer, Hindernisse und Personennaehe definieren. & Testaufbau und Kriterien benoetigen quantifizierte Requirements und Safety-Annahmen. & Iteration F, vorbereitet in B/C. & Hoch \\
+\bottomrule
+\end{longtable}
+
+\section{Bewusst nicht offene Punkte}
+
+Folgende Punkte gelten fuer Baseline A.1 als entschieden und werden nicht mehr als offene Abschlussfragen der Iteration A gefuehrt:
+\begin{itemize}
+  \item Einsatzort: produktionsaehnlicher Schulbereich,
+  \item Fahrbereich: mehrere Raeume und Flur,
+  \item offene Tueren muessen durchfahren werden,
+  \item Transportgut: Werkstuecktraeger eines Transfersystems,
+  \item Beladung: zunaechst extern durch Mensch oder Transfersystem,
+  \item Geschwindigkeit MVP: ca. $0{,}5\,\mathrm{m/s}$,
+  \item Betriebsdauer erste Version: ca. 2 h,
+  \item Auftragserteilung erste Version: Web-App.
+\end{itemize}
+
+\section{Pflegeregel}
+
+Jedes Open Issue bleibt im Register, bis es durch eine Anforderung, eine Entscheidung, einen Testfall oder eine bewusst dokumentierte Nicht-Ziel-Entscheidung geschlossen wird. Beim Schliessen wird die betroffene Requirement-, Decision- oder Test-ID referenziert. Dadurch bleibt nachvollziehbar, warum ein Punkt geloest wurde und welche Artefakte davon betroffen sind.

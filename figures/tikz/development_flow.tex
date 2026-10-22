@@ -1,0 +1,25 @@
+\begin{tikzpicture}[
+  node distance=9mm,
+  step/.style={draw, rounded corners=2pt, align=center, minimum width=31mm, minimum height=8mm, fill=gray!8},
+  artifact/.style={draw, rounded corners=2pt, align=center, minimum width=31mm, minimum height=8mm, fill=blue!6},
+  arrow/.style={-{Latex[length=2mm]}, thick},
+  feedback/.style={-{Latex[length=2mm]}, thick, dashed}
+]
+\node[step] (goal) {Systemzweck\\und Kontext};
+\node[step, right=of goal] (needs) {Stakeholder\\Needs};
+\node[step, right=of needs] (req) {Requirements\\und Use Cases};
+\node[step, right=of req] (func) {Funktionen\\und Verhalten};
+\node[step, below=of func] (arch) {Architektur\\und Schnittstellen};
+\node[step, left=of arch] (mvp) {MVP-Schnitt\\im Zielsystem};
+\node[step, left=of mvp] (impl) {HW/SW, ROS2\\und Mechanik};
+\node[artifact, left=of impl] (verify) {Verifikation\\und Traceability};
+
+\draw[arrow] (goal) -- (needs);
+\draw[arrow] (needs) -- (req);
+\draw[arrow] (req) -- (func);
+\draw[arrow] (func) -- (arch);
+\draw[arrow] (arch) -- (mvp);
+\draw[arrow] (mvp) -- (impl);
+\draw[arrow] (impl) -- (verify);
+\draw[feedback] (verify.north) to[out=90,in=270] node[above, align=center, font=\small] {Erkenntnisse aktualisieren\\Modell und Entscheidungen} (needs.south);
+\end{tikzpicture}

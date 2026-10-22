@@ -1,0 +1,59 @@
+\chapter{Einleitung}
+
+\section{Projektanlass}
+
+Ziel des Projekts ist die Entwicklung eines autonomen mobilen Indoor-Roboters, der kleine Materialkisten zwischen festgelegten Standorten transportiert. Die Standorte sind in einer internen Karte hinterlegt. Eine grobe Karte des Bewegungsraums liegt zu Projektbeginn vor, wird jedoch waehrend des Betriebs aktualisiert, damit temporaere und dauerhafte Hindernisse in der Navigation beruecksichtigt werden koennen.
+
+Das Projekt verfolgt zwei miteinander gekoppelte Ziele:
+\begin{enumerate}
+  \item Entwicklung eines funktionsfaehigen mobilen Materialtransportroboters.
+  \item Aufbau einer nachvollziehbaren MBSE-Entwicklungskette, in der Anforderungen, \sysml-Modell, Architektur, Hardware, Software, \ros-Mapping, Tests und Dokumentation konsistent miteinander verbunden bleiben.
+\end{enumerate}
+
+\section{Rolle dieses Dokuments}
+
+Dieses Dokument wird parallel zur technischen Entwicklung gepflegt. Es ist weder ein nachtraegliches Protokoll noch ein reines Pflichtenheft. Es ist die zentrale textuelle Projektdokumentation fuer:
+\begin{itemize}
+  \item Entwicklungsschritte und Iterationen,
+  \item Annahmen, Randbedingungen und offene Punkte,
+  \item Stakeholder, Beduerfnisse, Requirements und Use Cases,
+  \item MVP-Abgrenzung gegenueber dem Zielsystem,
+  \item Architekturentscheidungen und betrachtete Alternativen,
+  \item Hardware-/Software-Allokation,
+  \item Schnittstellen und \ros-Mapping,
+  \item Verifikation, Validierung und Traceability.
+\end{itemize}
+
+Die Struktur ist modular aufgebaut, damit einzelne Kapitel in Overleaf gezielt erweitert, reviewed und spaeter in eine publikationsfaehige Fassung ueberfuehrt werden koennen.
+
+\section{Quellen und Ausgangsdaten}
+
+Die initiale Fassung basiert auf:
+\begin{itemize}
+  \item dem bisherigen Projektchat zur Rolle von KI als Entwicklungspartner,
+  \item der Projektbeschreibung zum mobilen Materialtransportroboter,
+  \item dem bereitgestellten Lehrbuch \emph{SysML v2, MBSE und ROS2 fuer Einsteiger} \cite{becker2026sysml},
+  \item den daraus abgeleiteten MBSE-Arbeitsregeln fuer Anforderungen, Modellierung, Architektur, Implementierung und Nachweis.
+\end{itemize}
+
+Das Lehrbuch wird als methodischer Rahmen verwendet. Es betont insbesondere, dass technische Loesungen nicht vor dem Problemverstaendnis festgelegt werden sollen, dass Stakeholder, Systemgrenze und Kontext frueh zu klaeren sind und dass Tests und Nachweise nicht erst am Projektende geplant werden duerfen \cite[Kap.~1]{becker2026sysml}. Fuer das vorliegende Projekt wird diese Methodik um einen expliziten MVP-Schnitt innerhalb des Gesamtmodells erweitert.
+
+\section{Dokumentationsregel}
+
+Jeder wesentliche Entwicklungsschritt wird nach demselben Muster dokumentiert:
+\begin{itemize}
+  \item Ausgangslage und Problem,
+  \item Annahmen,
+  \item betroffene Stakeholder,
+  \item abgeleitete Anforderungen,
+  \item betrachtete Alternativen,
+  \item Entscheidung,
+  \item Begruendung,
+  \item Auswirkungen auf Zielsystem und MVP,
+  \item offene Punkte,
+  \item zugehoerige \sysml-Elemente,
+  \item Verifikations- oder Validierungsidee,
+  \item Aenderungshistorie.
+\end{itemize}
+
+Diese Regel verhindert, dass Architekturwissen nur implizit im Chat, in Code, in Zeichnungen oder in Einzelentscheidungen verbleibt.

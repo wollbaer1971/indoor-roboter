@@ -1,0 +1,45 @@
+\documentclass[11pt,a4paper,oneside]{scrreprt}
+
+\input{config/preamble}
+
+\title{MBSE-gestuetzte Entwicklung eines mobilen Materialtransportroboters}
+\subtitle{Begleitende LaTeX-Dokumentation fuer SysML v2, MVP, Architektur, ROS2-Mapping, Verifikation und Traceability}
+\author{Projektteam}
+\date{Stand: \today \\ Version \projectversion}
+
+\begin{document}
+\pagenumbering{roman}
+\maketitle
+
+\begin{abstract}
+Dieses Dokument begleitet die schrittweise Entwicklung eines mobilen Indoor-Roboters zum Transport kleiner Materialkisten. Es dient als lebendes Engineering-Dokument und als Grundlage fuer eine spaetere publikationsfaehige Overleaf-Fassung. Der Entwicklungsprozess folgt einem MBSE-Ansatz: Stakeholder-Beduerfnisse werden in Anforderungen ueberfuehrt, Anforderungen werden mit Use Cases, Funktionen, Architektur, Schnittstellen, ROS2-Elementen und Verifikationsfaellen verbunden. Der MVP wird dabei nicht als Wegwerfprototyp betrachtet, sondern als erster durchgaengiger Ausschnitt des Zielsystems.
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\clearpage
+\pagenumbering{arabic}
+
+\input{chapters/01_einleitung}
+\input{chapters/02_methodik}
+\input{chapters/03_systemdefinition}
+\input{chapters/04_stakeholder}
+\input{chapters/05_requirements}
+\input{chapters/06_usecases}
+\input{chapters/07_mvp}
+\input{chapters/08_architektur}
+\input{chapters/09_hw_sw_ros2}
+\input{chapters/10_verifikation_traceability}
+\input{chapters/11_iteration_a_status}
+\input{chapters/12_iteration_b_usecases_requirements}
+\input{chapters/12_glossar}
+
+\appendix
+\input{appendices/a_decision_log}
+\input{appendices/b_open_points}
+\input{appendices/c_traceability_matrix}
+
+\printbibliography
+
+\end{document}

@@ -1,0 +1,79 @@
+\chapter{Iteration A: Status und Baseline-Freigabe}
+
+\section{Ziel der Iteration}
+
+Iteration A klaert den Projektanfang. Sie liefert noch keine endgueltige technische Architektur, sondern eine belastbare Grundlage fuer Requirements, Use Cases und den spaeteren MVP-Schnitt. Der Fokus liegt auf Zweck, Kontext, Systemgrenze, Stakeholdern, Needs, Annahmen, Randbedingungen, Nicht-Zielen, Risiken, Schnittstellen und Entwicklungsprinzipien.
+
+\section{Baseline A.1}
+
+Der Stand dieser Dokumentation wird als \emph{System Definition Baseline A.1} gefuehrt. Die Baseline enthaelt die Festlegungen aus dem aktuellen Projektgespraech:
+\begin{itemize}
+  \item Werkstuecktraeger eines Transfersystems als Transportgut,
+  \item externe Beladung durch Mensch oder Transfersystem,
+  \item produktionsaehnlicher Schulbereich als Demonstratorumgebung,
+  \item mehrere Raeume und ein Flur als Fahrbereich,
+  \item Befahren offener Tueren,
+  \item Nominalgeschwindigkeit des MVP von ca. $0{,}5\,\mathrm{m/s}$,
+  \item Betriebsdauer der ersten Version von ca. 2 h,
+  \item Auftragserteilung ueber Web-App,
+  \item Grundbedienung mit Status, betrieblichem Stopp und Rueckkehr zur Ladestation.
+\end{itemize}
+
+\section{Ergebnisstand}
+
+\begin{longtable}{L{0.32\textwidth} L{0.22\textwidth} L{0.32\textwidth}}
+\toprule
+Element & Stand & Bemerkung \\
+\midrule
+Problemstellung & Definiert & Materialtransport in semi-dynamischer Indoor-Umgebung. \\
+Systemzweck & Definiert & Autonomer Transport von Werkstuecktraegern zwischen definierten Standorten. \\
+System of Interest & Definiert & Mobiler Roboter mit notwendiger Onboard-Hardware und Onboard-Software. \\
+Systemgrenze & Definiert fuer Baseline A.1 & Ladestation, Web-App, Transfersystem und Umgebung als externe Schnittstellen sichtbar. \\
+Einsatzumgebung & Definiert & Produktionsaehnlicher Schulbereich, mehrere Raeume, Flur, offene Tueren. \\
+Kartenkonzept & Definiert auf Systemebene & Trennung von Basisinformation, aktueller Umgebung und dauerhaften Aenderungen. \\
+Hauptakteure & Definiert & Bediener, Empfaenger, Betreiber, Personen, Wartung, IT, Safety, Entwicklung, Einkauf, Unterricht. \\
+Stakeholder Needs & Erster Satz vorhanden & Needs sind Quelle fuer Iteration B. \\
+Betriebsfaelle & Definiert & OP-01 bis OP-16 als Grundlage fuer Use Cases. \\
+Randbedingungen & Teilweise quantifiziert & Geschwindigkeit ca. $0{,}5\,\mathrm{m/s}$, Betriebsdauer ca. 2 h. \\
+Annahmen & Dokumentiert & A-001 bis A-010. \\
+Nicht-Ziele & Definiert & Verhindert fruehes Ausufern des Scopes. \\
+Schnittstellen & Definiert auf Kontextebene & IF-001 bis IF-007. \\
+Hauptrisiken & Identifiziert & R-01 bis R-10. \\
+Entwicklungsprinzipien & Definiert & DP-01 bis DP-07. \\
+Technische Architektur & Bewusst offen & Keine vorzeitige Festlegung auf Sensorik, Rechner, Fahrwerk oder \ros-Paket. \\
+\bottomrule
+\end{longtable}
+
+\section{Freigabeentscheidung}
+
+Iteration A ist fachlich geschlossen. Die noch offenen Punkte verhindern nicht den Uebergang in Iteration B, weil sie als Open Issues dokumentiert sind und dort in testbare Anforderungen ueberfuehrt oder durch Entscheidungen aufgeloest werden.
+
+\section{Umgang mit Open Issues}
+
+Ein Open Issue ist in dieser Dokumentation keine vergessene Luecke, sondern eine bewusst sichtbar gehaltene Unsicherheit. Iteration A soll den Systemzweck, den Kontext, die Systemgrenze und die wichtigsten Randbedingungen klaeren. Sie soll jedoch noch keine detaillierte Loesungsarchitektur, keine vollstaendige Sicherheitsauslegung und keine endgueltige Komponentenwahl erzwingen.
+
+Offene Punkte werden deshalb in Anhang~\ref{chap:open-points} als eigenes Register gefuehrt. Dort ist dokumentiert:
+\begin{itemize}
+  \item welcher Punkt offen ist,
+  \item warum er in Iteration A noch nicht entschieden wird,
+  \item welche spaetere Iteration ihn voraussichtlich aufloest,
+  \item welche Entwicklungsbereiche betroffen sind,
+  \item welche Prioritaet der Punkt fuer die weitere Arbeit hat.
+\end{itemize}
+
+Diese Trennung schuetzt die Baseline A.1 vor zwei typischen Fehlern: Erstens werden offene Fragen nicht versehentlich als Anforderungen behandelt. Zweitens werden technische Loesungen nicht zu frueh festgelegt, bevor Use Cases, Requirements, Safety-Betrachtung und Verifikationskriterien ausreichend beschrieben sind.
+
+\section{Uebergang zu Iteration B}
+
+Iteration B beginnt nicht mit einer unstrukturierten Requirements-Liste. Stattdessen werden die Betriebsfaelle OP-01 bis OP-16 auf etwa acht bis zehn saubere Use Cases verdichtet. Aus diesen Use Cases werden funktionale Anforderungen, Leistungsanforderungen, Schnittstellenanforderungen, Safety-Anforderungen, Betriebsanforderungen und Verifikationsideen abgeleitet.
+
+Die erwartete Arbeitsfolge fuer Iteration B ist:
+\begin{enumerate}
+  \item Betriebsfaelle priorisieren und gruppieren,
+  \item Use Cases mit Vorbedingungen, Normalablauf, Alternativen und Ergebnissen beschreiben,
+  \item Stakeholder Needs auf Requirements abbilden,
+  \item Akzeptanzideen und Verifikationsmethoden ergaenzen,
+  \item MVP-relevante Requirements markieren,
+  \item offene Quantifizierungen fuer Werkstuecktraeger, Energie, Geschwindigkeitstoleranz, Sicherheitsabstand und Kartenlogik bearbeiten,
+  \item Traceability-Matrix aktualisieren.
+\end{enumerate}

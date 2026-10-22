@@ -1,0 +1,17 @@
+\begin{tikzpicture}[
+  item/.style={draw, rounded corners=2pt, align=center, minimum width=26mm, minimum height=8mm, fill=gray!8},
+  arrow/.style={-{Latex[length=2mm]}, thick}
+]
+\node[item] (need) {Stakeholder\\Need};
+\node[item, right=7mm of need] (req) {Requirement};
+\node[item, right=7mm of req] (uc) {Use Case\\Betriebsfall};
+\node[item, right=7mm of uc] (fun) {Funktion\\Verhalten};
+\node[item, right=7mm of fun] (arch) {Systemelement\\Schnittstelle};
+\node[item, right=7mm of arch] (test) {Test\\Nachweis};
+
+\draw[arrow] (need) -- (req);
+\draw[arrow] (req) -- (uc);
+\draw[arrow] (uc) -- (fun);
+\draw[arrow] (fun) -- (arch);
+\draw[arrow] (arch) -- (test);
+\end{tikzpicture}

@@ -1,0 +1,54 @@
+\chapter{MVP-Abgrenzung}
+
+\section{MVP-Grundsatz}
+
+Der MVP ist der kleinste durchgaengige Systemausschnitt, mit dem die zentrale technische Hypothese geprueft werden kann:
+\begin{quote}
+Ein mobiler Indoor-Roboter kann einen manuell aufgesetzten Werkstuecktraeger als Payload mitfuehren, ueber eine Web-App einen Transportauftrag erhalten, auf Basis einer vorhandenen Grundkarte lokalisiert werden, ein Ziel autonom anfahren, offene Tueren und einen Flur durchfahren, Veraenderungen der Umgebung wahrnehmen, Hindernisse behandeln und seinen Missionsstatus nachvollziehbar melden.
+\end{quote}
+
+Der MVP ist damit kein separates Produkt und kein Wegwerfprototyp. Er nutzt dieselbe Zielarchitektur, implementiert aber nur einen bewusst begrenzten Umfang.
+
+\section{MVP 1: Navigationskern}
+
+\begin{longtable}{L{0.42\textwidth} L{0.42\textwidth}}
+\toprule
+Im MVP enthalten & Im MVP nicht enthalten \\
+\midrule
+Fahren auf ebener Indoor-Flaeche & Vollautomatische Kistenaufnahme \\
+Grundkarte laden & Vollautomatische Kistenuebergabe \\
+Lokalisierung in der Karte & Autonomes Docking und Laden \\
+Zielstandort ueber Web-App empfangen & Flottenmanagement \\
+Autonomes Zielanfahren & Aufzug- oder Tuerschnittstellen \\
+Offene Tueren und Flur durchfahren & Automatisches Oeffnen geschlossener Tueren \\
+Hindernisse erkennen & Dynamische Auftragsoptimierung \\
+Stoppen oder lokale Umfahrung & Personenerkennung per KI als separate Klassifikation \\
+Missionsstatus melden & Zertifizierte Safety-Architektur \\
+Rueckkehr zur Ladestation als Fahrziel & Vollautomatisches Laden als Muss-Funktion \\
+Minimale Diagnose fuer Tests & Vollstaendige Wartungs- und Betriebsoberflaeche \\
+\bottomrule
+\end{longtable}
+
+\section{MVP-Erfolgskriterien}
+
+\begin{longtable}{L{0.14\textwidth} L{0.48\textwidth} L{0.26\textwidth}}
+\toprule
+ID & Erfolgskriterium & Nachweismethode \\
+\midrule
+MVP-SC-001 & Roboter laedt eine bereitgestellte Karte und kann sich in ihr lokalisieren. & Integrationstest \\
+MVP-SC-002 & Roboter faehrt autonom zu mindestens einem definierten Ziel. & Systemtest \\
+MVP-SC-003 & Roboter erkennt ein Hindernis im Fahrweg und vermeidet Kollision durch Stoppen oder Umfahren. & Systemtest oder Simulation \\
+MVP-SC-004 & Roboter meldet Missionsstatus: bereit, unterwegs, Ziel erreicht, blockiert, Fehler. & Integrationstest \\
+MVP-SC-005 & Zu allen MVP-Anforderungen existiert eine Traceability-Kette bis zu Testfaellen. & Review \\
+MVP-SC-006 & Roboter durchfaehrt im Testaufbau mindestens eine offene Tuer und einen Flurabschnitt. & Systemtest \\
+MVP-SC-007 & Roboter erreicht fuer ein definiertes Unterrichtsprofil eine Betriebsdauer von ca. 2 h. & Systemtest \\
+\bottomrule
+\end{longtable}
+
+\section{Begruendung der Abgrenzung}
+
+Der Kern des Zielsystems liegt in der Kopplung von Karte, Lokalisierung, Umgebungserfassung, Bewegungsplanung, Bewegungsausfuehrung und Statusmeldung. Der physische Materialumschlag ist wichtig, wuerde jedoch im ersten Schritt zusaetzliche mechanische, elektrische und sicherheitstechnische Komplexitaet einbringen. Die MVP-Abgrenzung reduziert diese Komplexitaet, ohne die Zielarchitektur zu verwerfen.
+
+\section{Risiko der MVP-Abgrenzung}
+
+Das groesste Risiko besteht darin, dass die spaetere Transportaufnahme zu spaet beruecksichtigt wird. Deshalb bleibt das \emph{TransportSystem} bereits Teil der logischen Zielarchitektur. Es wird im MVP noch nicht voll implementiert, aber seine Schnittstellen zu Mission, Navigation, Energie und Safety werden frueh sichtbar gemacht.

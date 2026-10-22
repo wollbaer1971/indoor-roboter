@@ -1,0 +1,289 @@
+\chapter{Systemdefinition Baseline A.1}
+\label{chap:systemdefinition}
+
+\section{Zweck dieses Kapitels}
+
+Dieses Kapitel bildet die fachliche Baseline der Iteration A. Es beschreibt Zielsystem, Systemkontext, Systemgrenze, Betriebsbedingungen, Entscheidungen, Annahmen, Nicht-Ziele, Schnittstellen und offene Punkte. Nach der Methodik des Lehrbuchs wird zuerst vom Problem, den Stakeholdern, der Umgebung und den nachzuweisenden Wirkungen ausgegangen. Konkrete Loesungen wie Sensorfabrikate, Fahrwerkskonzept, Rechnerplattform oder konkrete \ros-Pakete werden erst spaeter entschieden \cite[Kap.~1--2]{becker2026sysml}.
+
+\section{Arbeitstitel und Kurzname}
+
+Der Arbeitstitel des Systems lautet:
+\begin{quote}
+Autonomer mobiler Materialtransportroboter.
+\end{quote}
+
+Als Kurzname wird fuer die weitere Dokumentation \emph{Mobile Material Robot} verwendet, abgekuerzt \emph{MMR}. Der Name dient der eindeutigen Referenz im Projekt und stellt noch keine Produkt- oder Markenentscheidung dar.
+
+\section{Problemstellung}
+
+In einem produktionsaehnlichen Bereich einer Schule sollen Werkstuecktraeger eines Transfersystems zwischen definierten Standorten transportiert werden. Der Fahrbereich umfasst mehrere Raeume und einen verbindenden Flur. Der Roboter muss offene Tueren durchfahren koennen und in einer Umgebung arbeiten, die nicht vollstaendig statisch ist. Personen, abgestellte Gegenstaende oder andere Hindernisse koennen sich im Fahrbereich befinden oder ihre Position veraendern.
+
+Eine Grundkarte des Betriebsbereichs ist vorhanden. Diese Karte reicht fuer den Betrieb allein nicht aus, weil der Roboter aktuelle Wahrnehmungsdaten beruecksichtigen muss. Das System muss daher bekannte Umgebungsinformation mit aktueller Wahrnehmung verbinden und daraus ein nutzbares Navigationsmodell ableiten.
+
+\section{Systemzweck}
+
+Der Systemzweck wird fuer Baseline A.1 wie folgt festgehalten:
+\begin{quote}
+Der Mobile Material Robot transportiert Werkstuecktraeger eines Transfersystems autonom zwischen definierten Standorten innerhalb eines produktionsaehnlichen Indoor-Demonstrationsbereichs einer Schule.
+\end{quote}
+
+Das System soll dazu:
+\begin{itemize}
+  \item Transportauftraege entgegennehmen,
+  \item Start- und Zielstandorte kennen,
+  \item die eigene Position bestimmen,
+  \item die Umgebung wahrnehmen,
+  \item Aenderungen gegenueber der bekannten Umgebung erkennen,
+  \item geeignete Fahrwege bestimmen,
+  \item Hindernisse beruecksichtigen,
+  \item autonom zum Ziel fahren,
+  \item den Transportzustand melden,
+  \item auf Fehler oder nicht loesbare Situationen kontrolliert reagieren.
+\end{itemize}
+
+Der didaktische Zweck ist ausdruecklich Teil des Projekts. Der Roboter dient nicht nur als Transportmittel, sondern auch als Demonstrator fuer Systems Engineering, \sysml, mobile Robotik, Sensorik, Navigation, Elektronik, Softwareentwicklung, \ros, Verifikation und Test.
+
+\section{System of Interest}
+
+Das \emph{System of Interest} ist der mobile Materialtransportroboter einschliesslich der fuer seinen autonomen Betrieb notwendigen Onboard-Hardware und Onboard-Software. Dazu gehoeren auf Systemebene insbesondere:
+\begin{itemize}
+  \item mechanische Roboterplattform,
+  \item Fahrwerk und Antrieb,
+  \item Energieversorgung auf dem Roboter,
+  \item Onboard-Sensorik,
+  \item Onboard-Rechentechnik und eingebettete Controller,
+  \item lokale Software fuer Mission, Navigation, Wahrnehmung, Diagnose und Status,
+  \item Kommunikationsschnittstellen,
+  \item Transportaufnahme fuer den Werkstuecktraeger,
+  \item Bedien- und Statusfunktionen,
+  \item Sicherheitsfunktionen.
+\end{itemize}
+
+Diese Aufteilung ist eine fachliche Systemstruktur, noch keine endgueltige Architektur. Sie dient dazu, spaetere Requirements, Schnittstellen und Tests sauber zu verorten.
+
+\section{Systemkontext und Systemgrenze}
+
+Abbildung~\ref{fig:system-context-boundary} zeigt den Systemkontext auf Baseline-Niveau. Die Systemgrenze verlaeuft um den Roboter selbst. Externe Akteure und Systeme bleiben sichtbar, weil sie Anforderungen und Schnittstellen erzeugen.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/tikz/system_context_boundary}}
+  \caption{Systemkontext und vorlaeufige Systemgrenze des Mobile Material Robot}
+  \label{fig:system-context-boundary}
+\end{figure}
+
+\subsection{Innerhalb der Systemgrenze}
+
+\begin{longtable}{L{0.30\textwidth} L{0.58\textwidth}}
+\toprule
+Element & Begruendung \\
+\midrule
+Mobile Roboterplattform & Physischer Traeger aller Transport-, Navigations- und Energiekomponenten. \\
+Fahrwerk, Antrieb und Motion Control & Notwendig zur Ausfuehrung geplanter Bewegungen. \\
+Energieversorgung auf dem Roboter & Erforderlich fuer autonome Missionen und fuer sichere Reaktionen bei niedrigem Ladezustand. \\
+Onboard-Sensorik & Grundlage fuer Lokalisierung, Kartierung, Hinderniserkennung und Safety-Funktionen. \\
+Onboard-Rechner und Controller & Ausfuehrung von Mission, Navigation, Wahrnehmung, Kommunikation, Diagnose und hardwarenaher Regelung. \\
+Transportaufnahme & Mechanische Schnittstelle zum Werkstuecktraeger. \\
+Onboard-Software & Realisiert Missionslogik, lokale Bedienung, Status, Diagnose, Navigation, Perception und Safety-Reaktionen. \\
+Kommunikationsschnittstellen & Notwendig fuer Web-App, Statusmeldungen und spaetere Integration. \\
+\bottomrule
+\end{longtable}
+
+\subsection{Ausserhalb der Systemgrenze}
+
+\begin{longtable}{L{0.30\textwidth} L{0.58\textwidth}}
+\toprule
+Externer Bestandteil & Schnittstellenrelevanz \\
+\midrule
+Bediener und Betreiber & Erteilen Auftraege, loesen Betriebsbefehle aus, erhalten Status und Fehlerdiagnosen. \\
+Web-App und Browser & Erste Auftragsquelle und Bedienoberflaeche; technische Ausfuehrung wird spaeter festgelegt. \\
+Werkstuecktraeger & Wird transportiert, ist aber selbst nicht Teil des Roboters. \\
+Externes Transfersystem & Kann den Werkstuecktraeger perspektivisch auf den Roboter uebergeben. \\
+Raeume, Flur, offene Tueren & Betriebsumgebung und Randbedingung fuer Navigation, Dimensionierung und Test. \\
+Personen im Fahrbereich & Externe Akteure mit Sicherheitsrelevanz. \\
+Bewegliche Gegenstaende und Hindernisse & Externe Objekte, die erkannt, lokal beruecksichtigt oder gemeldet werden muessen. \\
+Ladestation & Ziel fuer Rueckkehrfunktion; automatisches Docking und Laden bleiben fuer den MVP noch offen. \\
+IT- und Netzwerkinfrastruktur & Moegliche Grundlage fuer Web-App, Updates, Logging und spaetere Integration. \\
+\bottomrule
+\end{longtable}
+
+\section{Transportgut und mechanische Schnittstelle}
+
+Das Transportgut ist ein Werkstuecktraeger mit Standardmassen eines Transfersystems. Er wird in der ersten Version nicht aktiv vom Roboter aufgenommen. Vorgesehen sind zwei Beladungsarten:
+\begin{itemize}
+  \item ein Mensch setzt den Werkstuecktraeger auf den Roboter,
+  \item ein externes Transfersystem uebergibt den Werkstuecktraeger an den Roboter.
+\end{itemize}
+
+Damit liegt die aktive Be- und Entladung ausserhalb des MVP-Kerns. Der Roboter benoetigt jedoch eine definierte mechanische Transportaufnahme. In Iteration B muessen Breite, Laenge, Hoehe, Eigenmasse, maximale Werkstueckmasse, Gesamtmasse der Payload und Schwerpunktbereich festgelegt werden.
+
+\section{Einsatzumgebung}
+
+\begin{longtable}{L{0.28\textwidth} L{0.56\textwidth}}
+\toprule
+Merkmal & Festlegung Baseline A.1 \\
+\midrule
+Einsatzgebiet & Produktionsaehnlicher Schulbereich. \\
+Betriebsart & Demonstrator und Lehrsystem. \\
+Umgebung & Indoor. \\
+Raeumlicher Umfang & Mehrere Raeume und ein verbindender Flur. \\
+Tueren & Offene Tueren muessen durchfahren werden. \\
+Boden & Weitgehend ebener, fester Boden; kleine Schwellen bleiben zu pruefen. \\
+Personen & Koennen sich im Fahrbereich befinden. \\
+Gegenstaende & Koennen Fahrwege temporaer blockieren. \\
+Grundkarte & Vorhanden. \\
+Aktuelle Umgebung & Wird waehrend des Betriebs erfasst. \\
+Transportziele & Definierte Standorte. \\
+\bottomrule
+\end{longtable}
+
+\section{Karten- und Navigationslogik}
+
+Die Kartenlogik wird bewusst in mehrere Informationsarten getrennt. Der Roboter soll nicht blind einer statischen Karte folgen und auch nicht unkontrolliert jede Beobachtung dauerhaft in die Langzeitkarte schreiben.
+
+\begin{figure}[htbp]
+  \centering
+  \resizebox{\textwidth}{!}{\input{figures/tikz/navigation_logic}}
+  \caption{Trennung von Grundkarte, aktueller Wahrnehmung und Navigationsentscheidung}
+  \label{fig:navigation-logic}
+\end{figure}
+
+\begin{longtable}{L{0.24\textwidth} L{0.42\textwidth} L{0.22\textwidth}}
+\toprule
+Informationsart & Inhalt & Offene Entscheidung \\
+\midrule
+Basisinformationen & Waende, Raeume, Flure, feste Durchgaenge, bekannte Transportstationen und dauerhaft gesperrte Bereiche. & Erstellung, Freigabe und Versionierung der Grundkarte. \\
+Aktuelle Umgebungsinformationen & Personen, abgestellte Kisten, Fahrzeuge, Moebel, temporaere Sperren und andere Hindernisse. & Gueltigkeitsdauer und Umgang mit Sensorunsicherheit. \\
+Dauerhaft erkannte Aenderungen & Veraenderungen, die fuer die Langzeitkarte relevant sein koennten. & Menschliche Freigabe oder automatische Uebernahme. \\
+\bottomrule
+\end{longtable}
+
+\section{Leistungs- und Betriebsrandbedingungen}
+
+\begin{longtable}{L{0.22\textwidth} L{0.38\textwidth} L{0.26\textwidth}}
+\toprule
+Thema & Festlegung Baseline A.1 & Bemerkung \\
+\midrule
+Nominalgeschwindigkeit MVP & ca. $0{,}5\,\mathrm{m/s}$, entsprechend ca. $1{,}8\,\mathrm{km/h}$ & Bewusst niedrig fuer Demonstration, Navigation, Tests und Unterricht. \\
+Spaetere Geschwindigkeit & Hoehere Geschwindigkeit soll perspektivisch moeglich bleiben. & Future Requirement; keine sofortige Auslegung auf Maximalgeschwindigkeit. \\
+Betriebsdauer erste Version & ca. 2 h & Deckt einen Unterrichtsblock von 90 min mit Reserve ab. \\
+Transportauftrag & Zunaechst ueber Web-App & Externe Produktionsintegration bleibt spaeter moeglich. \\
+Grundbedienung & Status, betrieblicher Stopp, Rueckkehr zur Ladestation & Stopp ist vom sicherheitsgerichteten Not-Halt zu unterscheiden. \\
+\bottomrule
+\end{longtable}
+
+\section{Bedienung und Auftragserteilung}
+
+Die erste Version verwendet eine Web-App als Bedien- und Auftragsoberflaeche. Ein Transportauftrag enthaelt im MVP mindestens Start, Ziel und Ausloesen des Auftrags. Spaeter koennen Auftrags-ID, Werkstuecktraeger-ID, Prioritaet oder weitere Prozessdaten hinzukommen.
+
+Eine wichtige begriffliche Trennung wird bereits in Iteration A festgehalten:
+\begin{quote}
+Ein betrieblicher Stoppbefehl in einer Web-App ist kein sicherheitsgerichteter Not-Halt.
+\end{quote}
+
+Das Modell unterscheidet deshalb:
+\begin{itemize}
+  \item \emph{OperationalStop}: betrieblicher Stopp oder Pausenbefehl,
+  \item \emph{SafetyStop}: sicherheitsbezogene Reaktion auf erkannte Gefahr oder unsichere Situation,
+  \item \emph{EmergencyStop}: Not-Halt-Funktion, deren Bedarf und Ausfuehrung in der Sicherheitsbetrachtung festgelegt werden.
+\end{itemize}
+
+\section{Ladestation}
+
+Die Funktion \enquote{Rueckkehr zur Ladestation} gehoert zum Zielsystem. Offen bleibt fuer den MVP, ob der Roboter nur zur Ladestation faehrt oder ob automatisches Docking und automatisches Laden bereits realisiert werden. Die Ladestation wird daher in Baseline A.1 als externes System mit relevanter Schnittstelle gefuehrt.
+
+\section{Zentrale externe Schnittstellen}
+\label{sec:interfaces}
+
+\begin{longtable}{L{0.14\textwidth} L{0.22\textwidth} L{0.24\textwidth} L{0.26\textwidth}}
+\toprule
+ID & Schnittstelle & Richtung & Gegenstand \\
+\midrule
+IF-001 & Benutzer -- Web-App & bidirektional & Transportauftrag, Betriebsbefehl, Statusanzeige. \\
+IF-002 & Web-App -- Roboter & bidirektional & Auftrag, Ziel, Status, Fehler, Grundbefehle. \\
+IF-003 & Werkstuecktraeger -- Roboter & mechanisch & Auflage, Halten, Lage, Masse, Schwerpunkt. \\
+IF-004 & Transfersystem -- Roboter & mechanisch/organisatorisch & Perspektivische Uebergabe eines Werkstuecktraegers. \\
+IF-005 & Roboter -- Fahrumgebung & physisch/informatorisch & Bewegung, Wahrnehmung, Karte, Hindernisse, Tueren. \\
+IF-006 & Roboter -- Personen & sicherheitsrelevant & Erkennung, Abstand, Bewegung, Warnung, sicherer Zustand. \\
+IF-007 & Roboter -- Ladestation & physisch/energetisch & Rueckkehr, Positionierung, Energieuebergabe, Ladezustand. \\
+\bottomrule
+\end{longtable}
+
+\section{Entscheidungen der Baseline A.1}
+
+\begin{longtable}{L{0.14\textwidth} L{0.50\textwidth} L{0.20\textwidth}}
+\toprule
+ID & Entscheidung & Status \\
+\midrule
+DEC-001 & Das Zielsystem ist ein Indoor-Demonstrator. & Entschieden \\
+DEC-002 & Einsatzort ist ein produktionsaehnlicher Schulbereich. & Entschieden \\
+DEC-003 & Transportgut ist ein Werkstuecktraeger eines Transfersystems. & Entschieden \\
+DEC-004 & Die Beladung erfolgt zunaechst extern durch Mensch oder Transfersystem. & Entschieden \\
+DEC-005 & Der Fahrbereich umfasst mehrere Raeume und einen Flur. & Entschieden \\
+DEC-006 & Offene Tueren muessen befahrbar sein. & Entschieden \\
+DEC-007 & Die MVP-Geschwindigkeit liegt bei ca. $0{,}5\,\mathrm{m/s}$. & Entschieden \\
+DEC-008 & Die Zielbetriebsdauer der ersten Version liegt bei ca. 2 h. & Entschieden \\
+DEC-009 & Transportauftraege werden zunaechst ueber eine Web-App ausgeloest. & Entschieden \\
+DEC-010 & Eine einfache Bedienoberflaeche fuer Status, Stopp und Rueckkehr zur Ladestation ist vorgesehen. & Entschieden \\
+DEC-011 & Rueckkehr zur Ladestation gehoert zum Zielsystem. & Entschieden \\
+DEC-012 & Hoehere Geschwindigkeit wird als spaetere Erweiterung gefuehrt. & Entschieden \\
+\bottomrule
+\end{longtable}
+
+\section{Annahmen}
+
+\begin{longtable}{L{0.14\textwidth} L{0.56\textwidth} L{0.16\textwidth}}
+\toprule
+ID & Annahme & Status \\
+\midrule
+A-001 & Der Roboter bewegt sich ueberwiegend auf einer Ebene. & Vorlaeufig \\
+A-002 & Der Fahrbereich ist grundsaetzlich fuer einen kleinen mobilen Roboter geeignet. & Vorlaeufig \\
+A-003 & Treppen muessen nicht autonom bewaeltigt werden. & Vorlaeufig \\
+A-004 & Der Werkstuecktraeger ueberschreitet eine noch festzulegende Groesse, Masse und Schwerpunktlage nicht. & Offen \\
+A-005 & Transportstandorte sind dauerhaft oder zumindest ueber laengere Zeit definiert. & Vorlaeufig \\
+A-006 & Menschen duerfen den Fahrbereich betreten. & Sicherheitsrelevant \\
+A-007 & Temporaere Hindernisse sind normaler Bestandteil der Betriebsumgebung. & Vorlaeufig \\
+A-008 & Ein Teil der Umgebung kann sich langfristig veraendern. & Vorlaeufig \\
+A-009 & Das System funktioniert zunaechst mit einem einzelnen Roboter. & Vorlaeufig \\
+A-010 & Eine spaetere Erweiterung auf mehrere Roboter soll architektonisch nicht unnoetig verhindert werden. & Architekturziel \\
+\bottomrule
+\end{longtable}
+
+\section{Nicht-Ziele}
+
+Fuer die erste Entwicklungsstufe sind keine primaeren Ziele:
+\begin{itemize}
+  \item Ausseneinsatz,
+  \item Treppensteigen,
+  \item autonomer Personenverkehr,
+  \item Manipulatorarm,
+  \item humanoide Manipulation,
+  \item vollstaendig autonome Be- und Entladung beliebiger Gegenstaende,
+  \item mehrere Stockwerke per Aufzug,
+  \item autonome Flottenoptimierung,
+  \item Betrieb auf oeffentlichen Strassen,
+  \item hochdynamische Fahrgeschwindigkeiten.
+\end{itemize}
+
+\section{Zentrale Risiken und offene Herausforderungen}
+
+\begin{longtable}{L{0.14\textwidth} L{0.30\textwidth} L{0.40\textwidth}}
+\toprule
+ID & Herausforderung & Leitfrage \\
+\midrule
+R-01 & Navigation in veraenderlicher Umgebung & Wie zuverlaessig lassen sich Grundkarte und aktuelle Sensordaten kombinieren? \\
+R-02 & Lokalisierung & Was passiert, wenn die reale Umgebung stark von der Karte abweicht? \\
+R-03 & Hindernisse & Welche Hindernisse muss das System zuverlaessig erkennen? \\
+R-04 & Personen im Fahrbereich & Wie wird sicherer gemeinsamer Betrieb mit Menschen erreicht? \\
+R-05 & Materialtransport & Wie wird der Werkstuecktraeger mechanisch aufgenommen, gehalten und gegen Verrutschen gesichert? \\
+R-06 & Blockierter Weg & Wann wartet der Roboter, wann plant er neu und wann bricht er ab? \\
+R-07 & Energie & Wie wird die Betriebsdauer von ca. 2 h unter realistischem Nutzungsprofil nachgewiesen? \\
+R-08 & Safety & Welche Sicherheitsarchitektur ist fuer realen Unterrichts- und Demonstrationsbetrieb erforderlich? \\
+R-09 & Karte & Wann ist eine erkannte Aenderung temporaer und wann dauerhaft? \\
+R-10 & Integration & Wie bleiben \sysml-Modell, Software, Elektronik, Mechanik und Tests synchron? \\
+\bottomrule
+\end{longtable}
+
+\section{Definition of Done fuer Iteration A}
+
+Iteration A ist mit Baseline A.1 fachlich geschlossen, weil Problem, Zweck, System of Interest, Systemgrenze, Einsatzumgebung, Stakeholder, Stakeholder Needs, Betriebsfaelle, Randbedingungen, Annahmen, Nicht-Ziele, Schnittstellen, Risiken und Entwicklungsprinzipien hinreichend beschrieben sind. Die naechste Iteration leitet daraus Use Cases, testbare Requirements und den formalen MVP-Schnitt ab.

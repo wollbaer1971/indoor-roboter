@@ -1,0 +1,47 @@
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[ngerman]{babel}
+\usepackage{lmodern}
+\usepackage{microtype}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{hyperref}
+\usepackage[backend=biber,style=ieee]{biblatex}
+
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,shapes.misc,backgrounds,matrix}
+
+\geometry{left=28mm,right=28mm,top=28mm,bottom=30mm}
+\addbibresource{bibliography/references.bib}
+
+\hypersetup{
+  colorlinks=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=blue,
+  pdftitle={MBSE-gestuetzte Entwicklung eines mobilen Materialtransportroboters},
+  pdfauthor={Projektteam}
+}
+
+\newcommand{\projectversion}{0.3}
+\newcommand{\docstatus}{Arbeitsstand}
+\newcommand{\sysml}{SysML v2}
+\newcommand{\ros}{ROS2}
+
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash}p{#1}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\setlist[itemize]{topsep=3pt,itemsep=2pt,parsep=0pt}
+\setlist[enumerate]{topsep=3pt,itemsep=2pt,parsep=0pt}
+\renewcommand{\arraystretch}{1.18}
+
+\newenvironment{decisionbox}[1]
+  {\par\medskip\noindent\textbf{#1}\par\smallskip\noindent}
+  {\par\medskip}
