@@ -36,6 +36,7 @@ ADR-0006 & Keine vorzeitige Festlegung auf konkrete Technologien in Iteration A 
 ADR-0007 & Kartenkonzept in drei Informationsarten trennen & Angenommen & Basisinformationen, aktuelle Umgebungsinformationen und dauerhaft erkannte Aenderungen werden getrennt, um fehlerhafte Kartenupdates zu vermeiden. \\
 ADR-0008 & Iteration B aus Betriebsfaellen statt aus isolierter Requirements-Liste ableiten & Angenommen & Use Cases schaffen Kontext fuer Anforderungen, Alternativen und Verifikation. \\
 ADR-0009 & Safety-Gate zwischen Navigation und Motion & Vorgeschlagen & Nur die Safety-Schicht sendet \texttt{/cmd\_vel}; ein Fehler in der Navigation kann den Roboter nicht in Bewegung halten. Ersetzt keinen Hardware-Stopp. Details: \texttt{decisions/ADR-0009-safety-gate-vor-motion.md}. \\
+ADR-0010 & Stakeholder-Need-IDs vereinheitlichen & Vorgeschlagen & Nur die detaillierte Need-Liste bleibt gueltig; SN-001 bis SN-010 werden als abgeloest gefuehrt; SN-007 erhaelt den Nachfolger SN-IT-001. Details: \texttt{decisions/ADR-0010-need-ids-vereinheitlichen.md}. \\
 \bottomrule
 \end{longtable}
 

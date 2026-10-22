@@ -21,7 +21,7 @@ Jede Anforderung erhaelt:
 ID & Typ & Requirement & Akzeptanzidee \\
 \midrule
 REQ-MIS-001 & Funktional & Das System muss einen Transportauftrag mit Start- und Zielstandort annehmen koennen. & Auftrag wird angenommen, validiert und mit Status versehen. \\
-REQ-TRN-001 & Funktional & Das System muss eine kleine Materialkiste zwischen zwei definierten Transportstationen transportieren koennen. & Kiste erreicht Zielstation in definiertem Testaufbau. \\
+REQ-TRN-001 & Funktional & Das System muss einen Werkstuecktraeger eines Transfersystems zwischen zwei definierten Transportstandorten transportieren koennen (DEC-003). & Werkstuecktraeger erreicht den Zielstandort in definiertem Testaufbau. \\
 REQ-MAP-001 & Funktional & Das System muss eine vorhandene Grundkarte des Betriebsbereichs laden koennen. & Karte wird geladen und fuer Lokalisierung genutzt. \\
 REQ-MAP-002 & Funktional & Das System muss relevante Veraenderungen der befahrbaren Umgebung waehrend des Betriebs erkennen. & Hindernis erscheint in lokaler Umgebungsdarstellung. \\
 REQ-LOC-001 & Funktional & Das System muss seine Position innerhalb des definierten Betriebsbereichs bestimmen koennen. & Positionsabweichung liegt innerhalb noch festzulegender Toleranz. \\
@@ -74,7 +74,7 @@ Folgende Anforderungen sind bewusst noch nicht numerisch festgelegt:
   \item erlaubte Positionsabweichung,
   \item minimale Hindernisdetektionsdistanz,
   \item Bremsweg und Sicherheitsabstand,
-  \item Nutzlast und Kistengeometrie,
+  \item Nutzlast, Abmessungen und Schwerpunktlage des Werkstuecktraegers (OI-MECH-001),
   \item Batterieauslegung fuer das 2-h-Unterrichtsprofil,
   \item maximale Abmessungen des Roboters,
   \item Verfuegbarkeit und zulassige Fehlerrate.
@@ -91,7 +91,7 @@ Aus den detaillierten Needs, Betriebsfaellen und dem Kartenkonzept ergeben sich 
 ID & Typ & Requirement & Akzeptanzidee \\
 \midrule
 REQ-MIS-002 & Funktional & Das System muss melden, ob ein Transportauftrag angenommen, abgelehnt, pausiert, blockiert oder abgeschlossen wurde. & Statuswechsel sind fuer Bedienung und Test nachvollziehbar. \\
-REQ-TRN-002 & Safety/Funktional & Das System muss die transportierte Kiste waehrend des Transports so halten oder sichern, dass sie keine zusaetzliche Gefaehrdung verursacht. & Kiste bleibt bei spezifiziertem Fahrprofil innerhalb der zulaessigen Lage. \\
+REQ-TRN-002 & Safety/Funktional & Das System muss den transportierten Werkstuecktraeger waehrend des Transports so halten oder sichern, dass er keine zusaetzliche Gefaehrdung verursacht. & Werkstuecktraeger bleibt bei spezifiziertem Fahrprofil innerhalb der zulaessigen Lage. \\
 REQ-MAP-003 & Constraint & Das System muss zwischen Basisinformationen, aktuellen Umgebungsinformationen und moeglichen dauerhaften Kartenupdates unterscheiden koennen. & Temporaeres Hindernis veraendert die Langzeitkarte nicht automatisch. \\
 REQ-NAV-003 & Funktional & Das System muss erkennen koennen, wenn ein Ziel oder Fahrweg nicht erreichbar ist. & System meldet Blockade oder Nichterreichbarkeit mit nachvollziehbarem Status. \\
 REQ-SAFE-002 & Safety & Das System muss Personen im Fahrbereich bei der Bewegungsentscheidung sicherheitsrelevant beruecksichtigen. & Roboter reduziert Bewegung, stoppt oder waehlt Alternative gemaess spaeterem Safety-Konzept. \\
