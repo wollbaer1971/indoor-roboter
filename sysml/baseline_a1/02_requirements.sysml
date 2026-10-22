@@ -15,7 +15,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-MIS-001'> acceptTransportOrder : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-UI-001, UC-001, SN-001
+    Source: SN-UI-001, UC-001, SN-USER-001
     Function: FUN-MIS-001
     Interface: IF-002
     Text: The system shall accept a transport order with start and target location.
@@ -37,7 +37,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-TRN-001'> transportCarrier : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-TRN-001, SN-002
+    Source: SN-TRN-001
     Function: FUN-TRN-001
     Interface: IF-003
     Text: The system shall transport a workpiece carrier between two defined
@@ -72,7 +72,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-MAP-002'> detectEnvironmentChanges : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-NAV-002, SN-006
+    Source: SN-NAV-002, SN-NAV-003
     Function: FUN-PER-001
     Interface: /local_obstacles
     Text: The system shall detect relevant changes in the drivable environment
@@ -105,7 +105,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-NAV-001'> driveToTarget : RobotRequirement {
     doc /*
     Type: functional
-    Source: UC-003
+    Source: UC-003, SN-NAV-001
     Function: FUN-NAV-001
     Interface: /cmd_vel
     Text: The system shall autonomously drive to a selected target location.
@@ -116,7 +116,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-NAV-002'> considerObstacles : RobotRequirement {
     doc /*
     Type: functional
-    Source: UC-007
+    Source: UC-007, SN-NAV-003
     Function: FUN-NAV-001
     Interface: /local_obstacles
     Text: The system shall consider detected obstacles in path or motion planning.
@@ -157,7 +157,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-SAFE-001'> enterSafeStateOnObstacle : RobotRequirement {
     doc /*
     Type: safety
-    Source: SN-SAFE-002, SN-004
+    Source: SN-SAFE-002, SN-SAFE-001
     Function: FUN-SAFE-001
     Interface: /safety_state
     Text: The system shall transition to a safe state for obstacles that cannot
@@ -212,7 +212,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-PWR-002'> operatingTime : RobotRequirement {
     doc /*
     Type: non-functional
-    Source: SN-ENE-001, DEC-008
+    Source: SN-ENE-001, DEC-008, SN-EDU-003
     Text: The first version shall cover approximately 2 h of operating time.
     Acceptance: A teaching-block operating profile is defined and achieved.
     */
@@ -231,7 +231,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-STA-001'> reportOperatingStatus : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-OPS-001, SN-003
+    Source: SN-OPS-001
     Function: FUN-STA-001
     Interface: /mission_state
     Text: The system shall report mission and operating status.
@@ -242,7 +242,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-ARCH-001'> functionTraceability : RobotRequirement {
     doc /*
     Type: constraint
-    Source: SN-DEV-003, SN-008
+    Source: SN-DEV-003
     Interface: traceability artifacts
     Text: Each essential function shall be traceable to at least one logical
       system element and verification idea.
@@ -253,7 +253,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-DIAG-001'> provideDiagnostics : RobotRequirement {
     doc /*
     Type: operational
-    Source: SN-005
+    Source: SN-MNT-001, SN-OPS-002
     Function: FUN-STA-001
     Interface: /diagnostics
     Text: The system shall provide diagnostic information for fault finding.

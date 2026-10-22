@@ -68,6 +68,14 @@ def body_of(src: str, header_regex: str) -> str:
     return src[m.end() : i - 1]
 
 
+# ADR-0010: the initial needs SN-001 ... SN-010 are superseded.
+SUPERSEDED_NEEDS = {
+    "SN-001": "SN-USER-001", "SN-002": "SN-TRN-001", "SN-003": "SN-OPS-001",
+    "SN-004": "SN-SAFE-001", "SN-005": "SN-MNT-001", "SN-006": "SN-NAV-002, SN-NAV-003",
+    "SN-007": "SN-IT-001", "SN-008": "SN-DEV-003", "SN-009": "SN-EDU-001", "SN-010": "SN-EDU-002",
+}
+
+
 def requirements(src: str) -> dict[str, dict]:
     reqs = {}
     pattern = r"requirement <'([\w-]+)'> (\w+) : RobotRequirement \{\s*doc /\*(.*?)\*/"
@@ -75,6 +83,8 @@ def requirements(src: str) -> dict[str, dict]:
         if name in reqs:
             errors.append(f"duplicate requirement name {name}")
         reqs[name] = {"id": rid, **doc_fields(doc)}
+        for old in re.findall(r"\bSN-\d{3}\b", reqs[name].get("Source", "")):
+            errors.append(f"ADR-0010: {rid} uses superseded need {old}, use {SUPERSEDED_NEEDS.get(old, '?')}")
     return reqs
 
 

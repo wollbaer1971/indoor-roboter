@@ -11,6 +11,6 @@ Empfohlenes Namensschema:
 Vorhandene Einzel-ADRs:
 
 - `ADR-0009-safety-gate-vor-motion.md` (Vorgeschlagen)
-- `ADR-0010-need-ids-vereinheitlichen.md` (Vorgeschlagen)
+- `ADR-0010-need-ids-vereinheitlichen.md` (Angenommen)
 
 Jede Entscheidung soll Kontext, Alternativen, Entscheidung, Begruendung, Auswirkungen, Risiken und betroffene Traceability-Elemente enthalten.

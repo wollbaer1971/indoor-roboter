@@ -22,22 +22,24 @@ STK-011 & Lehrende und Lernende & Demonstrierbare, verstaendliche und didaktisch
 \bottomrule
 \end{longtable}
 
-\section{Stakeholder Needs}
+\section{Initiale Stakeholder Needs (abgeloest)}
 
-\begin{longtable}{L{0.15\textwidth} L{0.18\textwidth} L{0.47\textwidth} L{0.10\textwidth}}
+Diese erste Need-Liste ist durch ADR-0010 abgeloest. Gueltig sind nur noch die detaillierten Needs im folgenden Abschnitt. Die Tabelle bleibt stehen, damit Verweise auf SN-001 bis SN-010 in aelteren Dokumenten aufloesbar bleiben. Die Prioritaeten sind auf die Nachfolger uebergegangen.
+
+\begin{longtable}{L{0.12\textwidth} L{0.12\textwidth} L{0.44\textwidth} L{0.18\textwidth}}
 \toprule
-ID & Quelle & Need & Prioritaet \\
+ID & Quelle & Need & Abgeloest durch \\
 \midrule
-SN-001 & STK-001 & Der Bediener moechte einen Transportauftrag mit moeglichst wenig Bedienaufwand ausloesen. & Must \\
-SN-002 & STK-002 & Die Materialkiste soll am vorgesehenen Zielstandort ankommen. & Must \\
-SN-003 & STK-003 & Der Betreiber moechte den Betriebszustand des Roboters jederzeit erkennen koennen. & Must \\
-SN-004 & STK-004 & Personen im Fahrbereich duerfen durch den Roboter nicht gefaehrdet werden. & Must \\
-SN-005 & STK-005 & Wartungspersonal benoetigt Diagnoseinformationen fuer Fehleranalyse und Instandhaltung. & Should \\
-SN-006 & STK-006 & Der Roboter soll Hindernisse und geaenderte Umgebungen so behandeln, dass Betriebsablaeufe nicht unnoetig gestoert werden. & Must \\
-SN-007 & STK-007 & Netzwerkschnittstellen, Updates und Datenhaltung sollen kontrollierbar und sicher sein. & Should \\
-SN-008 & STK-009 & Architekturentscheidungen sollen nachvollziehbar dokumentiert und mit Anforderungen verknuepft sein. & Must \\
-SN-009 & STK-011 & Der Roboter soll sich fuer die Demonstration technischer Zusammenhaenge im Unterricht eignen. & Must \\
-SN-010 & STK-011 & Wichtige Systemzustaende und Ablaeufe sollen im Unterricht nachvollziehbar dargestellt werden koennen. & Should \\
+SN-001 & STK-001 & Der Bediener moechte einen Transportauftrag mit moeglichst wenig Bedienaufwand ausloesen. & SN-USER-001 \\
+SN-002 & STK-002 & Die Materialkiste soll am vorgesehenen Zielstandort ankommen. & SN-TRN-001 \\
+SN-003 & STK-003 & Der Betreiber moechte den Betriebszustand des Roboters jederzeit erkennen koennen. & SN-OPS-001 \\
+SN-004 & STK-004 & Personen im Fahrbereich duerfen durch den Roboter nicht gefaehrdet werden. & SN-SAFE-001 \\
+SN-005 & STK-005 & Wartungspersonal benoetigt Diagnoseinformationen fuer Fehleranalyse und Instandhaltung. & SN-MNT-001 \\
+SN-006 & STK-006 & Der Roboter soll Hindernisse und geaenderte Umgebungen so behandeln, dass Betriebsablaeufe nicht unnoetig gestoert werden. & SN-NAV-002, SN-NAV-003 \\
+SN-007 & STK-007 & Netzwerkschnittstellen, Updates und Datenhaltung sollen kontrollierbar und sicher sein. & SN-IT-001 \\
+SN-008 & STK-009 & Architekturentscheidungen sollen nachvollziehbar dokumentiert und mit Anforderungen verknuepft sein. & SN-DEV-003 \\
+SN-009 & STK-011 & Der Roboter soll sich fuer die Demonstration technischer Zusammenhaenge im Unterricht eignen. & SN-EDU-001 \\
+SN-010 & STK-011 & Wichtige Systemzustaende und Ablaeufe sollen im Unterricht nachvollziehbar dargestellt werden koennen. & SN-EDU-002 \\
 \bottomrule
 \end{longtable}
 
@@ -56,90 +58,91 @@ Kartierung vs. Stabilitaet & Automatische Kartenupdates koennen hilfreich sein, 
 
 \section{Detaillierte Stakeholder Needs aus Iteration A}
 
-Die folgenden Needs wurden in der Vervollstaendigung von Iteration A feiner strukturiert. Sie ergaenzen die initiale Need-Liste und dienen als direkte Quelle fuer Iteration B.
+Die folgenden Needs wurden in der Vervollstaendigung von Iteration A feiner strukturiert. Seit ADR-0010 sind sie die einzige gueltige Need-Liste und direkte Quelle fuer Requirements und Iteration B. Needs mit Prioritaet \enquote{offen} sind noch vom Projektteam zu priorisieren.
 
 \subsection{Bedienung und Auftrag}
 
-\begin{longtable}{L{0.18\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\begin{longtable}{L{0.17\textwidth} L{0.15\textwidth} L{0.44\textwidth} L{0.10\textwidth}}
 \toprule
-ID & Quelle & Need \\
+ID & Quelle & Need & Prioritaet \\
 \midrule
-SN-USER-001 & STK-001 & Ein Bediener moechte einen Transportauftrag einfach erteilen koennen. \\
-SN-USER-002 & STK-001 & Ein Bediener moechte erkennen koennen, ob ein Transportauftrag angenommen wurde. \\
-SN-USER-003 & STK-001 & Ein Bediener moechte den aktuellen Zustand eines Transportauftrags erkennen koennen. \\
+SN-USER-001 & STK-001 & Ein Bediener moechte einen Transportauftrag einfach erteilen koennen. & Must \\
+SN-USER-002 & STK-001 & Ein Bediener moechte erkennen koennen, ob ein Transportauftrag angenommen wurde. & offen \\
+SN-USER-003 & STK-001 & Ein Bediener moechte den aktuellen Zustand eines Transportauftrags erkennen koennen. & offen \\
 \bottomrule
 \end{longtable}
 
 \subsection{Transport}
 
-\begin{longtable}{L{0.18\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\begin{longtable}{L{0.17\textwidth} L{0.15\textwidth} L{0.44\textwidth} L{0.10\textwidth}}
 \toprule
-ID & Quelle & Need \\
+ID & Quelle & Need & Prioritaet \\
 \midrule
-SN-TRN-001 & STK-002 & Material soll zuverlaessig vom gewuenschten Ausgangsort zum gewuenschten Zielort gelangen. \\
-SN-TRN-002 & STK-002, STK-004 & Die transportierte Kiste soll waehrend des Transports sicher gehalten werden. \\
-SN-TRN-003 & STK-002, STK-003 & Eine Materialkiste soll dem richtigen Transportauftrag zugeordnet werden koennen. \\
-SN-TRN-004 & STK-001, STK-006 & Ein Werkstuecktraeger soll durch einen Menschen auf den Roboter aufgesetzt werden koennen. \\
-SN-TRN-005 & STK-006 & Ein Werkstuecktraeger soll perspektivisch durch ein externes Transfersystem uebergeben werden koennen. \\
+SN-TRN-001 & STK-002 & Material soll zuverlaessig vom gewuenschten Ausgangsort zum gewuenschten Zielort gelangen. & Must \\
+SN-TRN-002 & STK-002, STK-004 & Die transportierte Kiste soll waehrend des Transports sicher gehalten werden. & offen \\
+SN-TRN-003 & STK-002, STK-003 & Eine Materialkiste soll dem richtigen Transportauftrag zugeordnet werden koennen. & offen \\
+SN-TRN-004 & STK-001, STK-006 & Ein Werkstuecktraeger soll durch einen Menschen auf den Roboter aufgesetzt werden koennen. & offen \\
+SN-TRN-005 & STK-006 & Ein Werkstuecktraeger soll perspektivisch durch ein externes Transfersystem uebergeben werden koennen. & offen \\
 \bottomrule
 \end{longtable}
 
 \subsection{Navigation und Umgebung}
 
-\begin{longtable}{L{0.18\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\begin{longtable}{L{0.17\textwidth} L{0.15\textwidth} L{0.44\textwidth} L{0.10\textwidth}}
 \toprule
-ID & Quelle & Need \\
+ID & Quelle & Need & Prioritaet \\
 \midrule
-SN-NAV-001 & STK-001, STK-003 & Der Roboter soll die gewuenschten Transportziele selbststaendig erreichen. \\
-SN-NAV-002 & STK-003, STK-006 & Der Roboter soll mit Veraenderungen seiner Umgebung umgehen koennen. \\
-SN-NAV-003 & STK-006 & Voruebergehende Hindernisse sollen einen Transport moeglichst nicht unnoetig verhindern. \\
-SN-NAV-004 & STK-001, STK-003 & Der Roboter soll erkennen koennen, wenn ein Ziel oder Fahrweg nicht erreichbar ist. \\
-SN-NAV-005 & STK-001, STK-003, STK-011 & Der Roboter soll mehrere Raeume ueber einen verbindenden Flur erreichen koennen. \\
-SN-NAV-006 & STK-001, STK-003, STK-011 & Der Roboter soll offene Tueren selbststaendig durchfahren koennen. \\
+SN-NAV-001 & STK-001, STK-003 & Der Roboter soll die gewuenschten Transportziele selbststaendig erreichen. & offen \\
+SN-NAV-002 & STK-003, STK-006 & Der Roboter soll mit Veraenderungen seiner Umgebung umgehen koennen. & Must \\
+SN-NAV-003 & STK-006 & Voruebergehende Hindernisse sollen einen Transport moeglichst nicht unnoetig verhindern. & Must \\
+SN-NAV-004 & STK-001, STK-003 & Der Roboter soll erkennen koennen, wenn ein Ziel oder Fahrweg nicht erreichbar ist. & offen \\
+SN-NAV-005 & STK-001, STK-003, STK-011 & Der Roboter soll mehrere Raeume ueber einen verbindenden Flur erreichen koennen. & offen \\
+SN-NAV-006 & STK-001, STK-003, STK-011 & Der Roboter soll offene Tueren selbststaendig durchfahren koennen. & offen \\
 \bottomrule
 \end{longtable}
 
 \subsection{Safety}
 
-\begin{longtable}{L{0.18\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\begin{longtable}{L{0.17\textwidth} L{0.15\textwidth} L{0.44\textwidth} L{0.10\textwidth}}
 \toprule
-ID & Quelle & Need \\
+ID & Quelle & Need & Prioritaet \\
 \midrule
-SN-SAFE-001 & STK-004, STK-008 & Personen im Fahrbereich duerfen durch den Roboter nicht gefaehrdet werden. \\
-SN-SAFE-002 & STK-004, STK-008 & Der Roboter soll bei kritischen Situationen in einen sicheren Zustand uebergehen. \\
-SN-SAFE-003 & STK-004, STK-002 & Der Transportgegenstand soll keine zusaetzliche Gefaehrdung verursachen. \\
+SN-SAFE-001 & STK-004, STK-008 & Personen im Fahrbereich duerfen durch den Roboter nicht gefaehrdet werden. & Must \\
+SN-SAFE-002 & STK-004, STK-008 & Der Roboter soll bei kritischen Situationen in einen sicheren Zustand uebergehen. & offen \\
+SN-SAFE-003 & STK-004, STK-002 & Der Transportgegenstand soll keine zusaetzliche Gefaehrdung verursachen. & offen \\
 \bottomrule
 \end{longtable}
 
 \subsection{Betrieb, Wartung und Entwicklung}
 
-\begin{longtable}{L{0.18\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\begin{longtable}{L{0.17\textwidth} L{0.15\textwidth} L{0.44\textwidth} L{0.10\textwidth}}
 \toprule
-ID & Quelle & Need \\
+ID & Quelle & Need & Prioritaet \\
 \midrule
-SN-OPS-001 & STK-003 & Der Betreiber moechte den Betriebszustand des Roboters erkennen koennen. \\
-SN-OPS-002 & STK-003, STK-005 & Stoerungen sollen nachvollziehbar sein. \\
-SN-OPS-003 & STK-003 & Der Roboter soll im normalen Betrieb moeglichst wenig manuelle Eingriffe benoetigen. \\
-SN-MNT-001 & STK-005 & Wartungspersonal soll Fehler diagnostizieren koennen. \\
-SN-MNT-002 & STK-005 & Verschleissteile und zentrale Komponenten sollen zugaenglich sein. \\
-SN-MNT-003 & STK-005, STK-007 & Hardware und Software sollen austauschbar beziehungsweise aktualisierbar sein. \\
-SN-DEV-001 & STK-009 & Das System soll schrittweise entwickelt und erweitert werden koennen. \\
-SN-DEV-002 & STK-009 & Aenderungen sollen moeglichst lokal bleiben und keine unnoetigen Aenderungen anderer Subsysteme verursachen. \\
-SN-DEV-003 & STK-009, STK-010 & Anforderungen, Architektur, Implementierung und Tests sollen nachvollziehbar miteinander verbunden sein. \\
+SN-OPS-001 & STK-003 & Der Betreiber moechte den Betriebszustand des Roboters erkennen koennen. & Must \\
+SN-OPS-002 & STK-003, STK-005 & Stoerungen sollen nachvollziehbar sein. & offen \\
+SN-OPS-003 & STK-003 & Der Roboter soll im normalen Betrieb moeglichst wenig manuelle Eingriffe benoetigen. & offen \\
+SN-MNT-001 & STK-005 & Wartungspersonal soll Fehler diagnostizieren koennen. & Should \\
+SN-MNT-002 & STK-005 & Verschleissteile und zentrale Komponenten sollen zugaenglich sein. & offen \\
+SN-MNT-003 & STK-005, STK-007 & Hardware und Software sollen austauschbar beziehungsweise aktualisierbar sein. & offen \\
+SN-IT-001 & STK-007 & Netzwerkschnittstellen, Updates und Datenhaltung sollen kontrollierbar und sicher sein. & Should \\
+SN-DEV-001 & STK-009 & Das System soll schrittweise entwickelt und erweitert werden koennen. & offen \\
+SN-DEV-002 & STK-009 & Aenderungen sollen moeglichst lokal bleiben und keine unnoetigen Aenderungen anderer Subsysteme verursachen. & offen \\
+SN-DEV-003 & STK-009, STK-010 & Anforderungen, Architektur, Implementierung und Tests sollen nachvollziehbar miteinander verbunden sein. & Must \\
 \bottomrule
 \end{longtable}
 
 \subsection{Unterricht und Demonstration}
 
-\begin{longtable}{L{0.18\textwidth} L{0.16\textwidth} L{0.50\textwidth}}
+\begin{longtable}{L{0.17\textwidth} L{0.15\textwidth} L{0.44\textwidth} L{0.10\textwidth}}
 \toprule
-ID & Quelle & Need \\
+ID & Quelle & Need & Prioritaet \\
 \midrule
-SN-EDU-001 & STK-011 & Der Roboter soll sich fuer die Demonstration technischer Zusammenhaenge im Unterricht eignen. \\
-SN-EDU-002 & STK-011 & Wichtige Systemzustaende und Ablaeufe sollen im Unterricht nachvollziehbar dargestellt werden koennen. \\
-SN-EDU-003 & STK-011 & Das System soll innerhalb eines Unterrichtsblocks sinnvoll eingesetzt werden koennen. \\
-SN-UI-001 & STK-001, STK-011 & Ein Benutzer soll Transportauftraege ueber eine Web-Oberflaeche ausloesen koennen. \\
-SN-UI-002 & STK-001, STK-003 & Ein Benutzer soll grundlegende Betriebsbefehle ausloesen koennen. \\
-SN-ENE-001 & STK-003, STK-011 & Der Roboter soll einen Unterrichtsblock ohne notwendiges Zwischenladen absolvieren koennen. \\
+SN-EDU-001 & STK-011 & Der Roboter soll sich fuer die Demonstration technischer Zusammenhaenge im Unterricht eignen. & Must \\
+SN-EDU-002 & STK-011 & Wichtige Systemzustaende und Ablaeufe sollen im Unterricht nachvollziehbar dargestellt werden koennen. & Should \\
+SN-EDU-003 & STK-011 & Das System soll innerhalb eines Unterrichtsblocks sinnvoll eingesetzt werden koennen. & offen \\
+SN-UI-001 & STK-001, STK-011 & Ein Benutzer soll Transportauftraege ueber eine Web-Oberflaeche ausloesen koennen. & offen \\
+SN-UI-002 & STK-001, STK-003 & Ein Benutzer soll grundlegende Betriebsbefehle ausloesen koennen. & offen \\
+SN-ENE-001 & STK-003, STK-011 & Der Roboter soll einen Unterrichtsblock ohne notwendiges Zwischenladen absolvieren koennen. & offen \\
 \bottomrule
 \end{longtable}

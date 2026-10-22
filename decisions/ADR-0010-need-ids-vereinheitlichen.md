@@ -1,6 +1,6 @@
 # ADR-0010: Stakeholder-Need-IDs vereinheitlichen
 
-- Status: Vorgeschlagen
+- Status: Angenommen (umgesetzt am 2026-10-22)
 - Datum: 2026-10-22
 - Betroffen: Kapitel 4 (Stakeholder Needs), Source-Felder in
   `sysml/baseline_a1/02_requirements.sysml`, generierte Traceability-Matrizen
@@ -116,3 +116,14 @@ Der Begriff "Kiste" bzw. "Materialkiste" widerspricht DEC-003
 - Kapitel 8: FUN-TRN-001 und TransportSystem
 
 Kapitel 3, Zeile 156 ("abgestellte Kisten") meint Hindernisse und ist korrekt.
+
+## Umsetzung
+
+- Kapitel 4: Tabelle SN-001 bis SN-010 als "Initiale Stakeholder Needs
+  (abgeloest)" mit Spalte "Abgeloest durch". Detaillierte Tabellen mit Spalte
+  Prioritaet; 11 Needs erben die Prioritaet ihres Vorgaengers, 22 stehen auf
+  "offen". SN-IT-001 neu in "Betrieb, Wartung und Entwicklung".
+- Modell: alte IDs in den Source-Feldern durch Nachfolger ersetzt;
+  SN-NAV-001 -> REQ-NAV-001, SN-NAV-003 -> REQ-NAV-002,
+  SN-OPS-002 -> REQ-DIAG-001 und SN-EDU-003 -> REQ-PWR-002 ergaenzt.
+- Generator: Eine alte ID in einem Source-Feld fuehrt zu Exit 2.

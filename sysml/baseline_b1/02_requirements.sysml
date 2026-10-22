@@ -145,7 +145,7 @@ package MobileMaterialRobot_Requirements_B1 {
   requirement <'REQ-B-TRN-001'> carryPlacedCarrier : RobotRequirement {
     doc /*
     Type: interface
-    Source: OI-MECH-001, OI-MECH-002
+    Source: SN-TRN-004, OI-MECH-001, OI-MECH-002
     Text: The robot shall carry a manually placed workpiece carrier as payload.
     Verification idea: mechanical payload test after carrier data are known.
     */
