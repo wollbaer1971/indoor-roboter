@@ -22,7 +22,7 @@ Die Beziehungen stehen im Modell, nicht in Tabellen:
 - `verify` (Test prueft Requirement): `baseline_a1/06_tests.sysml`
 - `dependency` (Requirement abgeleitet aus Use Case): `baseline_b1/03_traceability.sysml`
 
-Die Dateien `traceability_matrix.md` werden daraus erzeugt:
+Daraus werden erzeugt: beide `traceability_matrix.md` und die LaTeX-Tabelle `tables/traceability_matrix_a1.tex`, die `appendices/c_traceability_matrix.tex` per `\input` einbindet:
 
 ```
 python3 sysml/tools/generate_traceability.py          # Matrizen neu schreiben

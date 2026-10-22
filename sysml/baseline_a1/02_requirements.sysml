@@ -15,7 +15,8 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-MIS-001'> acceptTransportOrder : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-UI-001, UC-001
+    Source: SN-UI-001, UC-001, SN-001
+    Function: FUN-MIS-001
     Interface: IF-002
     Text: The system shall accept a transport order with start and target location.
     Acceptance: Order is accepted, validated and assigned a mission status.
@@ -36,7 +37,8 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-TRN-001'> transportCarrier : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-TRN-001
+    Source: SN-TRN-001, SN-002
+    Function: FUN-TRN-001
     Interface: IF-003
     Text: The system shall transport a workpiece carrier between two defined
       transport locations.
@@ -60,6 +62,7 @@ package MobileMaterialRobot_Requirements_A1 {
     doc /*
     Type: functional
     Source: Baseline A.1 map concept
+    Function: FUN-MAP-001
     Interface: /map
     Text: The system shall load an existing base map of the operating area.
     Acceptance: The map is loaded and can be used for localization.
@@ -69,7 +72,8 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-MAP-002'> detectEnvironmentChanges : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-NAV-002
+    Source: SN-NAV-002, SN-006
+    Function: FUN-PER-001
     Interface: /local_obstacles
     Text: The system shall detect relevant changes in the drivable environment
       during operation.
@@ -80,7 +84,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-MAP-003'> separateMapLayers : RobotRequirement {
     doc /*
     Type: constraint
-    Source: ADR-0007
+    Source: ADR-0007, SN-NAV-002, R-09
     Text: The system shall distinguish base information, current environment
       information and possible long-term map updates.
     Acceptance: A temporary obstacle does not automatically change the long-term map.
@@ -91,6 +95,7 @@ package MobileMaterialRobot_Requirements_A1 {
     doc /*
     Type: functional
     Source: UC-006
+    Function: FUN-LOC-001
     Interface: /robot_pose
     Text: The system shall determine its pose inside the defined operating area.
     Acceptance: Pose error remains within a tolerance to be defined in Iteration B.
@@ -101,6 +106,7 @@ package MobileMaterialRobot_Requirements_A1 {
     doc /*
     Type: functional
     Source: UC-003
+    Function: FUN-NAV-001
     Interface: /cmd_vel
     Text: The system shall autonomously drive to a selected target location.
     Acceptance: The target is reached without manual vehicle control.
@@ -111,6 +117,7 @@ package MobileMaterialRobot_Requirements_A1 {
     doc /*
     Type: functional
     Source: UC-007
+    Function: FUN-NAV-001
     Interface: /local_obstacles
     Text: The system shall consider detected obstacles in path or motion planning.
     Acceptance: The robot stops or locally replans around the obstacle.
@@ -120,7 +127,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-NAV-003'> detectUnreachableTarget : RobotRequirement {
     doc /*
     Type: functional
-    Source: UC-008
+    Source: UC-008, SN-NAV-004
     Interface: /navigation_result, /mission_state
     Text: The system shall detect when a target or route is not reachable.
     Acceptance: The system reports blockage or non-reachability with a clear status.
@@ -150,7 +157,8 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-SAFE-001'> enterSafeStateOnObstacle : RobotRequirement {
     doc /*
     Type: safety
-    Source: SN-SAFE-002
+    Source: SN-SAFE-002, SN-004
+    Function: FUN-SAFE-001
     Interface: /safety_state
     Text: The system shall transition to a safe state for obstacles that cannot
       be handled safely.
@@ -161,7 +169,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-SAFE-002'> considerPersons : RobotRequirement {
     doc /*
     Type: safety
-    Source: SN-SAFE-001
+    Source: SN-SAFE-001, R-04
     Interface: IF-006
     Text: The system shall consider persons in the operating area as
       safety-relevant for motion decisions.
@@ -173,7 +181,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-UI-001'> webAppOrderEntry : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-UI-001
+    Source: SN-UI-001, UC-001
     Interface: IF-001, IF-002
     Text: The first version shall accept transport orders through a web app.
     Acceptance: User selects start and target and starts the order.
@@ -183,7 +191,7 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-UI-002'> basicOperatingCommands : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-UI-002
+    Source: SN-UI-002, UC-009, UC-010
     Text: The system shall provide basic commands for status, operational stop
       and return to charging station.
     Acceptance: Commands can be triggered and produce observable system responses.
@@ -194,6 +202,7 @@ package MobileMaterialRobot_Requirements_A1 {
     doc /*
     Type: non-functional
     Source: Energy monitoring need
+    Function: FUN-STA-001
     Interface: /battery_state
     Text: The system shall monitor its energy state.
     Acceptance: Low state of charge is detected and reported.
@@ -222,7 +231,8 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-STA-001'> reportOperatingStatus : RobotRequirement {
     doc /*
     Type: functional
-    Source: SN-OPS-001
+    Source: SN-OPS-001, SN-003
+    Function: FUN-STA-001
     Interface: /mission_state
     Text: The system shall report mission and operating status.
     Acceptance: Status is available to operator or tester.
@@ -232,11 +242,45 @@ package MobileMaterialRobot_Requirements_A1 {
   requirement <'REQ-ARCH-001'> functionTraceability : RobotRequirement {
     doc /*
     Type: constraint
-    Source: SN-DEV-003
+    Source: SN-DEV-003, SN-008
     Interface: traceability artifacts
     Text: Each essential function shall be traceable to at least one logical
       system element and verification idea.
     Acceptance: Traceability matrix has no empty core columns for MVP items.
+    */
+  }
+
+  requirement <'REQ-DIAG-001'> provideDiagnostics : RobotRequirement {
+    doc /*
+    Type: operational
+    Source: SN-005
+    Function: FUN-STA-001
+    Interface: /diagnostics
+    Text: The system shall provide diagnostic information for fault finding.
+    Acceptance: Fault messages contain cause, affected function and timestamp.
+    */
+  }
+
+  requirement <'REQ-MNT-001'> maintenanceAccess : RobotRequirement {
+    doc /*
+    Type: operational
+    Source: SN-MNT-002, SN-MNT-003
+    Interface: maintenance interfaces open
+    Text: Central components and wear parts shall be accessible for maintenance.
+    Acceptance: Maintenance review confirms access without disproportionate
+      disassembly.
+    */
+  }
+
+  requirement <'REQ-ARCH-002'> mvpAsSubset : RobotRequirement {
+    doc /*
+    Type: constraint
+    Source: SN-DEV-001, SN-DEV-002
+    Interface: MVP marking
+    Text: The system shall be structured so that an MVP can be marked as a
+      subset of the target system.
+    Acceptance: MVP elements reference target-system elements instead of
+      forming a separate throwaway model.
     */
   }
 }

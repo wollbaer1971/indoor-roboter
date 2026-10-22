@@ -1,42 +1,7 @@
 \chapter{Initiale Traceability-Matrix}
 
-\begin{longtable}{L{0.15\textwidth} L{0.18\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.14\textwidth}}
-\toprule
-Requirement & Need/Funktion & Systemelement & Schnittstelle/ROS2 & Test \\
-\midrule
-REQ-MIS-001 & SN-001, FUN-MIS-001 & MissionSystem & \texttt{mission\_manager\_node} & TC-STA-001 \\
-REQ-TRN-001 & SN-002, FUN-TRN-001 & TransportSystem & offen & spaeter \\
-REQ-MAP-001 & FUN-MAP-001 & NavigationSystem/MapManagement & \texttt{map\_server}, \texttt{/map} & TC-MAP-001 \\
-REQ-MAP-002 & SN-006, FUN-PER-001 & PerceptionSystem & \texttt{/local\_obstacles} & TC-OBS-001 \\
-REQ-LOC-001 & FUN-LOC-001 & NavigationSystem & \texttt{localization\_node} & TC-LOC-001 \\
-REQ-NAV-001 & UC-003, FUN-NAV-001 & NavigationSystem, MotionSystem & \texttt{/goal\_pose}, \texttt{/cmd\_vel}, \texttt{/odom} & TC-NAV-001 \\
-REQ-NAV-002 & UC-007, FUN-NAV-001 & NavigationSystem, PerceptionSystem & \texttt{/local\_obstacles} & TC-OBS-001 \\
-REQ-SAFE-001 & SN-004, FUN-SAFE-001 & SafetySystem, MotionSystem & \texttt{/safety\_state} & TC-OBS-001, TC-OBS-002 \\
-REQ-STA-001 & SN-003, FUN-STA-001 & MissionSystem, UserInterface & \texttt{/mission\_state} & TC-STA-001 \\
-REQ-DIAG-001 & SN-005, FUN-STA-001 & CommunicationSystem & Logging/Diagnose offen & spaeter \\
-REQ-PWR-001 & FUN-STA-001 & EnergySystem & \texttt{/battery\_state} & TC-PWR-001 \\
-REQ-PWR-002 & SN-ENE-001 & EnergySystem & Batterieprofil offen & TC-PWR-002 \\
-REQ-UI-001 & SN-UI-001, UC-001 & UserInterface, MissionSystem & IF-001, IF-002 & TC-UI-001 \\
-REQ-UI-002 & SN-UI-002, UC-009, UC-010 & UserInterface, MissionSystem, EnergySystem & IF-001, IF-002, IF-007 & TC-UI-002 \\
-REQ-NAV-004 & SN-NAV-005, UC-004 & NavigationSystem, MotionSystem & IF-005 & TC-NAV-002 \\
-REQ-NAV-005 & SN-NAV-006, UC-004 & NavigationSystem, MotionSystem & IF-005 & TC-NAV-002 \\
-REQ-PERF-001 & DEC-007 & MotionSystem, SafetySystem & Motion-Parameter offen & TC-PERF-001 \\
-REQ-ARCH-001 & SN-008 & Gesamtmodell & Traceability-Artefakte & TC-TRC-001 \\
-\bottomrule
-\end{longtable}
+Die folgende Tabelle wird aus dem \sysml-Modell erzeugt (\texttt{sysml/baseline\_a1}). Grundlage sind die Beziehungen \texttt{satisfy} (Systemelement erfuellt Requirement), \texttt{allocate} (Systemelement auf \ros-Node) und \texttt{verify} (Test prueft Requirement). Aenderungen erfolgen im Modell; anschliessend wird die Tabelle mit \texttt{python3 sysml/tools/generate\_traceability.py} neu erzeugt. Die Tabelle wird nicht von Hand bearbeitet.
 
-\section{Ergaenzte Traceability aus Iteration A}
+Die Spalte Status zeigt Luecken direkt an: Ein Requirement ohne Systemelement oder ohne Testfall ist als Luecke markiert.
 
-\begin{longtable}{L{0.15\textwidth} L{0.18\textwidth} L{0.20\textwidth} L{0.20\textwidth} L{0.14\textwidth}}
-\toprule
-Requirement & Need/Funktion & Systemelement & Schnittstelle/ROS2 & Test \\
-\midrule
-REQ-MIS-002 & SN-USER-002, SN-USER-003 & MissionSystem, UserInterface & \texttt{/mission\_state} & TC-STA-001 \\
-REQ-TRN-002 & SN-TRN-002, SN-SAFE-003 & TransportSystem, SafetySystem & offen & spaeter \\
-REQ-MAP-003 & SN-NAV-002, R-09 & MapManagement & Kartenfreigabe offen & TC-MAP-002 \\
-REQ-NAV-003 & SN-NAV-004, UC-008 & NavigationSystem, MissionSystem & \texttt{/mission\_state} & TC-OBS-002 \\
-REQ-SAFE-002 & SN-SAFE-001, R-04 & SafetySystem, PerceptionSystem & Safety-Schnittstelle offen & spaeter \\
-REQ-MNT-001 & SN-MNT-002, SN-MNT-003 & Mechanik, Elektronik, Software & Wartungsschnittstellen offen & Review \\
-REQ-ARCH-002 & SN-DEV-001, SN-DEV-002 & Gesamtmodell & MVP-Markierung & TC-TRC-001 \\
-\bottomrule
-\end{longtable}
+\input{tables/traceability_matrix_a1}

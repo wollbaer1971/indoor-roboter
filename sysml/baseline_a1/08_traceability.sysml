@@ -62,10 +62,16 @@ package MobileMaterialRobot_Traceability_A1 {
     satisfy operatingTime by energy;
     satisfy nominalSpeed by motion;
     satisfy nominalSpeed by safety;
+
+    // Diagnostics
+    satisfy provideDiagnostics by diagnostics;
+    satisfy provideDiagnostics by communication;
   }
 
-  // Process requirement: fulfilled by the model as a whole.
+  // Fulfilled by the system or the model as a whole.
   satisfy functionTraceability by robot;
+  satisfy maintenanceAccess by robot;
+  satisfy mvpAsSubset by robot;
 
   part ros2 : Ros2System;
 
