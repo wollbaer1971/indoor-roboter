@@ -77,6 +77,21 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
     */
   }
 
+  part def Ros2System {
+    doc /*
+    Node composition of the preliminary ROS2 architecture. Allocation targets
+    for the logical subsystems, see 08_traceability.sysml.
+    */
+    part missionManager : MissionManagerNode;
+    part webInterface : WebInterfaceNode;
+    part mapManagement : MapManagementNode;
+    part localization : LocalizationNode;
+    part perception : PerceptionNode;
+    part navigation : NavigationNode;
+    part safetySupervisor : SafetySupervisorNode;
+    part energyMonitor : EnergyMonitorNode;
+  }
+
   part def EnergyMonitorNode {
     doc /*
     SysML element: EnergySystem

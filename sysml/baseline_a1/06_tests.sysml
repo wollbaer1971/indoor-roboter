@@ -118,6 +118,43 @@ package MobileMaterialRobot_Verification_A1 {
     }
   }
 
+  verification def <'TC-STA-001'> MissionStatusTest {
+    doc /*
+    Source: chapters/10_verifikation_traceability.tex
+    Action: Run a mission through its status changes.
+    Expected: Status changes are reported correctly.
+    */
+    subject robot : MobileMaterialRobot;
+    objective {
+      verify reportOperatingStatus;     // REQ-STA-001
+    }
+  }
+
+  verification def <'TC-PWR-001'> LowEnergyTest {
+    doc /*
+    Source: chapters/10_verifikation_traceability.tex
+    Action: Simulate or reach a low state of charge.
+    Expected: A warning is generated and the mission can be evaluated.
+    */
+    subject robot : MobileMaterialRobot;
+    objective {
+      verify monitorEnergyState;        // REQ-PWR-001
+    }
+  }
+
+  verification def <'TC-TRC-001'> TraceabilityReview {
+    doc /*
+    Source: chapters/10_verifikation_traceability.tex
+    Action: Review the generated traceability matrix.
+    Expected: Every MVP requirement is linked to function, element, interface
+      and test.
+    */
+    subject robot : MobileMaterialRobot;
+    objective {
+      verify functionTraceability;      // REQ-ARCH-001
+    }
+  }
+
   verification def <'TC-PWR-002'> OperatingTimeTest {
     doc /*
     Action: Run defined teaching-block operating profile.

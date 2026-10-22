@@ -8,6 +8,7 @@ Dateien:
 
 - `01_use_cases.sysml`: Use-Case-Struktur UC-B-001 bis UC-B-010
 - `02_requirements.sysml`: Candidate Requirements REQ-B-*
-- `traceability_matrix.md`: Zuordnung von Use Cases zu Requirements, Tests und Open Issues
+- `03_traceability.sysml`: `dependency`-Beziehungen von Requirements zu Use Cases
+- `traceability_matrix.md`: aus dem Modell erzeugte Zuordnung von Use Cases zu Requirements, Verifikationsideen und Open Issues
 
 Die Dateien sind bewusst Starterartefakte. Vor formaler Nutzung sollten sie gegen die verwendete SysML-v2-Toolchain geprueft werden.

@@ -12,6 +12,7 @@ Die Dateien sind bewusst klein und thematisch getrennt:
 - `05_behavior.sysml`: Betriebsablaeufe, Aktivitaeten und Zustandsmodell
 - `06_tests.sysml`: Verifikationsfaelle
 - `07_ros2_mapping.sysml`: vorlaeufiges ROS2-Mapping als Architekturartefakt
-- `traceability_matrix.md`: Review-Matrix von Need/Requirement bis Test
+- `08_traceability.sysml`: `satisfy`- und `allocate`-Beziehungen
+- `traceability_matrix.md`: aus dem Modell erzeugte Review-Matrix von Need/Requirement bis Test
 
 Hinweis: Die SysML-v2-Syntax ist als gut lesbarer Starter fuer die weitere Modellierung gedacht. Vor formaler Weiterverarbeitung sollte sie gegen die konkret verwendete Toolchain, zum Beispiel Syside, geprueft werden.
