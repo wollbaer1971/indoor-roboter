@@ -16,6 +16,7 @@ TC-LOC-001 & Lokalisierung in Karte & REQ-LOC-001 & Roboterpose wird innerhalb d
 TC-NAV-001 & Autonomes Zielanfahren & REQ-NAV-001 & Roboter erreicht Ziel ohne manuelle Steuerung. \\
 TC-OBS-001 & Hindernis frontal & REQ-MAP-002, REQ-NAV-002, REQ-SAFE-001 & Hindernis wird erkannt; Roboter stoppt oder faehrt sicher ausweichend. \\
 TC-OBS-002 & Blockierter Fahrweg & REQ-SAFE-001, REQ-STA-001 & Roboter stoppt und meldet Blockade. \\
+TC-SAFE-001 & Safety-Gate fail-safe & REQ-SAFE-001 & Bei gesperrtem oder ausbleibendem \texttt{/safety\_state} sowie bei ausbleibendem \texttt{/cmd\_vel\_nav} sendet das Gate innerhalb des Timeouts Nullgeschwindigkeit; der Roboter steht, auch wenn die Navigation weiter Fahrbefehle sendet. \\
 TC-STA-001 & Missionsstatus melden & REQ-STA-001 & Statuswechsel werden korrekt ausgegeben. \\
 TC-PWR-001 & Niedriger Energiezustand & REQ-PWR-001 & Warnung wird erzeugt und Mission kann bewertet werden. \\
 TC-PWR-002 & Unterrichtsprofil 2 h & REQ-PWR-002 & Roboter erreicht ein definiertes Demonstrationsprofil von ca. 2 h ohne Zwischenladen. \\

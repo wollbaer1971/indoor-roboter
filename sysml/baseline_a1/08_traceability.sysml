@@ -77,6 +77,8 @@ package MobileMaterialRobot_Traceability_A1 {
   allocate robot.navigation to ros2.navigation;
   allocate robot.perception to ros2.perception;
   allocate robot.safety to ros2.safetySupervisor;
+  allocate robot.safety to ros2.velocityGate;
+  allocate robot.motion to ros2.motionController;
   allocate robot.energy to ros2.energyMonitor;
-  // Not yet allocated: motion, transport, diagnostics.
+  // Not yet allocated: transport, diagnostics.
 }

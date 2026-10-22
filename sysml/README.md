@@ -29,6 +29,8 @@ python3 sysml/tools/generate_traceability.py          # Matrizen neu schreiben
 python3 sysml/tools/generate_traceability.py --check  # Exit 1, wenn veraltet; Exit 2 bei unbekannten Namen
 ```
 
+Der Generator prueft ausserdem das ROS2-Topic-Netz aus den `Publishes:`/`Subscribes:`-Zeilen in `07_ros2_mapping.sysml` und erzwingt die Regel aus ADR-0009: Nur Nodes, die dem SafetySystem zugeordnet sind, duerfen `/cmd_vel` senden. Ein Verstoss fuehrt zu Exit 2.
+
 Nur der Bereich zwischen den `GENERATED`-Markierungen wird ueberschrieben. Handgeschriebene Abschnitte davor und danach bleiben erhalten. Der Generator ist kein SysML-Parser, er liest die Konventionen dieses Repos per regulaerem Ausdruck.
 
 Regel: SysML-Dateien werden erst dann erweitert, wenn die zugehoerigen Requirements, Funktionen und Entscheidungen in der LaTeX-Dokumentation nachvollziehbar beschrieben sind.

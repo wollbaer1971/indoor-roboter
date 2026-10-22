@@ -8,4 +8,8 @@ Empfohlenes Namensschema:
 - `ADR-0002-mvp-navigationskern.md`
 - `ADR-0003-transport-system-zielarchitektur.md`
 
+Vorhandene Einzel-ADRs:
+
+- `ADR-0009-safety-gate-vor-motion.md` (Vorgeschlagen)
+
 Jede Entscheidung soll Kontext, Alternativen, Entscheidung, Begruendung, Auswirkungen, Risiken und betroffene Traceability-Elemente enthalten.

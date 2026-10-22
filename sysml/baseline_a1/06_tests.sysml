@@ -96,6 +96,20 @@ package MobileMaterialRobot_Verification_A1 {
     }
   }
 
+  verification def <'TC-SAFE-001'> VelocityGateFailSafeTest {
+    doc /*
+    Source: chapters/10_verifikation_traceability.tex, ADR-0009
+    Action: Let navigation keep sending /cmd_vel_nav, then block /safety_state,
+      stop /safety_state and stop /cmd_vel_nav, one case at a time.
+    Expected: The gate sends zero velocity within the timeout in each case and
+      the robot stands still.
+    */
+    subject robot : MobileMaterialRobot;
+    objective {
+      verify enterSafeStateOnObstacle;  // REQ-SAFE-001
+    }
+  }
+
   verification def <'TC-UI-001'> WebAppOrderTest {
     doc /*
     Action: User creates transport order in web app.

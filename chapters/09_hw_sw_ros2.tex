@@ -34,7 +34,7 @@ MapManagement & \texttt{map\_server} & Karte laden und bereitstellen & REQ-MAP-0
 LocalizationFunction & \texttt{localization\_node} & Pose, Transformationsdaten & REQ-LOC-001 \\
 PerceptionSystem & \texttt{sensor\_driver\_node}, \texttt{obstacle\_processing\_node} & Sensordaten, Hindernisse, lokale Karte & REQ-MAP-002, REQ-NAV-002 \\
 MotionSystem & \texttt{motion\_controller\_node}, MCU-Firmware & \texttt{cmd\_vel}, Odometry, Motorstatus & REQ-NAV-001 \\
-SafetySystem & \texttt{safety\_monitor\_node} plus Hardware-Stopp & Stoppsignal, Fehlerstatus & REQ-SAFE-001 \\
+SafetySystem & \texttt{safety\_monitor\_node}, \texttt{velocity\_gate\_node} plus Hardware-Stopp & Stoppsignal, Fehlerstatus, Freigabe der Fahrbefehle & REQ-SAFE-001 \\
 EnergySystem & \texttt{battery\_monitor\_node} & Batterie- und Warnstatus & REQ-PWR-001 \\
 \bottomrule
 \end{longtable}
@@ -46,15 +46,24 @@ EnergySystem & \texttt{battery\_monitor\_node} & Batterie- und Warnstatus & REQ-
 Name & Typ & Richtung & Zweck \\
 \midrule
 \texttt{/goal\_pose} & Topic/Action offen & Mission zu Navigation & Zielvorgabe fuer Navigation \\
-\texttt{/cmd\_vel} & Topic & Navigation zu Motion & Geschwindigkeitsvorgabe \\
+\texttt{/cmd\_vel\_nav} & Topic & Navigation zu Safety-Gate & Geschwindigkeitsvorgabe der Planung, noch nicht freigegeben \\
+\texttt{/cmd\_vel} & Topic & Safety-Gate zu Motion & freigegebene Geschwindigkeitsvorgabe; einziger Sender ist das Safety-Gate \\
 \texttt{/odom} & Topic & Motion zu Navigation & Odometriedaten \\
 \texttt{/map} & Topic/Service & Map zu Navigation & Grundkarte \\
 \texttt{/local\_obstacles} & Topic & Perception zu Navigation & erkannte Hindernisse \\
 \texttt{/mission\_state} & Topic & Mission zu UI/Logging & Missionsstatus \\
-\texttt{/safety\_state} & Topic & Safety zu Mission/Motion & Safety-Zustand und Stoppgrund \\
+\texttt{/safety\_state} & Topic & Safety zu Safety-Gate/Mission & Safety-Zustand und Stoppgrund \\
 \texttt{/battery\_state} & Topic & Energy zu Mission/UI & Energiezustand \\
 \bottomrule
 \end{longtable}
+
+\section{Sicherheitspfad (ADR-0009, vorgeschlagen)}
+
+Die Navigation sendet ihre Fahrbefehle nicht direkt an den Antrieb, sondern als \texttt{/cmd\_vel\_nav} an ein Safety-Gate. Erst das Gate gibt sie als \texttt{/cmd\_vel} an den Motion-Controller weiter. Ist \texttt{/safety\_state} nicht freigegeben oder bleibt eines der beiden Eingangssignale laenger als ein festzulegendes Timeout aus, sendet das Gate Nullgeschwindigkeit. Der Motion-Controller stoppt zusaetzlich selbst, wenn \texttt{/cmd\_vel} ausbleibt.
+
+Damit kann ein Fehler in der Navigation den Roboter nicht in Bewegung halten. Der betriebliche Stopp bleibt davon getrennt und laeuft ueber die Mission.
+
+Das Gate ist Software und nicht sicherheitsgerichtet. Es ersetzt weder Not-Halt noch eine Sicherheitsabschaltung der Motoren in Hardware. Diese Frage bleibt in OI-SAFE-001 offen.
 
 \section{Noch nicht entschiedene Alternativen}
 

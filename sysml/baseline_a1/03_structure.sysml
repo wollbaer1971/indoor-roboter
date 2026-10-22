@@ -96,7 +96,8 @@ package MobileMaterialRobot_Structure_A1 {
 
   part def SafetySystem {
     doc /*
-    Owns safety-relevant state evaluation, safety stop decisions and future
+    Owns safety-relevant state evaluation, safety stop decisions, release of
+    motion commands to the MotionSystem (ADR-0009, proposed) and future
     emergency-stop integration.
     */
   }

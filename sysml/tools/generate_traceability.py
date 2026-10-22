@@ -115,6 +115,26 @@ def build_a1() -> str:
         if resolve(sub, subsystems, "allocate") and resolve(node, nodes, "allocate"):
             allocated[sub].append(nodes[node])
 
+    # ROS2 topic graph from the "Publishes:"/"Subscribes:" lines of the node docs.
+    ros2_raw = read(A1 / "07_ros2_mapping.sysml")
+    pubs: dict[str, list[str]] = {}
+    subs: dict[str, list[str]] = {}
+    for node, doc in re.findall(r"part def (\w+Node) \{\s*doc /\*(.*?)\*/", ros2_raw, re.S):
+        f = doc_fields(doc)
+        for topic in re.findall(r"/[\w/]+", f.get("Publishes", "")):
+            pubs.setdefault(topic, []).append(node)
+        for topic in re.findall(r"/[\w/]+", f.get("Subscribes", "")):
+            subs.setdefault(topic, []).append(node)
+
+    # ADR-0009: only nodes allocated from the SafetySystem may publish /cmd_vel.
+    safety_nodes = set(allocated.get("safety", []))
+    cmd_vel_pubs = pubs.get("/cmd_vel", [])
+    if not cmd_vel_pubs:
+        errors.append("ADR-0009: no node publishes /cmd_vel")
+    for node in cmd_vel_pubs:
+        if node not in safety_nodes:
+            errors.append(f"ADR-0009: {node} publishes /cmd_vel but is not allocated from SafetySystem")
+
     verified: dict[str, list[str]] = {n: [] for n in reqs}
     test_rows = []
     for tid, tname, body in re.findall(r"verification def <'([\w-]+)'> (\w+) \{(.*?)\n  \}", tests_src, re.S):
@@ -161,6 +181,20 @@ def build_a1() -> str:
     for usage, d in subsystems.items():
         status = "Gap: no ROS2 node" if not allocated[usage] else "Allocated"
         lines.append(f"| {d} | {join(sub_reqs[usage])} | {join(allocated[usage])} | {status} |")
+
+    lines += [
+        "",
+        "## ROS2 topics",
+        "",
+        "Rule (ADR-0009): only nodes allocated from SafetySystem publish `/cmd_vel`.",
+        "",
+        "| Topic | Published by | Subscribed by | Status |",
+        "| --- | --- | --- | --- |",
+    ]
+    for topic in sorted(set(pubs) | set(subs)):
+        p, s = pubs.get(topic, []), subs.get(topic, [])
+        status = "Gap: no publisher" if not p else "Gap: no subscriber" if not s else "Connected"
+        lines.append(f"| `{topic}` | {join(p)} | {join(s)} | {status} |")
 
     lines += ["", "## Verification cases", "", "| Test | Name | Verifies |", "| --- | --- | --- |"]
     lines += test_rows
