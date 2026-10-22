@@ -7,8 +7,8 @@ Die Dateien sind bewusst klein und thematisch getrennt:
 - `00_overview.sysml`: Ziel, Scope, Baseline, Annahmen und Nicht-Ziele
 - `01_context.sysml`: Stakeholder, externe Systeme und Kontext
 - `02_requirements.sysml`: initiale Systemanforderungen
-- `03_structure.sysml`: Top-Level-Struktur und Subsysteme
-- `04_interfaces.sysml`: externe Schnittstellen und Port-Skizzen
+- `03_structure.sysml`: einzige Definition des Roboters mit Subsystemen und Ports
+- `04_interfaces.sysml`: Port-Typen und Schnittstellenregister
 - `05_behavior.sysml`: Betriebsablaeufe, Aktivitaeten und Zustandsmodell
 - `06_tests.sysml`: Verifikationsfaelle
 - `07_ros2_mapping.sysml`: vorlaeufiges ROS2-Mapping als Architekturartefakt

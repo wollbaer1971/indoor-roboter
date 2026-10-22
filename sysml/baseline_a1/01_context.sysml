@@ -4,14 +4,18 @@ package MobileMaterialRobot_Context_A1 {
   The system boundary is around the Mobile Material Robot. Web app, users,
   workpiece carrier, external transfer system, driving environment, persons,
   obstacles, charging station and IT infrastructure are external.
+  The robot itself is imported from MobileMaterialRobot_Structure_A1. The
+  external systems are defined only here, including their ports.
   */
 
-  part def MobileMaterialRobot {
-    doc /* System of Interest. */
-  }
+  import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+  import MobileMaterialRobot_Interfaces_A1::*;
 
   part def WebApp {
     doc /* Initial user interface for transport orders and basic commands. */
+    port orderOut : TransportOrderPort;
+    port statusIn : ~MissionStatusPort;
+    port commandOut : OperationalCommandPort;
   }
 
   part def HumanOperator {
@@ -23,6 +27,7 @@ package MobileMaterialRobot_Context_A1 {
     Standard workpiece carrier of a transfer system.
     Size, mass, maximum workpiece mass and center-of-gravity range are open.
     */
+    port mechanicalInterface : ~PayloadMechanicalPort;
   }
 
   part def ExternalTransferSystem {
@@ -35,8 +40,9 @@ package MobileMaterialRobot_Context_A1 {
   part def SchoolProductionArea {
     doc /*
     Production-like school demonstrator area with multiple rooms, a corridor
-    and open doors.
+    and open doors. This is the driving environment of IF-005.
     */
+    port physicalInteraction : ~EnvironmentInteractionPort;
   }
 
   part def PersonInOperatingArea {
@@ -52,6 +58,7 @@ package MobileMaterialRobot_Context_A1 {
     External station for return-to-charge behavior. Automatic docking and
     charging remain open for MVP definition.
     */
+    port chargeInterface : ~ChargingStationPort;
   }
 
   part def ITInfrastructure {

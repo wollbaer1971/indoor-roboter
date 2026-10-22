@@ -1,6 +1,9 @@
 package MobileMaterialRobot_Interfaces_A1 {
   doc /*
   External and first internal interface sketches for Baseline A.1.
+  This package only defines port types. The parts that own these ports are
+  defined once: the robot in MobileMaterialRobot_Structure_A1, the external
+  systems in MobileMaterialRobot_Context_A1.
   Details such as protocol, connector type, message format, rate and tolerance
   are intentionally left for later iterations.
   */
@@ -13,35 +16,6 @@ package MobileMaterialRobot_Interfaces_A1 {
   port def ChargingStationPort;
   port def DiagnosticsPort;
   port def SafetyStatePort;
-
-  part def MobileMaterialRobot {
-    port orderIn : ~TransportOrderPort;
-    port statusOut : MissionStatusPort;
-    port commandIn : ~OperationalCommandPort;
-    port payloadMount : PayloadMechanicalPort;
-    port environment : EnvironmentInteractionPort;
-    port charging : ChargingStationPort;
-    port diagnosticsOut : DiagnosticsPort;
-    port safetyStateOut : SafetyStatePort;
-  }
-
-  part def WebApp {
-    port orderOut : TransportOrderPort;
-    port statusIn : ~MissionStatusPort;
-    port commandOut : OperationalCommandPort;
-  }
-
-  part def WorkpieceCarrier {
-    port mechanicalInterface : ~PayloadMechanicalPort;
-  }
-
-  part def DrivingEnvironment {
-    port physicalInteraction : ~EnvironmentInteractionPort;
-  }
-
-  part def ChargingStation {
-    port chargeInterface : ~ChargingStationPort;
-  }
 
   item def InterfaceRegister {
     doc /*

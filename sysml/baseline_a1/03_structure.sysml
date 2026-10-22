@@ -1,12 +1,22 @@
 package MobileMaterialRobot_Structure_A1 {
   doc /*
   Top-level structural decomposition for Baseline A.1.
+  This package holds the single definition of the System of Interest. All other
+  packages import MobileMaterialRobot from here instead of defining it again.
   This is not a final physical architecture. It separates responsibilities so
   requirements, interfaces and tests can be allocated later.
   */
 
+  import MobileMaterialRobot_Interfaces_A1::*;
+
   part def MobileMaterialRobot {
-    doc /* Top-level System of Interest. */
+    doc /*
+    System of Interest.
+    Includes the mobile robot platform, onboard hardware, onboard software,
+    transport interface, navigation, perception, energy, communication,
+    diagnostic and safety functions.
+    */
+
     part mission : MissionSystem;
     part navigation : NavigationSystem;
     part perception : PerceptionSystem;
@@ -17,6 +27,15 @@ package MobileMaterialRobot_Structure_A1 {
     part userInterface : UserInterfaceSystem;
     part safety : SafetySystem;
     part diagnostics : DiagnosticsSystem;
+
+    port orderIn : ~TransportOrderPort;
+    port statusOut : MissionStatusPort;
+    port commandIn : ~OperationalCommandPort;
+    port payloadMount : PayloadMechanicalPort;
+    port environment : EnvironmentInteractionPort;
+    port charging : ChargingStationPort;
+    port diagnosticsOut : DiagnosticsPort;
+    port safetyStateOut : SafetyStatePort;
   }
 
   part def MissionSystem {

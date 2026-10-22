@@ -3,9 +3,13 @@ package MobileMaterialRobot_Requirements_B1 {
   Candidate Requirements derived in Iteration B.
   They refine Baseline A.1 and will be filtered into the formal MVP scope in
   Iteration C.
+  Each requirement carries its project ID as SysML short name, for example
+  <'REQ-B-MIS-001'>, and uses the common RobotRequirement type from Baseline A.1.
   */
 
-  requirement REQ_B_MIS_001 {
+  import MobileMaterialRobot_Requirements_A1::RobotRequirement;
+
+  requirement <'REQ-B-MIS-001'> acceptOrRejectOrder : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-001
@@ -15,7 +19,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_UI_001 {
+  requirement <'REQ-B-UI-001'> webAppOrderTrigger : RobotRequirement {
     doc /*
     Type: interface
     Source: UC-B-001
@@ -24,7 +28,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_STA_001 {
+  requirement <'REQ-B-STA-001'> reportStatusSet : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-001, UC-B-003, UC-B-005
@@ -34,7 +38,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_NAV_001 {
+  requirement <'REQ-B-NAV-001'> driveToDefinedTarget : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-003
@@ -43,7 +47,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_NAV_002 {
+  requirement <'REQ-B-NAV-002'> multiRoomRoute : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-003
@@ -53,7 +57,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_NAV_003 {
+  requirement <'REQ-B-NAV-003'> reportUnreachableRoute : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-005
@@ -62,7 +66,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_LOC_001 {
+  requirement <'REQ-B-LOC-001'> determinePoseInArea : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-003
@@ -71,7 +75,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_PER_001 {
+  requirement <'REQ-B-PER-001'> detectObstacles : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-004
@@ -81,7 +85,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_MAP_001 {
+  requirement <'REQ-B-MAP-001'> useApprovedBaseMap : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-010
@@ -90,7 +94,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_MAP_002 {
+  requirement <'REQ-B-MAP-002'> separateTemporaryObstacles : RobotRequirement {
     doc /*
     Type: constraint
     Source: UC-B-010, OI-NAV-002
@@ -100,7 +104,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_SAFE_001 {
+  requirement <'REQ-B-SAFE-001'> safeStateForObstacles : RobotRequirement {
     doc /*
     Type: safety
     Source: UC-B-004, UC-B-005
@@ -110,7 +114,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_SAFE_002 {
+  requirement <'REQ-B-SAFE-002'> personsSafetyRelevant : RobotRequirement {
     doc /*
     Type: safety
     Source: UC-B-006
@@ -120,7 +124,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_SAFE_003 {
+  requirement <'REQ-B-SAFE-003'> separateStopTypes : RobotRequirement {
     doc /*
     Type: safety/constraint
     Source: UC-B-007, OI-SAFE-001
@@ -130,7 +134,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_PERF_001 {
+  requirement <'REQ-B-PERF-001'> nominalSpeedMvp : RobotRequirement {
     doc /*
     Type: performance
     Source: DEC-007
@@ -139,7 +143,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_PWR_001 {
+  requirement <'REQ-B-PWR-001'> teachingProfileEndurance : RobotRequirement {
     doc /*
     Type: non-functional
     Source: DEC-008, OI-ENE-001
@@ -149,7 +153,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_TRN_001 {
+  requirement <'REQ-B-TRN-001'> carryPlacedCarrier : RobotRequirement {
     doc /*
     Type: interface
     Source: UC-B-002, OI-MECH-001, OI-MECH-002
@@ -158,7 +162,7 @@ package MobileMaterialRobot_Requirements_B1 {
     */
   }
 
-  requirement REQ_B_ENE_001 {
+  requirement <'REQ-B-ENE-001'> returnToChargingStation : RobotRequirement {
     doc /*
     Type: functional
     Source: UC-B-008, OI-ENE-002

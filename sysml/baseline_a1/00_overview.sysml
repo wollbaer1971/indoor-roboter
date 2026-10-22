@@ -13,14 +13,8 @@ package MobileMaterialRobot_BaselineA1 {
     were explicitly decided in Baseline A.1.
   */
 
-  part def MobileMaterialRobot {
-    doc /*
-    System of Interest.
-    Includes the mobile robot platform, onboard hardware, onboard software,
-    transport interface, navigation, perception, energy, communication,
-    diagnostic and safety functions.
-    */
-  }
+  // The System of Interest is defined once in MobileMaterialRobot_Structure_A1.
+  import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
 
   item def BaselineA1_Decisions {
     doc /*
