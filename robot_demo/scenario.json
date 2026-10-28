@@ -1,0 +1,11 @@
+{
+  "description": "Editable illustrative 2-D scenario; dimensions and sensor/turn parameters are not approved robot requirements.",
+  "world": {"width_m": 10.0, "height_m": 7.5,
+    "obstacles_m": [[4.0, 1.0, 4.8, 4.0], [2.0, 5.0, 6.0, 5.7], [7.5, 2.0, 8.5, 5.5]]},
+  "robot": {"radius_m": 0.18, "speed_m_s": 0.5, "turn_rate_deg_s": 90.0,
+    "sensor_range_m": 1.5, "detection_distance_m": 0.3,
+    "min_turn_deg": 45.0, "max_turn_deg": 150.0},
+  "initial_pose": {"x_m": 1.0, "y_m": 1.0, "heading_deg": 15.0},
+  "step_s": 0.05,
+  "seed": 7
+}

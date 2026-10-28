@@ -91,7 +91,7 @@ def architecture_checks(model: Path) -> None:
     clean = {p: re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
              for p, text in sources.items()}
     canonical = [p for p, text in clean.items()
-                 if re.search(r"\bpart def MobileMaterialRobot\s*\{", text)]
+                 if re.search(r"\bpart def MobileMaterialRobot(?:\s*:>\s*MobileRobotBase)?\s*\{", text)]
     if canonical != [model / "baseline_a1/03_structure.sysml"]:
         raise RuntimeError(f"Expected exactly one canonical robot type, found {canonical}")
     requirements = sources[model / "baseline_a1/02_requirements.sysml"]
@@ -105,6 +105,17 @@ def architecture_checks(model: Path) -> None:
     matrix_tests = {name.replace("-", "_") for name in re.findall(r"TC-[A-Z]+-\d+", matrix)}
     if not matrix_tests <= defined_tests:
         raise RuntimeError(f"Undefined matrix tests: {matrix_tests-defined_tests}")
+    stage = model / "stage2_wander"
+    stage_requirements = (stage / "01_requirements.sysml").read_text(encoding="utf-8")
+    stage_tests = (stage / "04_verification.sysml").read_text(encoding="utf-8")
+    wanted = set(re.findall(r"requirement (REQ_WDR_\w+)\s*\{", stage_requirements))
+    covered = set(re.findall(r"verify (REQ_WDR_\w+)", stage_tests))
+    if wanted != covered:
+        raise RuntimeError("Wander requirement/test coverage mismatch")
+    architecture = (stage / "03_architecture.sysml").read_text(encoding="utf-8")
+    if "part def ReactiveWanderRobot :> MobileRobotBase" not in architecture:
+        raise RuntimeError("Reactive variant must reuse MobileRobotBase")
+    print(f"WANDER requirements={len(wanted)} covered={len(covered)} shared_core=true")
     print(f"ARCHITECTURE canonical_robot=1 requirements={len(req_names)} covered={len(verified)} matrix_tests_resolve=true")
 
 

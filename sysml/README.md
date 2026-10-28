@@ -20,3 +20,13 @@ fuer A.1, B.1 und die Namensfassade muss der ganze Ordner `sysml` geladen sein.
 
 Validierung und noch offene fachliche Entscheidungen:
 [siehe Modellpruefung](../docs/model-validation.md).
+
+## Gemeinsame Basis und Fahrdemonstrator
+
+Die gemeinsame Zusammenstellung ist jetzt `00_project.sysml`.
+`stage2_wander/` ergaenzt eine reaktive Variante ohne Materialtransport.
+`MobileRobotBase` in der A.1-Struktur wird sowohl von dieser Variante als auch
+von `MobileMaterialRobot` spezialisiert. Der bisherige A.1-Modellzugang bleibt
+fuer das Transportmodell verfuegbar.
+
+[Start und Traceability](../docs/reactive-wander.md).

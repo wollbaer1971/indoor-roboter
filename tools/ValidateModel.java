@@ -64,6 +64,19 @@ public class ValidateModel {
                 if (!result.matches("EnumerationUsage " + fixture[1] + " \\(.*\\)")) errors++;
             }
         }
+        if (errors == 0 && warnings == 0 && args.length == 3 && "--self-test".equals(args[2])) {
+            String[][] wanderFixtures = {
+                {"clearForward", "pass"}, {"blockedButMoving", "fail"},
+                {"validTurn", "pass"}, {"invalidTurn", "fail"},
+                {"blockedAfterTurn", "fail"}, {"clearAfterTurn", "pass"}
+            };
+            for (var fixture : wanderFixtures) {
+                String result = model.eval("MobileRobot_Wander_Verification::"
+                    + fixture[0] + ".verdict", null).trim();
+                System.out.printf("WANDER EVALUATION %s -> %s (expected %s)%n", fixture[0], result, fixture[1]);
+                if (!result.matches("EnumerationUsage " + fixture[1] + " \\(.*\\)")) errors++;
+            }
+        }
         // Project quality gate: a type-binding warning must also fail CI.
         System.exit(errors == 0 && warnings == 0 ? 0 : 1);
     }

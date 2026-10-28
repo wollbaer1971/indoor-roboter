@@ -1,0 +1,19 @@
+name: Reactive robot demonstrator
+on:
+  pull_request:
+    paths: ['robot_demo/**', 'tests/**', '.github/workflows/robot-demo.yml']
+  push:
+    branches: [main]
+    paths: ['robot_demo/**', 'tests/**', '.github/workflows/robot-demo.yml']
+permissions:
+  contents: read
+jobs:
+  simulation-and-turtle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install display support for the real Turtle window
+        run: sudo apt-get update -qq && sudo apt-get install -y python3-tk xvfb xauth
+      - name: Test geometry, controller, pause policy, CLI and real Turtle rendering
+        run: xvfb-run -a /usr/bin/python3 -m unittest discover -s tests -v

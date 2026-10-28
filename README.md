@@ -2,6 +2,21 @@
 
 Dieses Verzeichnis enthaelt eine modulare LaTeX-Projektstruktur fuer die MBSE-gestuetzte Entwicklung eines mobilen Materialtransportroboters.
 
+## Lauffaehiger Fahrdemonstrator: Stufe 2
+
+Im Repository-Hauptverzeichnis mit Python 3.10+ und Tk:
+
+```powershell
+py -3 -m robot_demo
+```
+
+Der Roboter faehrt geradeaus, erkennt ein Hindernis vor Kontakt, dreht um einen
+Zufallswinkel und prueft erneut. Leertaste pausiert, Enter setzt manuell fort,
+R startet neu, Esc beendet. Noch kein Materialtransport.
+
+[Anleitung, Modellbezug, Tests und Grenzen](docs/reactive-wander.md).
+Ohne Fenster: `python -m robot_demo --headless --steps 3000 --seed 7 --svg trace.svg`.
+
 ## Einstieg
 
 In Overleaf kann der gesamte Ordner als ZIP hochgeladen werden. Hauptdatei:

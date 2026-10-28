@@ -49,7 +49,7 @@ Prueferfolg bedeutet noch nicht, dass der externe CI-Lauf bereits erfolgt ist.
 
 ### Modellpruefung und Auswertung
 
-- 16 SysML-Quelldateien werden als Gesamtmodell geladen.
+- 21 SysML-Quelldateien werden als Gesamtmodell geladen.
 - Ziel: null Modellfehler und null Modellwarnungen; Warnungen blockieren CI.
 - 15 synthetische Auswertungen: pass; zu wenige Raeume -> fail;
   fehlender Flur -> fail; keine offene Tuer -> fail; manuelle Fahrt -> fail;
@@ -63,7 +63,7 @@ Prueferfolg bedeutet noch nicht, dass der externe CI-Lauf bereits erfolgt ist.
   eine unpassende Typbindung als Warnung; das Projekt behandelt sie als Fehler
   seines Qualitaetsgates, ohne die Diagnose umzudeuten.
 
-Die Gesamtpruefung mit 16 Quelldateien, 15 synthetischen Auswertungen
+Die vorherige A.1-Gesamtpruefung mit 16 Quelldateien, 15 synthetischen Auswertungen
 und drei Negativtests wurde erfolgreich ausgefuehrt: null Modellfehler,
 null Modellwarnungen im unveraenderten Modell. Die absichtlich defekten
 Kopien wurden jeweils erkannt.
@@ -80,3 +80,15 @@ Der Stand ist ein pruefbares Engineering-Modell mit auswertbaren Kriterien
 und nominalem Verhalten einschliesslich expliziter manueller Pausenfreigabe.
 Er ist keine implementierte Robotersteuerung und
 kein ausgefuehrter physikalischer Simulationsversuch.
+
+## Erweiterung: reaktiver Fahrdemonstrator
+
+Die aktuelle Gesamtmodell-Pruefung umfasst 21 Quellen, 15 bisherige
+Pausen-/Transportkriterien und sechs neue reaktive Kriterien. Der Check
+kontrolliert weiter genau eine Definition von MobileMaterialRobot; diese
+spezialisiert nun MobileRobotBase. Fuer die neue Variante werden fuenf
+Anforderungen und ihre Testverweise abgeglichen.
+
+Python-Tests und die echte Turtle-Fensterpruefung laufen in einem separaten
+GitHub-Workflow. Ein erfolgreicher Modellcheck belegt keine physikalische
+Simulation oder reale Sensor-/Antriebsfunktion.
