@@ -34,6 +34,22 @@ package MobileMaterialRobot_Interfaces_A1 {
     attribute safeToMove : Boolean;
   }
 
+  item def ForwardClearance {
+    doc /* Ideal forward footprint clearance in metres; sensor technology open. */
+    attribute distance_m : Real;
+  }
+  item def PlanarMotionCommand {
+    doc /* Shared planar command contract. Units are explicit in field names. */
+    attribute linearSpeed_m_s : Real;
+    attribute angularSpeed_rad_s : Real;
+  }
+  port def ForwardClearancePort {
+    out item observation : ForwardClearance;
+  }
+  port def PlanarMotionCommandPort {
+    out item command : PlanarMotionCommand;
+  }
+
   port def TransportOrderPort {
     out item order : TransportOrder;
   }
@@ -84,4 +100,3 @@ package MobileMaterialRobot_Interfaces_A1 {
     */
   }
 }
-

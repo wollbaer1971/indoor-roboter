@@ -1,0 +1,40 @@
+name: Reactive robot demonstrator
+on:
+  pull_request:
+    paths: ['robot_demo/**', 'tests/**', 'tools/test_web_browser.cjs', '.github/workflows/robot-demo.yml']
+  push:
+    branches: [main]
+    paths: ['robot_demo/**', 'tests/**', 'tools/test_web_browser.cjs', '.github/workflows/robot-demo.yml']
+permissions:
+  contents: read
+jobs:
+  simulation-and-turtle:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install display support for the real Turtle window
+        run: sudo apt-get update -qq && sudo apt-get install -y python3-tk xvfb xauth
+      - name: Test geometry, controller, web HTTP, pause policy, CLI and real Turtle rendering
+        run: xvfb-run -a /usr/bin/python3 -m unittest discover -s tests -v
+  browser:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install test-only browser tooling
+        run: |
+          npm install --no-save --prefix /tmp/robot-web-test playwright@1.56.0
+          node /tmp/robot-web-test/node_modules/playwright/cli.js install --with-deps chromium
+      - name: Test actual browser controls and Canvas rendering
+        env:
+          NODE_PATH: /tmp/robot-web-test/node_modules
+        run: node tools/test_web_browser.cjs
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: browser-screenshots
+          path: web-test-results/

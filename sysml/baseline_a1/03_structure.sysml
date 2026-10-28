@@ -7,27 +7,41 @@ package MobileMaterialRobot_Structure_A1 {
   requirements, interfaces and tests can be allocated later.
   */
 
-  part def MobileMaterialRobot {
-    doc /* Top-level System of Interest. */
+  part def MobileRobotBase {
+    doc /*
+    Shared mobile core for reactive driving and later material transport.
+    Mission, payload, charging and external application are variant additions.
+    This definition contains no transport mission or transport state machine.
+    */
+    port environment : EnvironmentInteractionPort;
+    port diagnosticsOut : DiagnosticsPort;
+    port safetyStateOut : SafetyStatePort;
+    part navigation : NavigationSystem;
+    part perception : PerceptionSystem;
+    part motion : MotionSystem;
+    part safety : SafetySystem;
+    part diagnostics : DiagnosticsSystem;
+    connect perception.forwardClearanceOut to navigation.forwardClearanceIn;
+    connect navigation.motionCommandOut to motion.motionCommandIn;
+  }
+
+  part def MobileMaterialRobot :> MobileRobotBase {
+    doc /* Material-transport variant of the shared mobile core. */
     port orderIn : ~TransportOrderPort;
     port statusOut : MissionStatusPort;
     port commandIn : ~OperationalCommandPort;
     port payloadMount : PayloadMechanicalPort;
-    port environment : EnvironmentInteractionPort;
     port charging : ChargingStationPort;
-    port diagnosticsOut : DiagnosticsPort;
-    port safetyStateOut : SafetyStatePort;
     exhibit state operatingState : RobotOperationState;
     part mission : MissionSystem;
-    part navigation : NavigationSystem;
-    part perception : PerceptionSystem;
-    part motion : MotionSystem;
     part transport : TransportSystem;
     part energy : EnergySystem;
     part communication : CommunicationSystem;
     part userInterface : UserInterfaceSystem;
-    part safety : SafetySystem;
-    part diagnostics : DiagnosticsSystem;
+    part redefines navigation : NavigationSystem {
+      perform action passDoor : PassOpenDoor;
+      perform action handleObstacle : HandleTemporaryObstacle;
+    }
   }
 
   part def MissionSystem {
@@ -47,14 +61,16 @@ package MobileMaterialRobot_Structure_A1 {
 
   part def NavigationSystem {
     doc /*
-    Owns map use, localization, route planning, local planning and handling of
-    non-reachable targets or blocked routes.
+    Shared navigation role. The transport variant uses localization and
+    route planning; the reactive variant uses range-driven random turns.
+    Variant-specific behavior is attached by each specialization.
     */
-    perform action passDoor : PassOpenDoor;
-    perform action handleObstacle : HandleTemporaryObstacle;
+    port forwardClearanceIn : ~ForwardClearancePort;
+    port motionCommandOut : PlanarMotionCommandPort;
   }
 
   part def PerceptionSystem {
+    port forwardClearanceOut : ForwardClearancePort;
     doc /*
     Owns onboard sensing and interpretation of current environment information.
     Sensor choice is intentionally open in Baseline A.1.
@@ -62,6 +78,7 @@ package MobileMaterialRobot_Structure_A1 {
   }
 
   part def MotionSystem {
+    port motionCommandIn : ~PlanarMotionCommandPort;
     doc /*
     Owns vehicle movement, drive control and execution of planned motion within
     speed and safety limits.
@@ -112,4 +129,3 @@ package MobileMaterialRobot_Structure_A1 {
     */
   }
 }
-

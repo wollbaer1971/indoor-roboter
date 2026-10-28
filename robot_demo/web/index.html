@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="de">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mobiler Roboter · Simulation</title><link rel="stylesheet" href="/style.css"><script defer src="/app.js"></script></head>
+<body><main>
+<header><p class="eyebrow">SCHULDEMONSTRATOR · STUFE 2</p><h1>Mobiler Roboter</h1>
+<p>Geradeaus fahren. Hindernisse erkennen. Zufällig drehen.</p></header>
+<section class="toolbar" aria-label="Simulationssteuerung">
+<button id="resume" disabled>Start / manuell fortsetzen</button>
+<button id="pause" disabled>Pausieren</button><button id="reset" disabled>Zurücksetzen</button>
+<span id="connection" role="status">Verbindung wird aufgebaut …</span></section>
+<div class="layout"><section class="scene"><canvas id="world" width="1000" height="750" aria-label="Draufsicht: Roboter, Hindernisse, Sensor und Fahrspur">Die Simulation benötigt einen Browser mit Canvas-Unterstützung.</canvas>
+<p class="legend">Blau: Fahrspur · Grün: Fahrt · Gelb: Drehung · Grau: Pause · Rote Sensorlinie: Hindernis erkannt. Raster: 1 m.</p></section>
+<aside><h2>Simulationsstatus</h2><dl>
+<dt>Bewegung</dt><dd id="mode">—</dd><dt>Simulationszeit</dt><dd id="time">—</dd>
+<dt>Gefahrener Weg</dt><dd id="distance">—</dd><dt>Zufallsdrehungen</dt><dd id="turns">—</dd>
+<dt>Seed</dt><dd id="seed">—</dd><dt>Position (x / y)</dt><dd id="pose">—</dd>
+<dt>Restdrehwinkel</dt><dd id="remaining">—</dd></dl>
+<p id="error" role="alert"></p>
+<p>Der Python-Kern berechnet die Bewegung. Der Browser zeigt den Zustand und sendet Bedienbefehle.</p>
+<p>Start und Reset sind pausiert. Fortsetzung erfolgt nur über den Freigabeknopf. Ohne Statusabruf pausiert der Server nach 2 Sekunden.</p>
+</aside></div>
+<footer>2D-Kinematik · Beispielparameter · Keine Motor-, Reibungs- oder Kontaktphysik. Kein Nachweis realer Robotersicherheit.</footer>
+</main></body></html>

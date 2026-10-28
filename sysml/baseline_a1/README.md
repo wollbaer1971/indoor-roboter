@@ -4,7 +4,8 @@
 
 Es gibt genau eine Definition des Robotertyps:
 `MobileMaterialRobot_Structure_A1::MobileMaterialRobot` in `03_structure.sysml`.
-Dieser Typ besitzt Subsysteme, Ports und das Betriebszustandsmodell.
+Dieser Typ spezialisiert die gemeinsame Basis `MobileRobotBase`.
+Er erbt die Fahrkomponenten und ergaenzt Ports und Transport-Betriebszustandsmodell.
 Kontext, Verifikation und Simulationspruefstand beziehen sich darauf.
 Ein `SystemContext` ist ein Kontextbaustein, keine View-Definition.
 Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
@@ -106,3 +107,11 @@ Siehe [Pausenregel](../../docs/operational-pause.md).
 
 Es gibt keinen erfolgreichen Fahr-, Nutzlast-, Sicherheits- oder Dauertest.
 Siehe [Pruefprotokoll und Grenzen](../../docs/model-validation.md).
+
+## Wiederverwendbarer mobiler Kern
+
+`MobileRobotBase` enthaelt Navigation, Wahrnehmung, Bewegung, Sicherheit und
+Diagnose mit gemeinsamen gerichteten Sensor-/Bewegungsports. Die reaktive
+Variante aus `stage2_wander` verwendet denselben Kern, ohne Auftrags- und
+Transportfunktionen zu instanziieren. Die Transportvariante behaelt die
+bisherigen Namen und Anforderungs-/Testbeziehungen.

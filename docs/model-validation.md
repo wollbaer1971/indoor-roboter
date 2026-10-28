@@ -1,5 +1,12 @@
 # Modellbereinigung und Pruefung, 28.10.2026
 
+Aktueller Erweiterungsstand fuer Turtle und Browser: Code-Commit
+`8bbca044e623141af643d2d6c0405781abec6374`, **22 SysML-Dateien, 0 Fehler,
+0 Warnungen**. Alle 28 Python-Tests sowie die echte Chromium-Pruefung sind
+erfolgreich. Quellen, genaue Nachweisgrenzen und CI-Links stehen in
+[Browser-Simulation](browser-simulation.md#nachweise-dieser-erweiterung).
+Die folgenden Abschnitte dokumentieren die vorherige Modellbereinigung.
+
 ## Ausgangspunkt und Umfang
 
 Ausgangspunkt ist PR #1 mit Commit cd460a5d493e946e1765388176308c2a7baedfa7.
@@ -49,7 +56,7 @@ Prueferfolg bedeutet noch nicht, dass der externe CI-Lauf bereits erfolgt ist.
 
 ### Modellpruefung und Auswertung
 
-- 16 SysML-Quelldateien werden als Gesamtmodell geladen.
+- 21 SysML-Quelldateien werden als Gesamtmodell geladen.
 - Ziel: null Modellfehler und null Modellwarnungen; Warnungen blockieren CI.
 - 15 synthetische Auswertungen: pass; zu wenige Raeume -> fail;
   fehlender Flur -> fail; keine offene Tuer -> fail; manuelle Fahrt -> fail;
@@ -63,7 +70,7 @@ Prueferfolg bedeutet noch nicht, dass der externe CI-Lauf bereits erfolgt ist.
   eine unpassende Typbindung als Warnung; das Projekt behandelt sie als Fehler
   seines Qualitaetsgates, ohne die Diagnose umzudeuten.
 
-Die Gesamtpruefung mit 16 Quelldateien, 15 synthetischen Auswertungen
+Die vorherige A.1-Gesamtpruefung mit 16 Quelldateien, 15 synthetischen Auswertungen
 und drei Negativtests wurde erfolgreich ausgefuehrt: null Modellfehler,
 null Modellwarnungen im unveraenderten Modell. Die absichtlich defekten
 Kopien wurden jeweils erkannt.
@@ -80,3 +87,21 @@ Der Stand ist ein pruefbares Engineering-Modell mit auswertbaren Kriterien
 und nominalem Verhalten einschliesslich expliziter manueller Pausenfreigabe.
 Er ist keine implementierte Robotersteuerung und
 kein ausgefuehrter physikalischer Simulationsversuch.
+
+## Erweiterung: reaktiver Fahrdemonstrator
+
+Die aktuelle Gesamtmodell-Pruefung umfasst 21 Quellen, 15 bisherige
+Pausen-/Transportkriterien und sechs neue reaktive Kriterien. Der Check
+kontrolliert weiter genau eine Definition von MobileMaterialRobot; diese
+spezialisiert nun MobileRobotBase. Fuer die neue Variante werden fuenf
+Anforderungen und ihre Testverweise abgeglichen.
+
+Python-Tests und die echte Turtle-Fensterpruefung laufen in einem separaten
+GitHub-Workflow. Ein erfolgreicher Modellcheck belegt keine physikalische
+Simulation oder reale Sensor-/Antriebsfunktion.
+
+Die Erweiterungspruefung wurde im Code-Commit
+`c81f424dd05d5a0446a4eb933907fdf64fa06ea4` erfolgreich ausgefuehrt:
+[SysML](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40778094531)
+und [20 Python-/Turtle-Tests](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40778094730).
+Die anschliessende Dokumentation aendert diesen getesteten Code nicht.
