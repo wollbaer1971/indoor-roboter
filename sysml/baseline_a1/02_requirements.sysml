@@ -1,10 +1,25 @@
 package MobileMaterialRobot_Requirements_A1 {
+  private import ScalarValues::*;
+  private import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+  constraint def MultiRoomCriterion {
+    in attribute roomsVisited : Integer;
+    in attribute corridorTraversed : Boolean;
+    roomsVisited >= 2 and corridorTraversed
+  }
+
+  constraint def OpenDoorCriterion {
+    in attribute openDoorPassed : Boolean;
+    in attribute autonomousDriving : Boolean;
+    openDoorPassed and autonomousDriving
+  }
+
   doc /*
   Initial system requirements derived from Baseline A.1.
   Requirements keep project IDs in doc blocks for stable traceability.
   */
 
   requirement REQ_MIS_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MIS-001
     Type: functional
@@ -14,6 +29,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_MIS_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MIS-002
     Type: functional
@@ -24,6 +40,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_TRN_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-TRN-001
     Type: functional
@@ -34,6 +51,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_TRN_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-TRN-002
     Type: safety/functional
@@ -45,6 +63,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_MAP_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MAP-001
     Type: functional
@@ -54,6 +73,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_MAP_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MAP-002
     Type: functional
@@ -64,6 +84,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_MAP_003 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MAP-003
     Type: constraint
@@ -74,6 +95,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_LOC_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-LOC-001
     Type: functional
@@ -83,6 +105,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_NAV_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-NAV-001
     Type: functional
@@ -92,6 +115,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_NAV_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-NAV-002
     Type: functional
@@ -101,6 +125,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_NAV_003 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-NAV-003
     Type: functional
@@ -110,6 +135,13 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_NAV_004 {
+    subject robot : MobileMaterialRobot;
+    in attribute roomsVisited : Integer;
+    in attribute corridorTraversed : Boolean;
+    require constraint routeCriterion : MultiRoomCriterion {
+      in attribute :>> roomsVisited = REQ_NAV_004::roomsVisited;
+      in attribute :>> corridorTraversed = REQ_NAV_004::corridorTraversed;
+    }
     doc /*
     ID: REQ-NAV-004
     Type: functional
@@ -119,6 +151,13 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_NAV_005 {
+    subject robot : MobileMaterialRobot;
+    in attribute openDoorPassed : Boolean;
+    in attribute autonomousDriving : Boolean;
+    require constraint doorCriterion : OpenDoorCriterion {
+      in attribute :>> openDoorPassed = REQ_NAV_005::openDoorPassed;
+      in attribute :>> autonomousDriving = REQ_NAV_005::autonomousDriving;
+    }
     doc /*
     ID: REQ-NAV-005
     Type: functional
@@ -128,6 +167,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_SAFE_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-SAFE-001
     Type: safety
@@ -138,6 +178,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_SAFE_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-SAFE-002
     Type: safety
@@ -149,6 +190,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_UI_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-UI-001
     Type: functional
@@ -158,6 +200,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_UI_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-UI-002
     Type: functional
@@ -168,6 +211,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_PWR_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-PWR-001
     Type: non-functional
@@ -177,6 +221,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_PWR_002 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-PWR-002
     Type: non-functional
@@ -186,6 +231,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_PERF_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-PERF-001
     Type: performance
@@ -195,6 +241,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_STA_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-STA-001
     Type: functional
@@ -204,6 +251,7 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   requirement REQ_ARCH_001 {
+    subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-ARCH-001
     Type: constraint
@@ -213,3 +261,4 @@ package MobileMaterialRobot_Requirements_A1 {
     */
   }
 }
+

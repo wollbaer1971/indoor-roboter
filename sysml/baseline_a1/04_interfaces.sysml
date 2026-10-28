@@ -1,46 +1,62 @@
 package MobileMaterialRobot_Interfaces_A1 {
+  private import ScalarValues::*;
   doc /*
   External and first internal interface sketches for Baseline A.1.
   Details such as protocol, connector type, message format, rate and tolerance
   are intentionally left for later iterations.
   */
 
-  port def TransportOrderPort;
-  port def MissionStatusPort;
-  port def OperationalCommandPort;
-  port def PayloadMechanicalPort;
-  port def EnvironmentInteractionPort;
-  port def ChargingStationPort;
-  port def DiagnosticsPort;
-  port def SafetyStatePort;
-
-  part def MobileMaterialRobot {
-    port orderIn : ~TransportOrderPort;
-    port statusOut : MissionStatusPort;
-    port commandIn : ~OperationalCommandPort;
-    port payloadMount : PayloadMechanicalPort;
-    port environment : EnvironmentInteractionPort;
-    port charging : ChargingStationPort;
-    port diagnosticsOut : DiagnosticsPort;
-    port safetyStateOut : SafetyStatePort;
+  item def TransportOrder {
+    attribute orderId : String;
+    attribute startLocation : String;
+    attribute targetLocation : String;
+  }
+  enum def MissionStatusKind {
+    off; initializing; ready; orderAccepted; rejected; driving;
+    avoidingObstacle; paused; blocked; completed; stopped;
+    returningToChargingStation; chargingInterfaceReached; fault; safeState;
+  }
+  item def MissionStatus {
+    attribute orderId : String;
+    attribute statusKind : MissionStatusKind;
+  }
+  enum def OperatorCommandKind {
+    requestStatus; operationalStop; returnToChargingStation;
+  }
+  item def OperatorCommand {
+    attribute kind : OperatorCommandKind;
+  }
+  item def DiagnosticMessage {
+    attribute text : String;
+  }
+  item def SafetyStateReport {
+    doc /* Reports the safety assessment; no safety integrity level is claimed. */
+    attribute safeToMove : Boolean;
   }
 
-  part def WebApp {
-    port orderOut : TransportOrderPort;
-    port statusIn : ~MissionStatusPort;
-    port commandOut : OperationalCommandPort;
+  port def TransportOrderPort {
+    out item order : TransportOrder;
   }
-
-  part def WorkpieceCarrier {
-    port mechanicalInterface : ~PayloadMechanicalPort;
+  port def MissionStatusPort {
+    out item status : MissionStatus;
   }
-
-  part def DrivingEnvironment {
-    port physicalInteraction : ~EnvironmentInteractionPort;
+  port def OperationalCommandPort {
+    out item command : OperatorCommand;
   }
-
-  part def ChargingStation {
-    port chargeInterface : ~ChargingStationPort;
+  port def DiagnosticsPort {
+    out item diagnostic : DiagnosticMessage;
+  }
+  port def SafetyStatePort {
+    out item report : SafetyStateReport;
+  }
+  port def PayloadMechanicalPort {
+    doc /* Mechanical contract placeholder: geometry/load/retention are open. */
+  }
+  port def EnvironmentInteractionPort {
+    doc /* Physical interaction placeholder: sensor/contact model is open. */
+  }
+  port def ChargingStationPort {
+    doc /* Return interface placeholder; docking/charging are not decided. */
   }
 
   item def InterfaceRegister {
@@ -68,3 +84,4 @@ package MobileMaterialRobot_Interfaces_A1 {
     */
   }
 }
+

@@ -1,13 +1,17 @@
 # SysML v2 Baseline B.1
 
-Dieses Verzeichnis enthaelt die SysML-v2-Starterartefakte fuer Iteration B.
+Candidate Requirements und Use Cases fuer Iteration B.
 
-Iteration B verdichtet die Betriebsfaelle aus Baseline A.1 zu Use Cases und leitet daraus Candidate Requirements mit Akzeptanz- und Verifikationsideen ab.
+- `01_use_cases.sysml`: zehn echte `use case def` mit kanonischem
+  Robotertyp als Subject und dem Bediener als externem Akteur.
+- `02_requirements.sysml`: 17 Candidate Requirements mit typisiertem Subject
+  und expliziten Quellen-Abhaengigkeiten zu den Use Cases.
+- `traceability_matrix.md`: Review-Zuordnung von Use Cases zu Requirements
+  und offenen Entscheidungen. Die Source-Felder und Modell-Abhaengigkeiten
+  enthalten die bereits in dieser Matrix dokumentierten Zuordnungen.
 
-Dateien:
-
-- `01_use_cases.sysml`: Use-Case-Struktur UC-B-001 bis UC-B-010
-- `02_requirements.sysml`: Candidate Requirements REQ-B-*
-- `traceability_matrix.md`: Zuordnung von Use Cases zu Requirements, Tests und Open Issues
-
-Die Dateien sind bewusst Starterartefakte. Vor formaler Nutzung sollten sie gegen die verwendete SysML-v2-Toolchain geprueft werden.
+Kandidaten sind keine bestaetigten Implementierungen oder bestandenen Tests.
+A.1 und B.1 werden gemeinsam ueber den ganzen Ordner `sysml` geladen.
+Die Aufnahme in den verbindlichen MVP-Scope bleibt ein fachlicher Schritt.
+Die Modellpruefung ist in [docs/model-validation.md](../../docs/model-validation.md)
+beschrieben.

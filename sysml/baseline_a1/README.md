@@ -1,80 +1,104 @@
 # SysML v2 Baseline A.1
 
-Dieses Verzeichnis enthaelt ein konservatives SysML-v2-Startermodell zur System Definition Baseline A.1 des Mobile Material Robot.
+## Verbindliche Struktur
 
-Die Dateien sind bewusst klein und thematisch getrennt:
+Es gibt genau eine Definition des Robotertyps:
+`MobileMaterialRobot_Structure_A1::MobileMaterialRobot` in `03_structure.sysml`.
+Dieser Typ besitzt Subsysteme, Ports und das Betriebszustandsmodell.
+Kontext, Verifikation und Simulationspruefstand beziehen sich darauf.
+Ein `SystemContext` ist ein Kontextbaustein, keine View-Definition.
+Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 
-- `00_overview.sysml`: Ziel, Scope, Baseline, Annahmen und Nicht-Ziele
-- `01_context.sysml`: Stakeholder, externe Systeme und Kontext
-- `02_requirements.sysml`: initiale Systemanforderungen
-- `03_structure.sysml`: Top-Level-Struktur und Subsysteme
-- `04_interfaces.sysml`: externe Schnittstellen und Port-Skizzen
-- `05_behavior.sysml`: Betriebsablaeufe, Aktivitaeten und Zustandsmodell
-- `06_tests.sysml`: Verifikationsfaelle
-- `07_ros2_mapping.sysml`: vorlaeufiges ROS2-Mapping als Architekturartefakt
-- `traceability_matrix.md`: Review-Matrix von Need/Requirement bis Test
+| Datei | Zweck |
+| --- | --- |
+| `00_overview.sysml` | Modellzusammenstellung mit oeffentlichen Imports, Scope und Entscheidungen |
+| `01_context.sysml` | Externe Akteure, kanonische externe Typen, Kontext und Verbindungen |
+| `02_requirements.sysml` | 22 Anforderungen mit typisiertem Subject; wiederverwendbare Raum-/Tuerkriterien |
+| `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
+| `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
+| `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
+| `06_tests.sysml` | 17 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
+| `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
+| `90_simulation_testbench.sysml` | Pruefstand mit kanonischem Roboter, Welt, Adapter und Beobachter |
+| `91_simulation_verification.sysml` | Bindung von TC_NAV_002 an den Pruefstandsroboter |
+| `92_model_checks.sysml` | Ausschliesslich synthetische Testdaten fuer die Modell-Auswertung |
+| `93_views.sysml` | Kontext-, Architektur-, Ablauf-, Zustands- und Simulationssichten |
+| `traceability_matrix.md` | Review-Matrix; Status bezeichnet Planung, keine bestandenen Robotertests |
 
-Hinweis: Die SysML-v2-Syntax ist als gut lesbarer Starter fuer die weitere Modellierung gedacht. Vor formaler Weiterverarbeitung sollte sie gegen die konkret verwendete Toolchain, zum Beispiel Syside, geprueft werden.
+## Namens- und Grenzkonvention
 
-## Simulationspruefstand (Ergaenzung vom 28.10.2026)
+Typen: UpperCamelCase. Verwendungen: lowerCamelCase.
+Anforderungs-/Testnamen behalten `REQ_NAV_004` bzw. `TC_NAV_002`;
+Dokumentations-IDs behalten `REQ-NAV-004` bzw. `TC-NAV-002`.
+Der enum-Wert `orderAccepted` und der gleichnamige Betriebszustand stehen fuer
+fachlich akzeptierte Auftraege. Der Name vermeidet eine Kollision mit dem
+geerbten SysML-Mitglied `accepted`.
 
-Die erste Umsetzung erfolgt ausschliesslich in einer physikalischen Simulation
-mit realistischer Darstellung. Simulator und konkrete physikalische Parameter
-sind noch nicht festgelegt; dieses Modell startet keine Simulation.
+`WebApp` liegt ausserhalb der Systemgrenze. `UserInterfaceSystem` bezeichnet
+den roboterseitigen Anschluss, nicht eine zweite Web-Oberflaeche.
+Die frueheren Paralleltypen in Ueberblick, Kontext und Schnittstellen sind
+entfernt. Der alte externe Name `MobileMaterialTransportRobot` ist ein Alias
+auf den kanonischen Typ, `UserInterface` ein Alias auf `UserInterfaceSystem`.
 
-- `90_simulation_testbench.sysml`: logischer Pruefstand mit dem vorhandenen
-  `MobileMaterialRobot_Structure_A1::MobileMaterialRobot`, Welt,
-  Steuerungsadapter und unabhaengigem Beobachter.
-- `91_simulation_verification.sysml`: Verwendung des vorhandenen
-  `MobileMaterialRobot_Verification_A1::TC_NAV_002` am Roboter des Pruefstands.
+## Lade- und Importbeziehungen
 
-Die bisherigen Chat-/ZIP-Vorlagen mit `RobotStructure::MobileRobot` und
-`RobotVerification::MultiRoomSimulationTest` passen nicht zu dieser Baseline.
-Sie sind fuer diese Integration nicht erforderlich und sollten nicht
-zusaetzlich als Parallelmodell geladen werden.
+- Schnittstellen/Datentypen und Verhalten werden von der Struktur verwendet.
+- Kontext verwendet Struktur und Schnittstellentypen.
+- Anforderungen und Verifikation verwenden den kanonischen Robotertyp.
+- Der Simulationspruefstand verwendet dieselbe Struktur.
+- Die Testverwendung importiert Pruefstand und TC_NAV_002.
+- Views verwenden vorhandene Elemente; sie erzeugen keine neuen Robotertypen.
+- `00_overview.sysml` ist die Zusammenstellung, kein zweites Systemmodell.
 
-### Verknuepfung mit der vorhandenen Verifikation
+Alle Ziele werden gemeinsam vom Validator aufgeloest. Ein Import ist kein
+Dateipfad und fuehrt selbst keinen Simulator aus.
 
-`TC_NAV_002` erhaelt einen typisierten Testgegenstand. Die vorhandenen
-Testdefinitionen verwenden nun `objective { verify ...; }` mit qualifizierten
-Referenzen auf die bestehenden Anforderungen. Die vorherige Schreibweise
-`verify requirement REQ_...;` deklarierte jeweils eine lokale Anforderung,
-statt den beabsichtigten Bezug auf das Requirements-Paket herzustellen.
+## Pruefung
 
-`TC_NAV_002` prueft REQ-NAV-004 und REQ-NAV-005. Ein erfolgreicher
-Navigationstest allein belegt weder Traegersicherung noch reale Sicherheit.
-REQ-TRN-001/002 bleiben eigenstaendige offene Verifikationsaufgaben.
+Vom Repository-Hauptverzeichnis mit Python 3.10+ und einem Java-21+-JDK:
 
-### Modellpruefung
+```powershell
+python tools/validate_sysml.py --self-test --negative-tests
+```
 
-1. Gesamten Ordner `sysml/baseline_a1` in der SysML-Toolchain laden.
-2. Alle qualifizierten Requirements-Verweise in `06_tests.sysml` aufloesen.
-3. Von `schoolTransportTest` zu `TC_NAV_002` und von dessen Subject-Bindung
-   zu `schoolTransportBench.robot` navigieren.
-4. Negativfall in einer Arbeitskopie: `.robot` durch `.robotMissing`
-   ersetzen. Erwartet: unaufgeloester Verweis. Danach rueckgaengig machen.
-5. Negativfall: `.robot` durch `.world` ersetzen.
-   Erwartet: Typunvertraeglichkeit zum Testgegenstand MobileMaterialRobot.
-   Danach rueckgaengig machen.
+Beim ersten Lauf wird die unveraenderte offizielle Pilot Implementation
+0.53.0 (Release 2025-10, SysML-v2.0-Linie) oeffentlich heruntergeladen,
+per SHA-256 geprueft und ausserhalb des Repositorys gecacht.
+Es ist keine kostenpflichtige Syside-Lizenz erforderlich.
+Bei mehreren Java-Installationen `JAVA_HOME` setzen oder `--java` angeben.
+Das Skript laedt Standardbibliothek und alle Quellen vor der Validierung.
+Sowohl Modellfehler als auch Modellwarnungen lassen den Check scheitern.
 
-Bei Syside mit freigeschalteter Visualisierung: Dateien speichern und
-`SimulationTestBench` ueber `Syside: Visualize element` als verschachtelte
-Sicht darstellen. Die vier Bestandteile muessen sichtbar sein.
-Toolversion und Lizenzumfang sind vor Ort zu pruefen.
+Die synthetischen Beispiele pruefen pass, fail und inconclusive fuer
+Raumzahl, Flur, offene Tuer, autonome Fahrt und fehlende Nachweise.
+Drei Negativtests entfernen in temporaeren Kopien ein Importziel bzw.
+veraendern Feature und Subject-Typ. Sie muessen vom Validator erkannt werden.
+Keine synthetische Eingabe ist ein beobachteter Simulatorlauf.
 
-### Geplanter Simulationsfunktionstest
+## Diagramme
 
-Welt und Roboter auf einen dokumentierten Anfangszustand zuruecksetzen.
-Ein Ziel in Raum B aus Raum A ueber Flur und offene Tuer anfahren lassen,
-ohne manuelle Fahrzeugsteuerung. Referenztrajektorie, Tuerdurchfahrt und
-Zielankunft mit Konfigurationsversion und Laufkennung protokollieren.
-Zieltoleranz und maximale Versuchsdauer vor dem Lauf festlegen; hier werden
-keine neuen Grenzwerte als Systemanforderung vorgegeben.
-Bei Zielverfehlung ist der Nachweis nicht erbracht; bei fehlenden Daten oder
-fehlender Versuchskonfiguration bleibt die Bewertung unentschieden.
-Fahrversuche und erfolgreiche Ergebnisse sind noch nicht nachgewiesen.
+In einer Syside-Installation mit verfuegbarer Visualisierung den gesamten
+Modellordner oeffnen, speichern und die Views aus `93_views.sysml`
+visualisieren, z.B. `systemContext`, `robotArchitecture`, `missionFlow`,
+`operationStates` und `simulationTestBench`. Fuer Dateiverweise ist der
+Modellordner massgebend, nicht nur die geoeffnete Datei.
+Die Modell-Sichten sind Standard-SysML; Renderer/Lizenzumfang und Darstellung
+koennen zwischen Werkzeugversionen abweichen.
 
-Pruefstatus: Die Integration wurde statisch auf vorhandene Paket-, Typ-,
-Anforderungs- und Testnamen sowie unveraenderte Anforderungs-IDs abgeglichen.
-Dies ersetzt keinen SysML-Parserlauf und keine semantische Toolpruefung.
-Kein Simulatorlauf wurde ausgefuehrt.
+## Fachlich offen
+
+Zunaechst ausschliesslich Simulation, keine reale Hardware.
+Simulator, Weltgeometrie, Masse, Reibung, Sensor-/Energiemodell und
+physikalische Grenzen sind nicht ausgewaehlt. Physische Ports sind daher
+explizite Vertragshalter; sie enthalten keine erfundenen Eigenschaften.
+Geschwindigkeit etwa 0,5 m/s und Betriebsdauer etwa 2 h bleiben Zielwerte,
+keine neu festgelegten harten Grenzwerte.
+
+Das Zustandsmodell ist ein nominales Geruest. Mission nach Betriebsstopp
+pausieren oder abbrechen, Freigabe-/Wiederanlaufregeln sowie die vollstaendige
+Fehler- und Sicherheitsbehandlung brauchen noch fachliche Entscheidungen.
+Dazu wird kein automatischer Wiederanlauf vorweggenommen.
+
+Es gibt keinen erfolgreichen Fahr-, Nutzlast-, Sicherheits- oder Dauertest.
+Siehe [Pruefprotokoll und Grenzen](../../docs/model-validation.md).

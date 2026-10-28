@@ -1,4 +1,7 @@
 package MobileMaterialRobot_Verification_A1 {
+  private import ScalarValues::*;
+  private import VerificationCases::*;
+  private import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
   doc /*
   Verification cases for Baseline A.1. Test definitions are starter artifacts
   and need concrete preconditions, measurement tolerances and test environment
@@ -6,6 +9,7 @@ package MobileMaterialRobot_Verification_A1 {
   */
 
   verification def TC_MAP_001 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-MAP-001
     Verifies: REQ-MAP-001
@@ -19,6 +23,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_MAP_002 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-MAP-002
     Verifies: REQ-MAP-003
@@ -31,6 +36,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_LOC_001 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-LOC-001
     Verifies: REQ-LOC-001
@@ -43,6 +49,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_NAV_001 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-NAV-001
     Verifies: REQ-NAV-001
@@ -55,7 +62,21 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_NAV_002 {
-    subject testRobot : MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+    subject testRobot : MobileMaterialRobot;
+    in attribute evidenceComplete : Boolean default = false;
+    in attribute roomsVisited : Integer;
+    in attribute corridorTraversed : Boolean;
+    in attribute openDoorPassed : Boolean;
+    in attribute autonomousDriving : Boolean;
+    return verdict : VerdictKind = if evidenceComplete ?
+      PassIf(
+        MobileMaterialRobot_Requirements_A1::MultiRoomCriterion(
+          roomsVisited = roomsVisited,
+          corridorTraversed = corridorTraversed)
+        and MobileMaterialRobot_Requirements_A1::OpenDoorCriterion(
+          openDoorPassed = openDoorPassed,
+          autonomousDriving = autonomousDriving))
+      else VerdictKind::inconclusive;
     doc /*
     ID: TC-NAV-002
     Verifies: REQ-NAV-004, REQ-NAV-005
@@ -67,12 +88,21 @@ package MobileMaterialRobot_Verification_A1 {
     No verdict is asserted before a documented run has been evaluated.
     */
     objective {
-      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_004;
-      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_005;
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_004 {
+        subject redefines robot = TC_NAV_002::testRobot;
+        in attribute :>> roomsVisited = TC_NAV_002::roomsVisited;
+        in attribute :>> corridorTraversed = TC_NAV_002::corridorTraversed;
+      }
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_005 {
+        subject redefines robot = TC_NAV_002::testRobot;
+        in attribute :>> openDoorPassed = TC_NAV_002::openDoorPassed;
+        in attribute :>> autonomousDriving = TC_NAV_002::autonomousDriving;
+      }
     }
   }
 
   verification def TC_OBS_001 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-OBS-001
     Verifies: REQ-MAP-002, REQ-NAV-002, REQ-SAFE-001
@@ -87,6 +117,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_OBS_002 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-OBS-002
     Verifies: REQ-NAV-003, REQ-SAFE-001, REQ-STA-001
@@ -101,6 +132,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_UI_001 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-UI-001
     Verifies: REQ-UI-001
@@ -109,10 +141,12 @@ package MobileMaterialRobot_Verification_A1 {
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_UI_001;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_001;
     }
   }
 
   verification def TC_UI_002 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-UI-002
     Verifies: REQ-UI-002
@@ -125,6 +159,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_PWR_002 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-PWR-002
     Verifies: REQ-PWR-002
@@ -137,6 +172,7 @@ package MobileMaterialRobot_Verification_A1 {
   }
 
   verification def TC_PERF_001 {
+    subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-PERF-001
     Verifies: REQ-PERF-001
@@ -147,4 +183,45 @@ package MobileMaterialRobot_Verification_A1 {
       verify MobileMaterialRobot_Requirements_A1::REQ_PERF_001;
     }
   }
+
+  // Planned verification definitions; no pass verdict or fabricated evidence.
+  verification def TC_PWR_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Observe simulated energy state and check low-energy reporting. Battery model and thresholds remain open. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_PWR_001; }
+  }
+
+  verification def TC_STA_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Observe mission/operating status on the defined digital interface; no successful execution is asserted. */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_STA_001;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
+  }
+
+  verification def TC_TRC_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Inspect requirement, responsible system element, interface and test references; unresolved links must be reported. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_001; }
+  }
+
+  verification def TC_TRN_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Simulate transport of a manually placed carrier. Payload data and goal tolerance must be fixed before execution. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_TRN_001; }
+  }
+
+  verification def TC_TRN_002 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Inspect simulated carrier pose during the agreed driving profile. Allowed pose/load limits remain open. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_TRN_002; }
+  }
+
+  verification def TC_SAFE_002 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Inspect the simulated response to a person in the route. Pass criteria require the still-open safety concept. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_SAFE_002; }
+  }
+
 }

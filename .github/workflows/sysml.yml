@@ -1,0 +1,21 @@
+name: SysML model validation
+on:
+  pull_request:
+    paths: ['sysml/**', 'tools/**', '.github/workflows/sysml.yml']
+  push:
+    branches: [main]
+    paths: ['sysml/**', 'tools/**', '.github/workflows/sysml.yml']
+permissions:
+  contents: read
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Validate model, evaluate examples and reject broken links
+        run: python3 tools/validate_sysml.py --self-test --negative-tests

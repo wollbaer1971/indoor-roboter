@@ -1,11 +1,15 @@
 package MobileMaterialRobot_UseCases_B1 {
+  private import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+  private import MobileMaterialRobot_Context_A1::HumanOperator;
   doc /*
   Iteration B use cases derived from Baseline A.1 operating cases.
   Use cases are kept at system level and serve as sources for Candidate
   Requirements REQ-B-*.
   */
 
-  action def UC_B_001_TransportauftragErteilen {
+  use case def UC_B_001_TransportauftragErteilen {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Operator submits start and target through the web app.
     Covers: OP-01.
@@ -13,7 +17,9 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_002_WerkstuecktraegerBereitstellen {
+  use case def UC_B_002_WerkstuecktraegerBereitstellen {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: A human or external transfer system places the workpiece carrier on
     the robot.
@@ -22,7 +28,9 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_003_AutonomeTransportmissionAusfuehren {
+  use case def UC_B_003_AutonomeTransportmissionAusfuehren {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Robot drives autonomously to a defined target through rooms,
     corridor and open doors.
@@ -30,21 +38,27 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_004_TemporaeresHindernisBehandeln {
+  use case def UC_B_004_TemporaeresHindernisBehandeln {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Robot detects temporary obstacle and stops, replans or reports blockage.
     Covers: OP-08, OP-09.
     */
   }
 
-  action def UC_B_005_BlockiertenFahrwegBehandeln {
+  use case def UC_B_005_BlockiertenFahrwegBehandeln {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Robot detects that no useful route is available and reports blockage.
     Covers: OP-10.
     */
   }
 
-  action def UC_B_006_PersonImFahrbereichBehandeln {
+  use case def UC_B_006_PersonImFahrbereichBehandeln {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Robot treats persons in the operating area as safety-relevant.
     Covers: OP-11, OP-16.
@@ -52,7 +66,9 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_007_BetrieblichenStoppAusloesen {
+  use case def UC_B_007_BetrieblichenStoppAusloesen {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: User triggers an operational stop.
     Covers: OP-13.
@@ -60,7 +76,9 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_008_RueckkehrZurLadestationAusloesen {
+  use case def UC_B_008_RueckkehrZurLadestationAusloesen {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Robot drives to charging station area as a target or command.
     Covers: OP-14.
@@ -68,7 +86,9 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_009_TechnischenFehlerBehandeln {
+  use case def UC_B_009_TechnischenFehlerBehandeln {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Robot reacts to a technical fault, reaches a controlled state and
     reports diagnostic information.
@@ -76,7 +96,9 @@ package MobileMaterialRobot_UseCases_B1 {
     */
   }
 
-  action def UC_B_010_KarteUndUmgebungVerwalten {
+  use case def UC_B_010_KarteUndUmgebungVerwalten {
+    subject robot : MobileMaterialRobot;
+    actor operator : HumanOperator;
     doc /*
     Goal: Base map, temporary obstacles and possible long-term map changes
     remain distinguishable.

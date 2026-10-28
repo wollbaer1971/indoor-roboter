@@ -1,25 +1,10 @@
 package MobileMaterialRobot {
-
-  part def MobileMaterialTransportRobot {
-    part missionSystem : MissionSystem;
-    part transportSystem : TransportSystem;
-    part navigationSystem : NavigationSystem;
-    part perceptionSystem : PerceptionSystem;
-    part motionSystem : MotionSystem;
-    part energySystem : EnergySystem;
-    part safetySystem : SafetySystem;
-    part communicationSystem : CommunicationSystem;
-    part userInterface : UserInterface;
-  }
-
-  part def MissionSystem;
-  part def TransportSystem;
-  part def NavigationSystem;
-  part def PerceptionSystem;
-  part def MotionSystem;
-  part def EnergySystem;
-  part def SafetySystem;
-  part def CommunicationSystem;
-  part def UserInterface;
-
+  doc /*
+  Compatibility facade for the earlier sketch. These are aliases/imports of
+  canonical A.1 definitions, not a second robot architecture.
+  Load the complete sysml directory rather than this file in isolation.
+  */
+  public import MobileMaterialRobot_Structure_A1::*;
+  alias MobileMaterialTransportRobot for MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+  alias UserInterface for MobileMaterialRobot_Structure_A1::UserInterfaceSystem;
 }

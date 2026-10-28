@@ -1,9 +1,22 @@
-# SysML v2 Artefakte
+# SysML-v2-Gesamtmodell
 
-Dieser Ordner ist fuer die textuellen SysML-v2-Modelldateien vorgesehen.
+Das aktuelle Modell wird als kompletter Ordner `sysml` geladen.
 
-Aktueller Stand:
+- `baseline_a1/`: Systemkontext, kanonische Architektur, Requirements,
+  Schnittstellen, Verhalten, Verifikation und Simulationspruefstand.
+- `baseline_b1/`: Use Cases und Candidate Requirements mit typisiertem
+  Systemgegenstand und aufgeloesten Quellenbeziehungen.
+- `mobile_material_robot_overview.sysml`: kompatible Namensfassade fuer den
+  frueheren Strukturanker; keine separate Architektur mehr.
 
-- `mobile_material_robot_overview.sysml`: erster Strukturanker fuer das Zielsystem.
+Kanonischer Robotertyp:
+`MobileMaterialRobot_Structure_A1::MobileMaterialRobot`.
 
-Regel: SysML-Dateien werden erst dann erweitert, wenn die zugehoerigen Requirements, Funktionen und Entscheidungen in der LaTeX-Dokumentation nachvollziehbar beschrieben sind.
+`baseline_a1/00_overview.sysml` stellt das Modell ueber oeffentliche Imports
+zusammen. Imports machen Modellelemente sichtbar; sie ersetzen nicht das
+Laden der Quelldateien durch das Werkzeug. Einzelne Dateien sollten nicht
+isoliert geprueft werden. Fuer A.1 allein reicht der Ordner `baseline_a1`;
+fuer A.1, B.1 und die Namensfassade muss der ganze Ordner `sysml` geladen sein.
+
+Validierung und noch offene fachliche Entscheidungen:
+[siehe Modellpruefung](../docs/model-validation.md).
