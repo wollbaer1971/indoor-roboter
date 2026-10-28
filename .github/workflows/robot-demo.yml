@@ -18,7 +18,7 @@ jobs:
       - name: Test geometry, controller, web HTTP, pause policy, CLI and real Turtle rendering
         run: xvfb-run -a /usr/bin/python3 -m unittest discover -s tests -v
   browser:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
