@@ -70,7 +70,9 @@ package MobileMaterialRobot_UseCases_B1 {
     subject robot : MobileMaterialRobot;
     actor operator : HumanOperator;
     doc /*
-    Goal: User triggers an operational stop.
+    Goal: User triggers an operational stop. The current transport order is
+      paused and retained. Only explicit manual release may continue it;
+      safety and route checks remain applicable.
     Covers: OP-13.
     Note: OperationalStop is not EmergencyStop.
     */

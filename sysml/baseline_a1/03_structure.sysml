@@ -35,7 +35,14 @@ package MobileMaterialRobot_Structure_A1 {
     Owns transport order handling, mission state, target validation, mission
     progress and completion or blockage reporting.
     */
+    ref item activeOrder : TransportOrder[0..1];
     perform action transportMission : ExecuteTransportMission;
+    perform action pauseMission : OperationalStop {
+      in item redefines activeOrder = MissionSystem::activeOrder;
+    }
+    perform action resumeMission : ResumeMission {
+      in item redefines pausedOrder = MissionSystem::activeOrder;
+    }
   }
 
   part def NavigationSystem {

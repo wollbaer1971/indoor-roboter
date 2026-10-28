@@ -34,7 +34,7 @@ package MobileMaterialRobot_Requirements_B1 {
     Type: functional
     Source: UC-B-001, UC-B-003, UC-B-005, UC-B-007, UC-B-009
     Text: The system shall report at least ready, accepted, driving, target
-      reached, blocked, stopped and fault.
+      reached, paused, blocked, stopped and fault.
     Verification idea: integration test checks status sequence.
     */
   }
@@ -141,7 +141,9 @@ package MobileMaterialRobot_Requirements_B1 {
     Source: UC-B-006, UC-B-007, OI-SAFE-001
     Text: OperationalStop, SafetyStop and EmergencyStop shall be conceptually
       and functionally separated.
-    Verification idea: review and later safety tests.
+    Decision 2026-10-28: OperationalStop pauses the retained mission and
+      requires explicit manual release to continue; it does not reset safety stops.
+    Verification idea: review, pause/resume tests and later safety tests.
     */
   }
 

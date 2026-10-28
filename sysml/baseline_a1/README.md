@@ -17,7 +17,7 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
 | `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
 | `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
-| `06_tests.sysml` | 17 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `06_tests.sysml` | 18 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
 | `90_simulation_testbench.sysml` | Pruefstand mit kanonischem Roboter, Welt, Adapter und Beobachter |
@@ -70,8 +70,9 @@ Bei mehreren Java-Installationen `JAVA_HOME` setzen oder `--java` angeben.
 Das Skript laedt Standardbibliothek und alle Quellen vor der Validierung.
 Sowohl Modellfehler als auch Modellwarnungen lassen den Check scheitern.
 
-Die synthetischen Beispiele pruefen pass, fail und inconclusive fuer
-Raumzahl, Flur, offene Tuer, autonome Fahrt und fehlende Nachweise.
+Die 15 synthetischen Beispiele pruefen pass, fail und inconclusive fuer
+Raumzahl, Flur, offene Tuer, autonome Fahrt und fehlende Nachweise sowie
+manuelle Freigabe, Auftragserhalt und Bewegungsstopp in der Pausenphase.
 Drei Negativtests entfernen in temporaeren Kopien ein Importziel bzw.
 veraendern Feature und Subject-Typ. Sie muessen vom Validator erkannt werden.
 Keine synthetische Eingabe ist ein beobachteter Simulatorlauf.
@@ -95,10 +96,13 @@ explizite Vertragshalter; sie enthalten keine erfundenen Eigenschaften.
 Geschwindigkeit etwa 0,5 m/s und Betriebsdauer etwa 2 h bleiben Zielwerte,
 keine neu festgelegten harten Grenzwerte.
 
-Das Zustandsmodell ist ein nominales Geruest. Mission nach Betriebsstopp
-pausieren oder abbrechen, Freigabe-/Wiederanlaufregeln sowie die vollstaendige
-Fehler- und Sicherheitsbehandlung brauchen noch fachliche Entscheidungen.
-Dazu wird kein automatischer Wiederanlauf vorweggenommen.
+Bestaetigte Stoppregel: Ein betrieblicher Stopp pausiert den laufenden Auftrag.
+ID, Start und Ziel bleiben erhalten. Der neue Befehl resumeMission verlangt
+eine ausdrueckliche manuelle Freigabe. Ohne Freigabe bleibt der Auftrag pausiert.
+Freigabe umgeht weder Sicherheit noch Navigation: erst orderAccepted, dann
+nach RouteReady wieder driving. Recovery nach Blockade, technischem Fehler
+und Sicherheitsstopp sowie die vollstaendige Sicherheitsbehandlung bleiben offen.
+Siehe [Pausenregel](../../docs/operational-pause.md).
 
 Es gibt keinen erfolgreichen Fahr-, Nutzlast-, Sicherheits- oder Dauertest.
 Siehe [Pruefprotokoll und Grenzen](../../docs/model-validation.md).

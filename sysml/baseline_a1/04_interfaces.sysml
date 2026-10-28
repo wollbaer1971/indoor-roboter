@@ -21,7 +21,7 @@ package MobileMaterialRobot_Interfaces_A1 {
     attribute statusKind : MissionStatusKind;
   }
   enum def OperatorCommandKind {
-    requestStatus; operationalStop; returnToChargingStation;
+    requestStatus; operationalStop; resumeMission; returnToChargingStation;
   }
   item def OperatorCommand {
     attribute kind : OperatorCommandKind;

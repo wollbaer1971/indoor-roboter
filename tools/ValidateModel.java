@@ -47,7 +47,15 @@ public class ValidateModel {
                 {"syntheticNoCorridor", "fail"},
                 {"syntheticNoDoor", "fail"},
                 {"syntheticManualDriving", "fail"},
-                {"syntheticMissingEvidence", "inconclusive"}
+                {"syntheticMissingEvidence", "inconclusive"},
+                {"syntheticPauseHeld", "pass"},
+                {"syntheticResumeApproved", "pass"},
+                {"syntheticResumeWithoutRelease", "fail"},
+                {"syntheticResumeUnsafe", "pass"},
+                {"syntheticLostOrder", "fail"},
+                {"syntheticMotionContinues", "fail"},
+                {"syntheticResumeOutsidePause", "pass"},
+                {"syntheticPauseMissingEvidence", "inconclusive"}
             };
             for (var fixture : fixtures) {
                 String result = model.eval("MobileMaterialRobot_ModelChecks_A1::"

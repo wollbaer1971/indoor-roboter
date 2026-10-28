@@ -204,9 +204,13 @@ package MobileMaterialRobot_Requirements_A1 {
     doc /*
     ID: REQ-UI-002
     Type: functional
-    Text: The system shall provide basic commands for status, operational stop
-      and return to charging station.
+    Text: The system shall provide basic commands for status, operational stop,
+      explicit manual mission resume and return to charging station.
+    Decision 2026-10-28: OperationalStop pauses the current transport order.
+      Order ID, start and target are retained. Continuation requires explicit
+      manual release; safety and route checks are not bypassed.
     Acceptance: Commands can be triggered and produce observable system responses.
+      No automatic resume is permitted while manual release is absent.
     */
   }
 

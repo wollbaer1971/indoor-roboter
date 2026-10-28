@@ -224,4 +224,31 @@ package MobileMaterialRobot_Verification_A1 {
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_SAFE_002; }
   }
 
+
+  verification def TC_UI_003 {
+    subject testRobot : MobileMaterialRobot;
+    in attribute evidenceComplete : Boolean default = false;
+    in attribute wasPaused : Boolean;
+    in attribute retainedOrderMatches : Boolean;
+    in attribute motionStopped : Boolean;
+    in attribute manualRelease : Boolean;
+    in attribute safeToMove : Boolean;
+    in attribute resumeAccepted : Boolean;
+    return verdict : VerdictKind = if evidenceComplete ?
+      PassIf(MobileMaterialRobot_Behavior_A1::PauseResumeCriterion(
+        wasPaused = wasPaused, retainedOrderMatches = retainedOrderMatches,
+        motionStopped = motionStopped, manualRelease = manualRelease,
+        safeToMove = safeToMove, resumeAccepted = resumeAccepted))
+      else VerdictKind::inconclusive;
+    doc /*
+    Operational-stop decision: retain and pause the active order, stop motion,
+    and accept resume only on explicit manual release and valid prerequisites.
+    motionStopped refers to the pause phase before evaluating the resume.
+    These are observation inputs; no physical stopping performance is asserted.
+    */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
+  }
 }

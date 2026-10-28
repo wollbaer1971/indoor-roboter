@@ -51,9 +51,11 @@ Prueferfolg bedeutet noch nicht, dass der externe CI-Lauf bereits erfolgt ist.
 
 - 16 SysML-Quelldateien werden als Gesamtmodell geladen.
 - Ziel: null Modellfehler und null Modellwarnungen; Warnungen blockieren CI.
-- Sieben synthetische Auswertungen: pass; zu wenige Raeume -> fail;
+- 15 synthetische Auswertungen: pass; zu wenige Raeume -> fail;
   fehlender Flur -> fail; keine offene Tuer -> fail; manuelle Fahrt -> fail;
-  unvollstaendige bzw. fehlende Nachweise -> inconclusive.
+  unvollstaendige bzw. fehlende Nachweise -> inconclusive. Acht weitere
+  Faelle pruefen die manuelle Pausenfreigabe, Auftragserhalt, Bewegungsstopp,
+  Ablehnung unsicherer Freigaben und fehlende Pausennachweise.
 - Wiederverwendbare Constraint-Definitionen sind die gemeinsame Quelle der
   Kriterien fuer Anforderungen und Verifikationsauswertung.
 - Drei Mutationen in temporaeren Kopien pruefen die Aufloesung von Importen,
@@ -61,7 +63,7 @@ Prueferfolg bedeutet noch nicht, dass der externe CI-Lauf bereits erfolgt ist.
   eine unpassende Typbindung als Warnung; das Projekt behandelt sie als Fehler
   seines Qualitaetsgates, ohne die Diagnose umzudeuten.
 
-Die Gesamtpruefung mit 16 Quelldateien, sieben synthetischen Auswertungen
+Die Gesamtpruefung mit 16 Quelldateien, 15 synthetischen Auswertungen
 und drei Negativtests wurde erfolgreich ausgefuehrt: null Modellfehler,
 null Modellwarnungen im unveraenderten Modell. Die absichtlich defekten
 Kopien wurden jeweils erkannt.
@@ -69,13 +71,12 @@ Keine der synthetischen Eingaben dokumentiert eine reale Beobachtung.
 
 ## Noch nicht entschieden oder implementiert
 
-- Wirkung eines Betriebsstopps auf den laufenden Auftrag: pausieren oder
-  abbrechen; daraus folgen unterschiedliche Wiederanlaufregeln.
 - Wiederanlauf nach Blockade, technischem Fehler oder Sicherheitsstopp.
 - Simulator, konkrete Hardware-/Sensor-/Energiekonfiguration, Weltgeometrie,
   Massen, Reibung, Nutzlast und quantitative Toleranzen.
 - Bewertung physikalischer Realitaetsnaehe, Sicherheitskonzept und Dauerlauf.
 
 Der Stand ist ein pruefbares Engineering-Modell mit auswertbaren Kriterien
-und nominalem Verhalten. Er ist keine implementierte Robotersteuerung und
+und nominalem Verhalten einschliesslich expliziter manueller Pausenfreigabe.
+Er ist keine implementierte Robotersteuerung und
 kein ausgefuehrter physikalischer Simulationsversuch.
