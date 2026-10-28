@@ -23,7 +23,7 @@ package MobileRobot_Wander_Browser {
   }
   port def BrowserControlPort {
     out item controlCommand : SimulationControlCommand;
-    in item snapshot : SimulationSnapshot;
+    in item stateSnapshot : SimulationSnapshot;
   }
   part def BrowserVisualization :> SimulationVisualization {
     port simulationPort : BrowserControlPort;
