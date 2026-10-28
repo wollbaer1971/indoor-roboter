@@ -185,15 +185,39 @@ py -3 tools/validate_sysml.py --self-test --negative-tests
 Werkzeug bleibt die offizielle SysML Pilot Implementation 0.53.0 / Release
 2025-10, mit gepruefter Downloadpruefsumme und Java 21+. Keine neue
 Werkzeugversion oder Syside-Lizenz ist vorausgesetzt. Syside-Installation
-ist weiterhin unbestaetigt. Fuer eine Darstellung kann im offiziellen
-SysML-Jupyter-Kernel als Alternative ein Notebook mit dem Inhalt der
-massgebenden Quelldateien in Abhaengigkeitsreihenfolge geladen werden;
-den konkreten Importablauf des vorhandenen Setups zuerst pruefen.
-Die deklarierte Sicht heisst `browserArchitecture`; zusaetzlich bleiben
-`wanderArchitecture` und `wanderBehavior` erhalten. Die verwendete
-Werkzeugversion muss die Sichtdarstellung unterstuetzen; die Validierungs-CI
-erzeugt selbst keine Diagramme. Die Canvas-Szene ist die Laufzeitansicht,
-kein automatisch aus SysML erzeugtes Architekturdiagramm.
+ist weiterhin unbestaetigt. Die deklarierte Sicht heisst `browserArchitecture`;
+zusaetzlich bleiben `wanderArchitecture` und `wanderBehavior` erhalten.
+
+Klar bezeichnete Diagrammalternative: offizieller SysML-Jupyter-Kernel.
+Er benoetigt zusaetzlich Jupyter und fuer die Diagrammausgabe Graphviz;
+eine entsprechende lokale Installation ist nicht bestaetigt.
+`jupyter kernelspec list` muss den Kernel `sysml` zeigen. In einem neuen
+Notebook diesen Kernel verwenden. Um die bestehenden Paketzyklen nicht
+durch einzelnes Laden von Dateien aufzubrechen, den gesamten Projektquelltext
+in einer gemeinsamen ersten SysML-Codezelle ausfuehren. Der Text kann mit
+diesem Python-Snippet aus den massgebenden Dateien zusammengestellt werden:
+
+```python
+from pathlib import Path
+sources = sorted(Path('sysml').rglob('*.sysml'))
+Path('.cache').mkdir(exist_ok=True)
+Path('.cache/model_for_notebook.sysml').write_text(
+    '\n\n'.join(p.read_text(encoding='utf-8') for p in sources), encoding='utf-8')
+```
+
+Den Inhalt der erzeugten Datei in die erste Notebookzelle kopieren und
+ausfuehren. Danach in einer zweiten Zelle:
+
+```text
+%viz MobileRobot_Wander_Browser::BrowserSimulation
+```
+
+Dies fordert eine Typdarstellung aus demselben Modell an. `%viz --help` zeigt
+die Darstellungsoptionen des installierten Kernels. Die Befehle wurden im
+offiziellen Quellcode des Releases 2025-10 geprueft; der Notebook-/Diagrammlauf
+wurde hier nicht ausgefuehrt. Die Validierungs-CI erzeugt keine Diagramme.
+Die Canvas-Szene ist die Laufzeitansicht, kein automatisch aus SysML erzeugtes
+Architekturdiagramm.
 
 Pruefebenen getrennt lesen:
 
@@ -206,11 +230,23 @@ Pruefebenen getrennt lesen:
 
 ## Nachweise dieser Erweiterung
 
-Lokal ausgefuehrt: 28 Python-Tests entdeckt; 27 bestanden, ein Turtle-Test
-wegen fehlendem Display uebersprungen. JavaScript-Dateien mit `node --check`
-syntaxgeprueft. Lokaler Chromium-Download fehlgeschlagen; daher kein lokaler
-Browser-Erfolg behauptet. Aktuelle GitHub-Pruefungen werden im Pull Request
-mit dem jeweiligen Code-Commit ausgewiesen.
+Gepruefter Code-Commit: **8bbca044e623141af643d2d6c0405781abec6374**.
+
+- [Python, HTTP und echtes Turtle-Fenster](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40781959216): alle 28 Python-Tests bestanden, ohne Skip.
+- Derselbe Lauf: echter Chromium-Test erfolgreich, einschliesslich Canvas-Pixel,
+  erster Drehung, Pause waehrend Drehung, manueller Fortsetzung, Timeout,
+  Wiederverbindung, Reset und mobilem Layout. Keine JavaScript-Laufzeitfehler.
+  Screenshots: CI-Artefakt browser-screenshots. Kein manueller Sichttest behauptet.
+- [Offizieller SysML-Parser und semantische Validierung](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40781959207): 22 Quelldateien,
+  **0 Fehler, 0 Warnungen**; 15 bisherige und 6 Wander-Kriterienbeispiele
+  mit erwarteten Ergebnissen. Alle drei absichtlich beschaedigten Modellkopien
+  wurden erkannt. Das BrowserAdapterCriterion wurde nicht separat ausgewertet;
+  der Browsernachweis stammt aus den ausgefuehrten Implementierungstests.
+- Lokal: 27 Python-Tests bestanden, ein Turtle-Test mangels Display uebersprungen;
+  JavaScript mit node --check geprueft. Der lokale Browserdownload schlug fehl.
+
+Die nachfolgende Aenderung dieser Anleitung betrifft nur Dokumentation.
+Simulationsnachweise bleiben von realen Fahr-/Sicherheitsnachweisen getrennt.
 
 ## Entscheidungen und offene Punkte
 
@@ -225,6 +261,8 @@ Primärquellen:
 [Canvas API](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API),
 [SysML-v2-Release](https://github.com/Systems-Modeling/SysML-v2-Release),
 [offizielles Beispiel zur Port-Konjugation](https://github.com/Systems-Modeling/SysML-v2-Release/blob/master/sysml/src/training/10.%20Ports/Port%20Conjugation%20Example.sysml),
+[Jupyter-Kernel und Graphviz-Konfiguration](https://github.com/Systems-Modeling/SysML-v2-Pilot-Implementation/blob/2025-10/org.omg.sysml.jupyter.kernel/README.adoc),
+[viz-Befehl im offiziellen Release](https://github.com/Systems-Modeling/SysML-v2-Pilot-Implementation/blob/2025-10/org.omg.sysml.jupyter.kernel/src/main/java/org/omg/sysml/jupyter/kernel/magic/Viz.java),
 [Playwright](https://playwright.dev/docs/intro).
 
 Python http.server ist fuer den lokalen Demonstrator vorgesehen; die offizielle

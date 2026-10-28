@@ -1,5 +1,12 @@
 # Modellbereinigung und Pruefung, 28.10.2026
 
+Aktueller Erweiterungsstand fuer Turtle und Browser: Code-Commit
+`8bbca044e623141af643d2d6c0405781abec6374`, **22 SysML-Dateien, 0 Fehler,
+0 Warnungen**. Alle 28 Python-Tests sowie die echte Chromium-Pruefung sind
+erfolgreich. Quellen, genaue Nachweisgrenzen und CI-Links stehen in
+[Browser-Simulation](browser-simulation.md#nachweise-dieser-erweiterung).
+Die folgenden Abschnitte dokumentieren die vorherige Modellbereinigung.
+
 ## Ausgangspunkt und Umfang
 
 Ausgangspunkt ist PR #1 mit Commit cd460a5d493e946e1765388176308c2a7baedfa7.
