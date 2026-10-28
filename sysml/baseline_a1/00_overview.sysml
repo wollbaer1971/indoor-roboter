@@ -1,4 +1,16 @@
 package MobileMaterialRobot_BaselineA1 {
+  public import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+  public import MobileMaterialRobot_Context_A1::SystemContext;
+  public import MobileMaterialRobot_Context_A1::schoolContext;
+  public import MobileMaterialRobot_Requirements_A1::*;
+  public import MobileMaterialRobot_Behavior_A1::*;
+  public import MobileMaterialRobot_Interfaces_A1::*;
+  public import MobileMaterialRobot_Verification_A1::*;
+  public import MobileMaterialRobot_Simulation_A1::*;
+  public import MobileMaterialRobot_SimulationVerification_A1::*;
+  public import MobileMaterialRobot_ROS2Mapping_A1::*;
+  public import MobileMaterialRobot_Views_A1::*;
+  public import MobileMaterialRobot_Traceability_A1::*;
   doc /*
   Model: Mobile Material Robot - System Definition Baseline A.1
   Purpose:
@@ -12,15 +24,6 @@ package MobileMaterialRobot_BaselineA1 {
     ROS2 mapping traceable. Concrete technologies remain open unless they
     were explicitly decided in Baseline A.1.
   */
-
-  part def MobileMaterialRobot {
-    doc /*
-    System of Interest.
-    Includes the mobile robot platform, onboard hardware, onboard software,
-    transport interface, navigation, perception, energy, communication,
-    diagnostic and safety functions.
-    */
-  }
 
   item def BaselineA1_Decisions {
     doc /*
@@ -64,3 +67,4 @@ package MobileMaterialRobot_BaselineA1 {
     */
   }
 }
+

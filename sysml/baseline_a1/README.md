@@ -1,17 +1,108 @@
 # SysML v2 Baseline A.1
 
-Dieses Verzeichnis enthaelt ein konservatives SysML-v2-Startermodell zur System Definition Baseline A.1 des Mobile Material Robot.
+## Verbindliche Struktur
 
-Die Dateien sind bewusst klein und thematisch getrennt:
+Es gibt genau eine Definition des Robotertyps:
+`MobileMaterialRobot_Structure_A1::MobileMaterialRobot` in `03_structure.sysml`.
+Dieser Typ besitzt Subsysteme, Ports und das Betriebszustandsmodell.
+Kontext, Verifikation und Simulationspruefstand beziehen sich darauf.
+Ein `SystemContext` ist ein Kontextbaustein, keine View-Definition.
+Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 
-- `00_overview.sysml`: Ziel, Scope, Baseline, Annahmen und Nicht-Ziele
-- `01_context.sysml`: Stakeholder, externe Systeme und Kontext
-- `02_requirements.sysml`: initiale Systemanforderungen
-- `03_structure.sysml`: Top-Level-Struktur und Subsysteme
-- `04_interfaces.sysml`: externe Schnittstellen und Port-Skizzen
-- `05_behavior.sysml`: Betriebsablaeufe, Aktivitaeten und Zustandsmodell
-- `06_tests.sysml`: Verifikationsfaelle
-- `07_ros2_mapping.sysml`: vorlaeufiges ROS2-Mapping als Architekturartefakt
-- `traceability_matrix.md`: Review-Matrix von Need/Requirement bis Test
+| Datei | Zweck |
+| --- | --- |
+| `00_overview.sysml` | Modellzusammenstellung mit oeffentlichen Imports, Scope und Entscheidungen |
+| `01_context.sysml` | Externe Akteure, kanonische externe Typen, Kontext und Verbindungen |
+| `02_requirements.sysml` | 22 Anforderungen mit typisiertem Subject; wiederverwendbare Raum-/Tuerkriterien |
+| `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
+| `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
+| `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
+| `06_tests.sysml` | 18 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
+| `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
+| `90_simulation_testbench.sysml` | Pruefstand mit kanonischem Roboter, Welt, Adapter und Beobachter |
+| `91_simulation_verification.sysml` | Bindung von TC_NAV_002 an den Pruefstandsroboter |
+| `92_model_checks.sysml` | Ausschliesslich synthetische Testdaten fuer die Modell-Auswertung |
+| `93_views.sysml` | Kontext-, Architektur-, Ablauf-, Zustands- und Simulationssichten |
+| `traceability_matrix.md` | Review-Matrix; Status bezeichnet Planung, keine bestandenen Robotertests |
 
-Hinweis: Die SysML-v2-Syntax ist als gut lesbarer Starter fuer die weitere Modellierung gedacht. Vor formaler Weiterverarbeitung sollte sie gegen die konkret verwendete Toolchain, zum Beispiel Syside, geprueft werden.
+## Namens- und Grenzkonvention
+
+Typen: UpperCamelCase. Verwendungen: lowerCamelCase.
+Anforderungs-/Testnamen behalten `REQ_NAV_004` bzw. `TC_NAV_002`;
+Dokumentations-IDs behalten `REQ-NAV-004` bzw. `TC-NAV-002`.
+Der enum-Wert `orderAccepted` und der gleichnamige Betriebszustand stehen fuer
+fachlich akzeptierte Auftraege. Der Name vermeidet eine Kollision mit dem
+geerbten SysML-Mitglied `accepted`.
+
+`WebApp` liegt ausserhalb der Systemgrenze. `UserInterfaceSystem` bezeichnet
+den roboterseitigen Anschluss, nicht eine zweite Web-Oberflaeche.
+Die frueheren Paralleltypen in Ueberblick, Kontext und Schnittstellen sind
+entfernt. Der alte externe Name `MobileMaterialTransportRobot` ist ein Alias
+auf den kanonischen Typ, `UserInterface` ein Alias auf `UserInterfaceSystem`.
+
+## Lade- und Importbeziehungen
+
+- Schnittstellen/Datentypen und Verhalten werden von der Struktur verwendet.
+- Kontext verwendet Struktur und Schnittstellentypen.
+- Anforderungen und Verifikation verwenden den kanonischen Robotertyp.
+- Der Simulationspruefstand verwendet dieselbe Struktur.
+- Die Testverwendung importiert Pruefstand und TC_NAV_002.
+- Views verwenden vorhandene Elemente; sie erzeugen keine neuen Robotertypen.
+- `00_overview.sysml` ist die Zusammenstellung, kein zweites Systemmodell.
+
+Alle Ziele werden gemeinsam vom Validator aufgeloest. Ein Import ist kein
+Dateipfad und fuehrt selbst keinen Simulator aus.
+
+## Pruefung
+
+Vom Repository-Hauptverzeichnis mit Python 3.10+ und einem Java-21+-JDK:
+
+```powershell
+python tools/validate_sysml.py --self-test --negative-tests
+```
+
+Beim ersten Lauf wird die unveraenderte offizielle Pilot Implementation
+0.53.0 (Release 2025-10, SysML-v2.0-Linie) oeffentlich heruntergeladen,
+per SHA-256 geprueft und ausserhalb des Repositorys gecacht.
+Es ist keine kostenpflichtige Syside-Lizenz erforderlich.
+Bei mehreren Java-Installationen `JAVA_HOME` setzen oder `--java` angeben.
+Das Skript laedt Standardbibliothek und alle Quellen vor der Validierung.
+Sowohl Modellfehler als auch Modellwarnungen lassen den Check scheitern.
+
+Die 15 synthetischen Beispiele pruefen pass, fail und inconclusive fuer
+Raumzahl, Flur, offene Tuer, autonome Fahrt und fehlende Nachweise sowie
+manuelle Freigabe, Auftragserhalt und Bewegungsstopp in der Pausenphase.
+Drei Negativtests entfernen in temporaeren Kopien ein Importziel bzw.
+veraendern Feature und Subject-Typ. Sie muessen vom Validator erkannt werden.
+Keine synthetische Eingabe ist ein beobachteter Simulatorlauf.
+
+## Diagramme
+
+In einer Syside-Installation mit verfuegbarer Visualisierung den gesamten
+Modellordner oeffnen, speichern und die Views aus `93_views.sysml`
+visualisieren, z.B. `systemContext`, `robotArchitecture`, `missionFlow`,
+`operationStates` und `simulationTestBench`. Fuer Dateiverweise ist der
+Modellordner massgebend, nicht nur die geoeffnete Datei.
+Die Modell-Sichten sind Standard-SysML; Renderer/Lizenzumfang und Darstellung
+koennen zwischen Werkzeugversionen abweichen.
+
+## Fachlich offen
+
+Zunaechst ausschliesslich Simulation, keine reale Hardware.
+Simulator, Weltgeometrie, Masse, Reibung, Sensor-/Energiemodell und
+physikalische Grenzen sind nicht ausgewaehlt. Physische Ports sind daher
+explizite Vertragshalter; sie enthalten keine erfundenen Eigenschaften.
+Geschwindigkeit etwa 0,5 m/s und Betriebsdauer etwa 2 h bleiben Zielwerte,
+keine neu festgelegten harten Grenzwerte.
+
+Bestaetigte Stoppregel: Ein betrieblicher Stopp pausiert den laufenden Auftrag.
+ID, Start und Ziel bleiben erhalten. Der neue Befehl resumeMission verlangt
+eine ausdrueckliche manuelle Freigabe. Ohne Freigabe bleibt der Auftrag pausiert.
+Freigabe umgeht weder Sicherheit noch Navigation: erst orderAccepted, dann
+nach RouteReady wieder driving. Recovery nach Blockade, technischem Fehler
+und Sicherheitsstopp sowie die vollstaendige Sicherheitsbehandlung bleiben offen.
+Siehe [Pausenregel](../../docs/operational-pause.md).
+
+Es gibt keinen erfolgreichen Fahr-, Nutzlast-, Sicherheits- oder Dauertest.
+Siehe [Pruefprotokoll und Grenzen](../../docs/model-validation.md).

@@ -9,8 +9,8 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
     doc /*
     SysML element: MissionSystem
     Possible ROS2 node: mission_manager_node
-    Publishes: /mission_state
-    Subscribes: /transport_order, /navigation_result, /battery_state
+    Publishes: /mission_state, /goal_pose
+    Subscribes: /transport_order, /operator_command, /navigation_result, /battery_state
     Owns: order validation, mission state, completion/blockage reporting.
     Related requirements: REQ-MIS-001, REQ-MIS-002, REQ-STA-001.
     */
@@ -28,7 +28,7 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
 
   part def MapManagementNode {
     doc /*
-    SysML element: NavigationSystem / MapManagement
+    SysML element: NavigationSystem (owns map management)
     Possible ROS2 node: map_management_node
     Publishes: /map, /map_update_candidate
     Subscribes: /local_obstacles
@@ -86,4 +86,34 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
     Related requirements: REQ-PWR-001, REQ-PWR-002.
     */
   }
+
+  part def MotionControllerNode {
+    doc /*
+    SysML element: MotionSystem
+    Candidate only; no physical driver or simulator selected.
+    Subscribes: /cmd_vel, /safety_state
+    Owns: execution of permitted motion commands.
+    */
+  }
+
+  part def DiagnosticsNode {
+    doc /*
+    SysML element: DiagnosticsSystem
+    Candidate only; no concrete diagnostic sources selected.
+    Publishes: /diagnostics
+    */
+  }
+
+  // Candidate technology mapping; these dependencies are not allocations or evidence.
+  dependency from MotionControllerNode to MobileMaterialRobot_Structure_A1::MotionSystem;
+  dependency from DiagnosticsNode to MobileMaterialRobot_Structure_A1::DiagnosticsSystem;
+  dependency from MissionManagerNode to MobileMaterialRobot_Structure_A1::MissionSystem;
+  dependency from WebInterfaceNode to MobileMaterialRobot_Structure_A1::UserInterfaceSystem;
+  dependency from WebInterfaceNode to MobileMaterialRobot_Structure_A1::CommunicationSystem;
+  dependency from MapManagementNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
+  dependency from LocalizationNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
+  dependency from PerceptionNode to MobileMaterialRobot_Structure_A1::PerceptionSystem;
+  dependency from NavigationNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
+  dependency from SafetySupervisorNode to MobileMaterialRobot_Structure_A1::SafetySystem;
+  dependency from EnergyMonitorNode to MobileMaterialRobot_Structure_A1::EnergySystem;
 }

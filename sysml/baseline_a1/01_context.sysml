@@ -1,4 +1,6 @@
 package MobileMaterialRobot_Context_A1 {
+  private import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
+  private import MobileMaterialRobot_Interfaces_A1::*;
   doc /*
   Context model for Baseline A.1.
   The system boundary is around the Mobile Material Robot. Web app, users,
@@ -6,12 +8,11 @@ package MobileMaterialRobot_Context_A1 {
   obstacles, charging station and IT infrastructure are external.
   */
 
-  part def MobileMaterialRobot {
-    doc /* System of Interest. */
-  }
-
   part def WebApp {
     doc /* Initial user interface for transport orders and basic commands. */
+    port orderOut : TransportOrderPort;
+    port statusIn : ~MissionStatusPort;
+    port commandOut : OperationalCommandPort;
   }
 
   part def HumanOperator {
@@ -23,6 +24,7 @@ package MobileMaterialRobot_Context_A1 {
     Standard workpiece carrier of a transfer system.
     Size, mass, maximum workpiece mass and center-of-gravity range are open.
     */
+    port mechanicalInterface : ~PayloadMechanicalPort;
   }
 
   part def ExternalTransferSystem {
@@ -37,6 +39,7 @@ package MobileMaterialRobot_Context_A1 {
     Production-like school demonstrator area with multiple rooms, a corridor
     and open doors.
     */
+    port physicalInteraction : ~EnvironmentInteractionPort;
   }
 
   part def PersonInOperatingArea {
@@ -52,13 +55,14 @@ package MobileMaterialRobot_Context_A1 {
     External station for return-to-charge behavior. Automatic docking and
     charging remain open for MVP definition.
     */
+    port chargeInterface : ~ChargingStationPort;
   }
 
   part def ITInfrastructure {
     doc /* Network, access control, updates, logging and possible integration. */
   }
 
-  part def ContextView {
+  part def SystemContext {
     part robot : MobileMaterialRobot;
     part webApp : WebApp;
     part operator : HumanOperator;
@@ -69,5 +73,14 @@ package MobileMaterialRobot_Context_A1 {
     part obstacle : TemporaryObstacle;
     part charger : ChargingStation;
     part it : ITInfrastructure;
+    connect webApp.orderOut to robot.orderIn;
+    connect robot.statusOut to webApp.statusIn;
+    connect webApp.commandOut to robot.commandIn;
+    connect carrier.mechanicalInterface to robot.payloadMount;
+    connect environment.physicalInteraction to robot.environment;
+    connect charger.chargeInterface to robot.charging;
   }
+
+  part schoolContext : SystemContext;
 }
+

@@ -1,4 +1,6 @@
 package MobileMaterialRobot_Structure_A1 {
+  private import MobileMaterialRobot_Interfaces_A1::*;
+  private import MobileMaterialRobot_Behavior_A1::*;
   doc /*
   Top-level structural decomposition for Baseline A.1.
   This is not a final physical architecture. It separates responsibilities so
@@ -7,6 +9,15 @@ package MobileMaterialRobot_Structure_A1 {
 
   part def MobileMaterialRobot {
     doc /* Top-level System of Interest. */
+    port orderIn : ~TransportOrderPort;
+    port statusOut : MissionStatusPort;
+    port commandIn : ~OperationalCommandPort;
+    port payloadMount : PayloadMechanicalPort;
+    port environment : EnvironmentInteractionPort;
+    port charging : ChargingStationPort;
+    port diagnosticsOut : DiagnosticsPort;
+    port safetyStateOut : SafetyStatePort;
+    exhibit state operatingState : RobotOperationState;
     part mission : MissionSystem;
     part navigation : NavigationSystem;
     part perception : PerceptionSystem;
@@ -24,6 +35,14 @@ package MobileMaterialRobot_Structure_A1 {
     Owns transport order handling, mission state, target validation, mission
     progress and completion or blockage reporting.
     */
+    ref item activeOrder : TransportOrder[0..1];
+    perform action transportMission : ExecuteTransportMission;
+    perform action pauseMission : OperationalStop {
+      in item redefines activeOrder = MissionSystem::activeOrder;
+    }
+    perform action resumeMission : ResumeMission {
+      in item redefines pausedOrder = MissionSystem::activeOrder;
+    }
   }
 
   part def NavigationSystem {
@@ -31,6 +50,8 @@ package MobileMaterialRobot_Structure_A1 {
     Owns map use, localization, route planning, local planning and handling of
     non-reachable targets or blocked routes.
     */
+    perform action passDoor : PassOpenDoor;
+    perform action handleObstacle : HandleTemporaryObstacle;
   }
 
   part def PerceptionSystem {
@@ -59,6 +80,7 @@ package MobileMaterialRobot_Structure_A1 {
     Owns energy storage, state-of-charge monitoring and return-to-charging
     behavior coordination. Automatic charging remains open.
     */
+    perform action returnToCharger : ReturnToChargingStation;
   }
 
   part def CommunicationSystem {
@@ -70,8 +92,9 @@ package MobileMaterialRobot_Structure_A1 {
 
   part def UserInterfaceSystem {
     doc /*
-    Owns web-app interaction, operator commands, status display and basic
-    commands such as OperationalStop and return to charging station.
+    Owns the robot-side endpoint for the external web app, operator commands,
+    status exchange and basic commands. The WebApp presentation is outside
+    the system boundary; no hosting technology is selected here.
     */
   }
 
@@ -80,6 +103,7 @@ package MobileMaterialRobot_Structure_A1 {
     Owns safety-relevant state evaluation, safety stop decisions and future
     emergency-stop integration.
     */
+    perform action safetyStop : SafetyStop;
   }
 
   part def DiagnosticsSystem {
@@ -88,3 +112,4 @@ package MobileMaterialRobot_Structure_A1 {
     */
   }
 }
+
