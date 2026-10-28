@@ -7,7 +7,16 @@ im Gesamtmodell erhalten.
 
 ## Start unter Windows
 
-Im Hauptverzeichnis des Repositorys, neben `README.md`:
+Der neue Stand liegt im Branch `codex/stage2-reactive-wander` (Pull Request #2).
+Falls er noch nicht nach main uebernommen wurde, zuerst diesen Branch auschecken
+oder dessen ZIP ueber GitHub herunterladen. Bei bereits vorhandenem Git-Checkout:
+
+```powershell
+git fetch origin
+git switch codex/stage2-reactive-wander
+```
+
+Im Hauptverzeichnis dieses Standes, neben `README.md`:
 
 ```powershell
 py -3 -m robot_demo
@@ -89,6 +98,22 @@ Damit ist der Fahrdemonstrator keine Kopie des gesamten Transportroboters.
 | DiagnosticsSystem | Laufzaehler, Status und Spur | Persistente Logs / Web-Status |
 | Anzeigeadapter ausserhalb des Roboters | TurtleViewer / SVG-Ausgabe | Realistische 3D-Visualisierung |
 
+Die Python-Feldnamen werden explizit auf die Modellvertraege abgebildet:
+
+| Modellfeld | Python-Feld |
+| --- | --- |
+| ForwardClearance.distance_m | RangeReading.forward_clearance_m |
+| PlanarMotionCommand.linearSpeed_m_s | VelocityCommand.linear_m_s |
+| PlanarMotionCommand.angularSpeed_rad_s | VelocityCommand.angular_rad_s |
+| ReactiveDrivingParameters.turnRate_rad_s | Parameters.turn_rate_rad_s |
+| ReactiveDrivingParameters.sensorRange_m | Parameters.sensor_range_m |
+| ReactiveDrivingParameters.detectionDistance_m | Parameters.detection_distance_m |
+| ReactiveDrivingParameters.minTurnMagnitude_rad | Parameters.min_turn_rad |
+| ReactiveDrivingParameters.maxTurnMagnitude_rad | Parameters.max_turn_rad |
+
+Die Gradangaben der editierbaren JSON-Datei werden beim Laden in Radiant
+umgerechnet. Turtle ist nicht die Quelle von Pose, Winkel oder Geschwindigkeit.
+
 Der Navigator erhaelt nur eine Sensorablesung und den Zeitschritt. Er kennt
 weder die Weltgeometrie noch die wahre Pose. Weltwissen verwenden ausschliesslich
 simulierte Sensorik, Bewegungskontrolle und Visualisierung.
@@ -154,3 +179,13 @@ Beobachtungen eines realen Roboters.
 
 In einer SysML-Visualisierung koennen `wanderArchitecture` und `wanderBehavior`
 aus `03_architecture.sysml` dargestellt werden.
+
+## Ausgefuehrte Pruefungen
+
+Code-Commit: c81f424dd05d5a0446a4eb933907fdf64fa06ea4.
+
+- [Python und echtes Turtle-Fenster](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40778094730): alle 20 Tests bestanden, einschliesslich Timer, Zeichnung und Pause/Fortsetzung.
+- [SysML-Gesamtmodell](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40778094531): 21 Quellen, null Modellfehler, null Modellwarnungen; 15 bisherige und sechs neue Kriterienauswertungen sowie drei Negativtests bestanden.
+
+Diese Pruefungen belegen die Software-/Modellfunktion der kinematischen Stufe,
+keine reale Fahr- oder Sicherheitsleistung.

@@ -92,3 +92,9 @@ Anforderungen und ihre Testverweise abgeglichen.
 Python-Tests und die echte Turtle-Fensterpruefung laufen in einem separaten
 GitHub-Workflow. Ein erfolgreicher Modellcheck belegt keine physikalische
 Simulation oder reale Sensor-/Antriebsfunktion.
+
+Die Erweiterungspruefung wurde im Code-Commit
+`c81f424dd05d5a0446a4eb933907fdf64fa06ea4` erfolgreich ausgefuehrt:
+[SysML](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40778094531)
+und [20 Python-/Turtle-Tests](https://github.com/wollbaer1971/indoor-roboter/actions/runs/40778094730).
+Die anschliessende Dokumentation aendert diesen getesteten Code nicht.
