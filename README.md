@@ -4,6 +4,15 @@ Dieses Verzeichnis enthaelt eine modulare LaTeX-Projektstruktur fuer die MBSE-ge
 
 ## Lauffaehiger Fahrdemonstrator: Stufe 2
 
+Browseransicht ohne Tk oder pip-Pakete:
+
+```powershell
+py -3 -m robot_demo.web_server
+```
+
+Danach **http://127.0.0.1:8765** oeffnen und manuell starten.
+[Browseranleitung, Schnittstelle und Funktionstest](docs/browser-simulation.md).
+
 Im Repository-Hauptverzeichnis mit Python 3.10+ und Tk:
 
 ```powershell

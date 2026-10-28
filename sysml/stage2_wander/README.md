@@ -8,6 +8,8 @@ Auftrags-, Transport-, Energie- und Benutzerfunktionen.
 - `02_behavior.sysml`: Geradeausfahrt, Zufallsdrehung, erneute Pruefung und Pause.
 - `03_architecture.sysml`: Variante, Parameter, Simulationsumgebung und Views.
 - `04_verification.sysml`: Testdefinitionen, Quellenbeziehungen und synthetische Beispiele.
+- `05_browser.sysml`: Browseradapter, typisierte Steuer-/Statusschnittstelle,
+  Bedarf/Anforderung, Testbezug und Sicht `browserArchitecture`.
 
 Der Controller darf nur eine Vorwaerts-Abstandsbeobachtung verwenden;
 Weltgeometrie und wahre Pose werden nicht als Navigator-Eingaben modelliert.
@@ -19,6 +21,7 @@ editierbare Instanz fuer Demonstrationen, keine freigegebene Hardwareauslegung.
 
 Start, Funktionstest, Wiederverwendung und Grenzen:
 [docs/reactive-wander.md](../../docs/reactive-wander.md).
+[Browseransicht](../../docs/browser-simulation.md) verwendet denselben Kern.
 
 Den gesamten Ordner `sysml` laden. Die gemeinsame Zusammenstellung ist
 `sysml/00_project.sysml`; die Standard-Views dieser Stufe heissen

@@ -2,3 +2,5 @@ __pycache__/
 *.py[cod]
 /trace.svg
 /.cache/
+# Browser integration-test screenshots are CI artifacts.
+web-test-results/

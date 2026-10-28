@@ -7,4 +7,5 @@ package MobileRobot_Project {
   public import MobileRobot_Wander_Requirements::*;
   public import MobileRobot_Wander_Behavior::*;
   public import MobileRobot_Wander_Verification::*;
+  public import MobileRobot_Wander_Browser::*;
 }

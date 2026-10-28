@@ -21,7 +21,7 @@ package MobileRobot_Wander_Architecture {
     Minimal reactive variant. Inherits perception, navigation, motion, safety,
     diagnostics and the same typed perception/motion connections.
     No MissionSystem, TransportSystem, carrier, charging or WebApp is instantiated.
-    Turtle is a visualization adapter; replacing it does not change the controller.
+    Visualization adapters are outside the robot; replacing them does not change the controller.
     */
     exhibit state reactiveState : ReactiveWanderState;
     part configuration : ReactiveDrivingParameters;
@@ -33,15 +33,18 @@ package MobileRobot_Wander_Architecture {
   part def KinematicWorld {
     doc /* Circular footprint, rectangular obstacles and swept-path collision guard; no contact dynamics. */
   }
-  part def TurtleVisualization {
+  part def SimulationVisualization {
     doc /* Receives simulation pose/status for drawing; no navigation decisions. */
   }
+  part def TurtleVisualization :> SimulationVisualization;
   part def ReactiveSimulation {
     part robot : ReactiveWanderRobot;
     part world : KinematicWorld;
-    part viewer : TurtleVisualization;
+    part viewer : SimulationVisualization;
   }
-  part reactiveDemo : ReactiveSimulation;
+  part reactiveDemo : ReactiveSimulation {
+    part redefines viewer : TurtleVisualization;
+  }
 
   view wanderArchitecture : InterconnectionView {
     expose ReactiveWanderRobot;

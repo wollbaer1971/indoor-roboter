@@ -7,6 +7,11 @@ im Gesamtmodell erhalten.
 
 ## Start unter Windows
 
+Alternativ zu Turtle kann derselbe Kern jetzt im Browser angezeigt werden:
+`py -3 -m robot_demo.web_server`, dann http://127.0.0.1:8765 oeffnen.
+Diese Variante benoetigt kein Tk und startet pausiert.
+[Browseranleitung und Tests](browser-simulation.md).
+
 Der neue Stand liegt im Branch `codex/stage2-reactive-wander` (Pull Request #2).
 Falls er noch nicht nach main uebernommen wurde, zuerst diesen Branch auschecken
 oder dessen ZIP ueber GitHub herunterladen. Bei bereits vorhandenem Git-Checkout:
@@ -96,7 +101,7 @@ Damit ist der Fahrdemonstrator keine Kopie des gesamten Transportroboters.
 | MotionSystem | KinematicDrive / VelocityCommand | Antriebs- oder Simulationsadapter |
 | SafetySystem | Simulations-Kollisionsschutz und manuelle Freigaberegel | Eigenstaendiges Sicherheitskonzept |
 | DiagnosticsSystem | Laufzaehler, Status und Spur | Persistente Logs / Web-Status |
-| Anzeigeadapter ausserhalb des Roboters | TurtleViewer / SVG-Ausgabe | Realistische 3D-Visualisierung |
+| Anzeigeadapter ausserhalb des Roboters | TurtleViewer / SVG-Ausgabe / Browseransicht | Realistische 3D-Visualisierung |
 
 Die Python-Feldnamen werden explizit auf die Modellvertraege abgebildet:
 
@@ -117,8 +122,9 @@ umgerechnet. Turtle ist nicht die Quelle von Pose, Winkel oder Geschwindigkeit.
 Der Navigator erhaelt nur eine Sensorablesung und den Zeitschritt. Er kennt
 weder die Weltgeometrie noch die wahre Pose. Weltwissen verwenden ausschliesslich
 simulierte Sensorik, Bewegungskontrolle und Visualisierung.
-MissionSystem, TransportSystem, Traeger, Laden und Web-App werden in der
-reaktiven Variante nicht instanziiert. Ihre bisherigen Modelle bleiben vorhanden.
+MissionSystem, TransportSystem, Traeger, Laden und Transport-Web-App werden in der
+reaktiven Variante nicht instanziiert. Die neue Browseransicht bedient nur die
+Simulation; die bisherigen Transportmodelle bleiben vorhanden.
 
 ## Was simuliert wird
 
