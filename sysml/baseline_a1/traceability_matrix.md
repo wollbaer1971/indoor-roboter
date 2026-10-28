@@ -37,3 +37,12 @@ planning.
 - OI-SAFE-001: Person-related safety behavior and distinction between OperationalStop, SafetyStop and EmergencyStop.
 - OI-ENE-002: Charging station scope: return-only, docking or automatic charging.
 - OI-NAV-002: Map update approval rules and distinction between temporary and long-term changes.
+
+## Simulation-only test context (2026-10-28)
+
+REQ-NAV-004 and REQ-NAV-005 remain linked to the existing TC-NAV-002.
+The usage `MobileMaterialRobot_SimulationVerification_A1::schoolTransportTest`
+binds its subject to
+`MobileMaterialRobot_Simulation_A1::schoolTransportBench.robot`.
+Status: model integration proposal; simulation configuration, run evidence
+and verdict remain open. REQ-TRN-001/002 are not verified by this addition.

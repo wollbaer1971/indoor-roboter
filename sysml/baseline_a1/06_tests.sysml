@@ -13,7 +13,9 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Load base map.
     Expected: Map is available and referenced by localization/navigation.
     */
-    verify requirement REQ_MAP_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_MAP_001;
+    }
   }
 
   verification def TC_MAP_002 {
@@ -23,7 +25,9 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Add a temporary obstacle to the local environment.
     Expected: Long-term map is not automatically changed.
     */
-    verify requirement REQ_MAP_003;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_MAP_003;
+    }
   }
 
   verification def TC_LOC_001 {
@@ -33,7 +37,9 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Estimate robot pose in known map.
     Expected: Pose estimate stays within a tolerance to be defined.
     */
-    verify requirement REQ_LOC_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_LOC_001;
+    }
   }
 
   verification def TC_NAV_001 {
@@ -43,18 +49,27 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Start mission to a known target.
     Expected: Robot reaches target without manual vehicle control.
     */
-    verify requirement REQ_NAV_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_001;
+    }
   }
 
   verification def TC_NAV_002 {
+    subject testRobot : MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
     doc /*
     ID: TC-NAV-002
     Verifies: REQ-NAV-004, REQ-NAV-005
+    Method: Initially simulation only; no physical robot is required.
+    Precondition: Documented world, robot configuration and open-door route.
     Action: Drive route through at least two rooms, a corridor and one open door.
-    Expected: Route is completed autonomously.
+    Expected: Route is completed autonomously in the simulation.
+    Evidence: Run ID, configuration versions, simulation time and trajectory.
+    No verdict is asserted before a documented run has been evaluated.
     */
-    verify requirement REQ_NAV_004;
-    verify requirement REQ_NAV_005;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_004;
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_005;
+    }
   }
 
   verification def TC_OBS_001 {
@@ -64,9 +79,11 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Place obstacle in front of planned route.
     Expected: Obstacle is detected and robot stops or safely replans.
     */
-    verify requirement REQ_MAP_002;
-    verify requirement REQ_NAV_002;
-    verify requirement REQ_SAFE_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_MAP_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_SAFE_001;
+    }
   }
 
   verification def TC_OBS_002 {
@@ -76,9 +93,11 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Block route so no safe alternative is available.
     Expected: Robot stops and reports blocked route.
     */
-    verify requirement REQ_NAV_003;
-    verify requirement REQ_SAFE_001;
-    verify requirement REQ_STA_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_NAV_003;
+      verify MobileMaterialRobot_Requirements_A1::REQ_SAFE_001;
+      verify MobileMaterialRobot_Requirements_A1::REQ_STA_001;
+    }
   }
 
   verification def TC_UI_001 {
@@ -88,7 +107,9 @@ package MobileMaterialRobot_Verification_A1 {
     Action: User creates transport order in web app.
     Expected: Robot accepts or rejects order with clear status.
     */
-    verify requirement REQ_UI_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_001;
+    }
   }
 
   verification def TC_UI_002 {
@@ -98,7 +119,9 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Trigger status, operational stop and return-to-charging command.
     Expected: Each command creates the expected observable system response.
     */
-    verify requirement REQ_UI_002;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+    }
   }
 
   verification def TC_PWR_002 {
@@ -108,7 +131,9 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Run defined teaching-block operating profile.
     Expected: System covers approximately 2 h without intermediate charging.
     */
-    verify requirement REQ_PWR_002;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_PWR_002;
+    }
   }
 
   verification def TC_PERF_001 {
@@ -118,6 +143,8 @@ package MobileMaterialRobot_Verification_A1 {
     Action: Measure driving profile during nominal movement.
     Expected: Nominal speed is approximately 0.5 m/s within defined tolerance.
     */
-    verify requirement REQ_PERF_001;
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_PERF_001;
+    }
   }
 }
