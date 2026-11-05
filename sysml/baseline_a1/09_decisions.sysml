@@ -180,20 +180,24 @@ package MobileMaterialRobot_Decisions_A1 {
       die bei jedem neuen Zustand gepflegt werden muesste.
   */
 
-  comment DEC_017 about REQ_PWR_001, FUN_ENE_001, MissionStatus, LowEnergyDetected, TC_PWR_001 /*
+  comment DEC_017 about REQ_PWR_001, FUN_ENE_001, MissionStatus, LowEnergyDetected, TC_PWR_001,
+      REQ_UI_002, TC_UI_005 /*
     ID: DEC-017
     Art: Baseline
     Entscheidung: Erreicht der Ladezustand waehrend eines Auftrags den
       Schwellwert, meldet der Roboter eine Warnung im Missionsstatus und
       faehrt weiter. Er unterbricht den Auftrag nicht selbst und faehrt nicht
-      selbst zur Ladestation; der Bediener entscheidet.
+      selbst zur Ladestation; der Bediener entscheidet. Ein pausierter
+      Auftrag kann zum Laden geschickt werden und bleibt dabei erhalten;
+      nach dem Laden setzt der Bediener ihn manuell fort oder verwirft ihn
+      per Quittierung.
     Status: Angenommen
     Datum: 05.11.2026
     Begruendung: Braucht im MVP keine neue Steuerlogik und folgt dem Muster
-      bewusster Bedienhandlungen aus DEC-013 und DEC-015. Der Bediener kommt
-      mit vorhandenen Befehlen zur Ladestation: Stopp (pausiert), Abbruch,
-      Quittierung, Rueckkehr. Die Annahme A-011 muss dafuer genug Reserve
-      fuer diese Bedienzeit einschliessen.
+      bewusster Bedienhandlungen aus DEC-013 und DEC-015. Der Weg zum Laden
+      ist kurz (Stopp, Rueckkehr), und der Auftrag geht nicht verloren, wie
+      es DEC-013 verlangt. A-011 muss die Reserve fuer diese Bedienzeit
+      einschliessen.
   */
 
   // Architektur- und Prozessentscheidungen

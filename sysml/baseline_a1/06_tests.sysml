@@ -278,6 +278,24 @@ package MobileMaterialRobot_Verification_A1 {
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_003; }
   }
 
+  verification def TC_UI_005 {
+    subject testRobot : MobileMaterialRobot;
+    doc /*
+    ID: TC-UI-005
+    Name: Laden mit pausiertem Auftrag
+    Ablauf: Auftrag pausieren, Rueckkehr zur Ladestation ausloesen, nach
+      Erreichen der Ladestation einmal fortsetzen und einmal quittieren.
+    Erwartet: Der pausierte Auftrag bleibt waehrend der Rueckkehr erhalten;
+      Fortsetzung fuehrt ueber orderAccepted zurueck in die Fahrt,
+      Quittierung verwirft ihn (DEC-017).
+    Hinweis: Geplant; keine Auswertungslogik und kein Nachweis.
+    */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
+  }
+
   verification def TC_DIAG_001 {
     subject testRobot : MobileMaterialRobot;
     doc /*

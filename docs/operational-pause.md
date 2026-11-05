@@ -44,6 +44,8 @@ Acht ausschliesslich synthetische Fixtures ergaenzen die bisherigen sieben:
 | Pausennachweise fehlen | inconclusive |
 
 Kein Fall belegt einen physikalischen Stopp oder eine Simulatorfahrt.
+Ein pausierter Auftrag kann zum Laden geschickt werden und bleibt erhalten;
+nach dem Laden wird er manuell fortgesetzt oder verworfen (DEC-017).
 Abbruch und Rueckkehr nach Blockade, Fehler und sicherem Zustand regelt
 DEC-015 (manuelle Quittierung); der Not-Halt bleibt offen (OI-SAFE-001).
 

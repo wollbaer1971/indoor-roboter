@@ -178,6 +178,12 @@ package MobileMaterialRobot_Behavior_A1 {
     safeState nur bei safeToMove. Quittierung setzt keinen EmergencyStop
     zurueck (OI-SAFE-001).
 
+    Laden mit pausiertem Auftrag (DEC-017): Aus paused fuehrt der
+    Rueckkehrbefehl zur Ladestation, der Auftrag bleibt erhalten. Aus
+    chargingInterfaceReached setzt eine manuelle Freigabe den erhaltenen
+    Auftrag fort (orderAccepted, dann RouteReady); eine Quittierung dort
+    verwirft ihn und fuehrt nach ready.
+
     Regeln, die tools/validate_sysml.py prueft:
     In jedem Zustand fuehrt UnsafeCondition nach safeState und
     TechnicalFault nach fault (DEC-016), auch im Stillstand und beim
@@ -224,6 +230,13 @@ package MobileMaterialRobot_Behavior_A1 {
         retainedOrderAvailable = resume.retainedOrderAvailable)
       then orderAccepted;
     transition first ready accept ReturnRequested then returningToChargingStation;
+    // DEC-017: return to charge from paused; the paused order stays retained.
+    transition first paused accept ReturnRequested then returningToChargingStation;
+    transition first chargingInterfaceReached accept resumeAfterCharge : ResumeRequested
+      if ResumePermitted(isPaused = true, manualRelease = resumeAfterCharge.manualRelease,
+        safeToMove = resumeAfterCharge.safeToMove,
+        retainedOrderAvailable = resumeAfterCharge.retainedOrderAvailable)
+      then orderAccepted;
     transition first returningToChargingStation accept ChargingAreaReached then chargingInterfaceReached;
     transition first driving accept ObstacleDetected then avoidingObstacle;
     transition first avoidingObstacle accept ObstacleCleared then driving;

@@ -290,3 +290,7 @@ Overleaf passt nur ihr Aussehen an.
 - Bedienweg zur Ladestation mit vorhandenen Befehlen: operationalStop
   (paused), cancelMission (stopped), acknowledge (ready),
   returnToChargingStation.
+- Ergaenzung: paused --ReturnRequested--> returningToChargingStation, der
+  Auftrag bleibt erhalten. chargingInterfaceReached --ResumeRequested
+  (ResumePermitted)--> orderAccepted setzt ihn fort; Quittierung dort
+  verwirft ihn. Geplanter Test TC-UI-005.
