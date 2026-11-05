@@ -1,0 +1,53 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+\begin{tikzpicture}
+\input{figures/tikz/state_machine_layout}
+\node[state] (s-off) at (pos-off) {off};
+\node[state] (s-initializing) at (pos-initializing) {initializing};
+\node[state] (s-ready) at (pos-ready) {ready};
+\node[state] (s-orderAccepted) at (pos-orderAccepted) {orderAccepted};
+\node[state] (s-rejected) at (pos-rejected) {rejected};
+\node[state] (s-driving) at (pos-driving) {driving};
+\node[state] (s-avoidingObstacle) at (pos-avoidingObstacle) {avoidingObstacle};
+\node[state] (s-paused) at (pos-paused) {paused};
+\node[state] (s-blocked) at (pos-blocked) {blocked};
+\node[state] (s-completed) at (pos-completed) {completed};
+\node[state] (s-stopped) at (pos-stopped) {stopped};
+\node[state] (s-returningToChargingStation) at (pos-returningToChargingStation) {returningToChargingStation};
+\node[state] (s-returnPaused) at (pos-returnPaused) {returnPaused};
+\node[state] (s-chargingInterfaceReached) at (pos-chargingInterfaceReached) {chargingInterfaceReached};
+\node[terminal] (s-fault) at (pos-fault) {fault};
+\node[terminal] (s-safeState) at (pos-safeState) {safeState};
+\fill (s-off.west) ++(-6mm,0) circle (1.2mm) coordinate (start);
+\draw[transition] (start) -- (s-off);
+\draw[transition, e-off-initializing/.try] (s-off) to node[event, align=center] {PowerOn} (s-initializing);
+\draw[transition, e-initializing-ready/.try] (s-initializing) to node[event, align=center] {InitializationComplete} (s-ready);
+\draw[transition, e-ready-orderAccepted/.try] (s-ready) to node[event, align=center] {OrderValidated} (s-orderAccepted);
+\draw[transition, bend left=14, e-ready-rejected/.try] (s-ready) to node[event, align=center] {OrderRejected} (s-rejected);
+\draw[transition, e-orderAccepted-driving/.try] (s-orderAccepted) to node[event, align=center] {RouteReady} (s-driving);
+\draw[transition, e-driving-completed/.try] (s-driving) to node[event, align=center] {TargetReached} (s-completed);
+\draw[transition, e-driving-blocked/.try] (s-driving) to node[event, align=center] {RouteBlocked} (s-blocked);
+\draw[transition, e-driving-paused/.try] (s-driving) to node[event, align=center] {OperationalStop} (s-paused);
+\draw[transition, bend left=14, e-orderAccepted-paused/.try] (s-orderAccepted) to node[event, align=center] {OperationalStop} (s-paused);
+\draw[transition, e-avoidingObstacle-paused/.try] (s-avoidingObstacle) to node[event, align=center] {OperationalStop} (s-paused);
+\draw[transition, bend left=14, e-paused-orderAccepted/.try] (s-paused) to node[event, align=center] {Resume [ResumePermitted]} (s-orderAccepted);
+\draw[transition, e-ready-returningToChargingStation/.try] (s-ready) to node[event, align=center] {Return} (s-returningToChargingStation);
+\draw[transition, e-paused-returningToChargingStation/.try] (s-paused) to node[event, align=center] {Return} (s-returningToChargingStation);
+\draw[transition, e-chargingInterfaceReached-orderAccepted/.try] (s-chargingInterfaceReached) to node[event, align=center] {Resume [ResumePermitted]} (s-orderAccepted);
+\draw[transition, e-returningToChargingStation-chargingInterfaceReached/.try] (s-returningToChargingStation) to node[event, align=center] {ChargingAreaReached} (s-chargingInterfaceReached);
+\draw[transition, bend left=14, e-returningToChargingStation-returnPaused/.try] (s-returningToChargingStation) to node[event, align=center] {OperationalStop} (s-returnPaused);
+\draw[transition, bend left=14, e-returnPaused-returningToChargingStation/.try] (s-returnPaused) to node[event, align=center] {Resume [ResumePermitted]} (s-returningToChargingStation);
+\draw[transition, e-returnPaused-ready/.try] (s-returnPaused) to node[event, align=center] {Acknowledge} (s-ready);
+\draw[transition, bend left=14, e-driving-avoidingObstacle/.try] (s-driving) to node[event, align=center] {ObstacleDetected} (s-avoidingObstacle);
+\draw[transition, bend left=14, e-avoidingObstacle-driving/.try] (s-avoidingObstacle) to node[event, align=center] {ObstacleCleared} (s-driving);
+\draw[transition, e-avoidingObstacle-blocked/.try] (s-avoidingObstacle) to node[event, align=center] {RouteBlocked} (s-blocked);
+\draw[transition, e-paused-stopped/.try] (s-paused) to node[event, align=center] {Cancel} (s-stopped);
+\draw[transition, e-stopped-ready/.try] (s-stopped) to node[event, align=center] {Acknowledge} (s-ready);
+\draw[transition, e-completed-ready/.try] (s-completed) to node[event, align=center] {Acknowledge} (s-ready);
+\draw[transition, bend left=14, e-rejected-ready/.try] (s-rejected) to node[event, align=center] {Acknowledge} (s-ready);
+\draw[transition, e-blocked-ready/.try] (s-blocked) to node[event, align=center] {Acknowledge} (s-ready);
+\draw[transition, e-chargingInterfaceReached-ready/.try] (s-chargingInterfaceReached) to node[event, align=center] {Acknowledge} (s-ready);
+\draw[transition, e-fault-ready/.try] (s-fault) to node[event, align=center] {Acknowledge [faultCleared]} (s-ready);
+\draw[transition, e-safeState-ready/.try] (s-safeState) to node[event, align=center] {Acknowledge [safeToMove]} (s-ready);
+\node[note] at (pos-note) {\textbf{Sicherheit (DEC-016):} Aus jedem Zustand ausser \texttt{off}, \texttt{fault}, \texttt{safeState} fuehrt \texttt{UnsafeCondition} nach \texttt{safeState} und \texttt{TechnicalFault} nach \texttt{fault}. Diese 26 Uebergaenge sind nicht einzeln gezeichnet. Ereignisnamen ohne die Endung \texttt{Requested}.};
+\end{tikzpicture}

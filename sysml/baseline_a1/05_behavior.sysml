@@ -27,6 +27,13 @@ package MobileMaterialRobot_Behavior_A1 {
     attribute safeToMove : Boolean;
     attribute faultCleared : Boolean;
   }
+  item def LowEnergyDetected {
+    doc /*
+    Ladezustand unter dem Schwellwert (FUN-ENE-001, A-011). Loest bewusst
+    keinen Zustandswechsel aus, sondern setzt die Warnung im MissionStatus;
+    der Bediener entscheidet ueber Unterbrechung und Rueckkehr (DEC-017).
+    */
+  }
   item def ReturnRequested;
   item def ChargingAreaReached;
   item def TechnicalFault;
@@ -171,6 +178,17 @@ package MobileMaterialRobot_Behavior_A1 {
     safeState nur bei safeToMove. Quittierung setzt keinen EmergencyStop
     zurueck (OI-SAFE-001).
 
+    Laden mit pausiertem Auftrag (DEC-017): Aus paused fuehrt der
+    Rueckkehrbefehl zur Ladestation, der Auftrag bleibt erhalten. Aus
+    chargingInterfaceReached setzt eine manuelle Freigabe den erhaltenen
+    Auftrag fort (orderAccepted, dann RouteReady); eine Quittierung dort
+    verwirft ihn und fuehrt nach ready.
+
+    Stopp waehrend der Rueckkehr (DEC-018): Ein betrieblicher Stopp in
+    returningToChargingStation fuehrt nach returnPaused. Fortsetzen mit
+    manueller Freigabe (ResumePermitted, wie DEC-013) setzt die Rueckkehr
+    fort; Quittierung bricht sie ab und fuehrt nach ready.
+
     Regeln, die tools/validate_sysml.py prueft:
     In jedem Zustand fuehrt UnsafeCondition nach safeState und
     TechnicalFault nach fault (DEC-016), auch im Stillstand und beim
@@ -197,6 +215,7 @@ package MobileMaterialRobot_Behavior_A1 {
     state completed;
     state stopped;
     state returningToChargingStation;
+    state returnPaused;
     state chargingInterfaceReached;
     state fault;
     state safeState;
@@ -217,7 +236,21 @@ package MobileMaterialRobot_Behavior_A1 {
         retainedOrderAvailable = resume.retainedOrderAvailable)
       then orderAccepted;
     transition first ready accept ReturnRequested then returningToChargingStation;
+    // DEC-017: return to charge from paused; the paused order stays retained.
+    transition first paused accept ReturnRequested then returningToChargingStation;
+    transition first chargingInterfaceReached accept resumeAfterCharge : ResumeRequested
+      if ResumePermitted(isPaused = true, manualRelease = resumeAfterCharge.manualRelease,
+        safeToMove = resumeAfterCharge.safeToMove,
+        retainedOrderAvailable = resumeAfterCharge.retainedOrderAvailable)
+      then orderAccepted;
     transition first returningToChargingStation accept ChargingAreaReached then chargingInterfaceReached;
+    // DEC-018: operational stop during the return; same release rule as DEC-013.
+    transition first returningToChargingStation accept OperationalStopRequested then returnPaused;
+    transition first returnPaused accept continueReturn : ResumeRequested
+      if ResumePermitted(isPaused = true, manualRelease = continueReturn.manualRelease,
+        safeToMove = continueReturn.safeToMove, retainedOrderAvailable = true)
+      then returningToChargingStation;
+    transition first returnPaused accept AcknowledgeRequested then ready;
     transition first driving accept ObstacleDetected then avoidingObstacle;
     transition first avoidingObstacle accept ObstacleCleared then driving;
     transition first avoidingObstacle accept RouteBlocked then blocked;
@@ -246,6 +279,7 @@ package MobileMaterialRobot_Behavior_A1 {
     transition first rejected accept UnsafeCondition then safeState;
     transition first stopped accept UnsafeCondition then safeState;
     transition first returningToChargingStation accept UnsafeCondition then safeState;
+    transition first returnPaused accept UnsafeCondition then safeState;
     transition first chargingInterfaceReached accept UnsafeCondition then safeState;
     transition first initializing accept TechnicalFault then fault;
     transition first ready accept TechnicalFault then fault;
@@ -258,6 +292,7 @@ package MobileMaterialRobot_Behavior_A1 {
     transition first rejected accept TechnicalFault then fault;
     transition first stopped accept TechnicalFault then fault;
     transition first returningToChargingStation accept TechnicalFault then fault;
+    transition first returnPaused accept TechnicalFault then fault;
     transition first chargingInterfaceReached accept TechnicalFault then fault;
   }
 }

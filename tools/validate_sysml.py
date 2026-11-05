@@ -93,7 +93,7 @@ def architecture_checks(model: Path) -> None:
     clean = {p: re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
              for p, text in sources.items()}
     canonical = [p for p, text in clean.items()
-                 if re.search(r"\bpart def MobileMaterialRobot\s*\{", text)]
+                 if re.search(r"\bpart def MobileMaterialRobot(?:\s*:>\s*\w+)?\s*\{", text)]
     if canonical != [model / "baseline_a1/03_structure.sysml"]:
         raise RuntimeError(f"Expected exactly one canonical robot type, found {canonical}")
     requirements = sources[model / "baseline_a1/02_requirements.sysml"]
@@ -216,7 +216,7 @@ def documentation_checks(docs: Path) -> None:
            for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
     for path, text in tex.items():
         for number, line in enumerate(text.splitlines(), 1):
-            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|A-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
+            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|A-\d{3}|FUN-[A-Z]+-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
                 problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, decision, subsystem or topic); "
                                 "maintain it in the model")
     for path, text in tex.items():
@@ -266,6 +266,33 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
             print(f"NEGATIVE {name}: detected ({summary[1]} errors, {summary[2]} warnings)")
 
 
+def inheritance_check() -> None:
+    """Move five subsystems into a base type, as a variant core would; the subsystem table must stay the same."""
+    shared = ("navigation : NavigationSystem", "perception : PerceptionSystem", "motion : MotionSystem",
+              "safety : SafetySystem", "diagnostics : DiagnosticsSystem")
+    with tempfile.TemporaryDirectory(prefix="inheritance-") as temporary:
+        copy = Path(temporary)
+        for folder in ("chapters", "appendices", "tables", "sysml", "figures"):
+            shutil.copytree(REPO / folder, copy / folder)
+        structure = copy / "sysml/baseline_a1/03_structure.sysml"
+        text = structure.read_text(encoding="utf-8")
+        for part in shared:
+            text = text.replace(f"    part {part};\n", "", 1)
+        base = "".join(f"    part {part};\n" for part in shared)
+        text = text.replace("  part def MobileMaterialRobot {\n",
+                            "  part def MobileRobotBase {\n" + base + "  }\n\n"
+                            "  part def MobileMaterialRobot :> MobileRobotBase {\n"
+                            "    part redefines navigation : NavigationSystem;\n", 1)
+        structure.write_text(text, encoding="utf-8")
+        key = generate_docs.GENERATED / "subsystems_a1.tex"
+        rows = lambda content: sorted(line for line in content.splitlines() if "&" in line)
+        expected = rows((REPO / key).read_text(encoding="utf-8"))
+        actual = rows(generate_docs.render(copy)[key])
+        if actual != expected:
+            raise RuntimeError("Subsystem table changes when subsystems are inherited from a base type")
+        print(f"INHERITANCE subsystems_via_base={len(shared)} redefines=1 table_unchanged=true")
+
+
 def negative_documentation_check() -> None:
     """Mutate temporary copies of docs and model; every mutation must fail the documentation check."""
     mutations = {
@@ -284,13 +311,21 @@ def negative_documentation_check() -> None:
         "hand_written_non_goal": ("chapters/03_systemdefinition.tex",
                                   lambda text: text.replace("\\modeltext{non_goals_a1}",
                                                             "\\modeltext{non_goals_a1}\n  \\item Raumfahrt.", 1)),
+        "open_function_chain": ("sysml/baseline_a1/08_traceability.sysml",
+                                lambda text: text.replace(
+                                    "  dependency from MobileMaterialRobot_Structure_A1::EnergySystem to "
+                                    "MobileMaterialRobot_Requirements_A1::REQ_PWR_001;\n", "", 1)),
+        "missing_state_position": ("figures/tikz/state_machine_layout.tex",
+                                   lambda text: text.replace("\\coordinate (pos-returnPaused)", "% removed", 1)),
+        "function_without_performer": ("sysml/baseline_a1/03_structure.sysml",
+                                       lambda text: text.replace("    perform action executeMotion : FUN_MOT_001;\n", "", 1)),
         "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
-                                         lambda text: text.replace("A-001 bis A-010", "A-001 bis A-011", 1)),
+                                         lambda text: text.replace("A-001 bis A-011", "A-001 bis A-099", 1)),
     }
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
             copy = Path(temporary)
-            for folder in ("chapters", "appendices", "tables", "sysml"):
+            for folder in ("chapters", "appendices", "tables", "sysml", "figures"):
                 shutil.copytree(REPO / folder, copy / folder)
             target = copy / rel
             original = target.read_text(encoding="utf-8")
@@ -329,6 +364,8 @@ def main() -> int:
     if args.negative_tests:
         negative_checks(java, home, model)
         negative_state_machine_check(model)
+        if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
+            inheritance_check()
         if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
             negative_documentation_check()
     return 0

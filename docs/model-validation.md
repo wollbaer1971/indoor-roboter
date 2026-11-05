@@ -239,3 +239,79 @@ Overleaf passt nur ihr Aussehen an.
 - Die Aufzaehlung in Kapitel 3 wird erzeugt; Text und Reihenfolge unveraendert.
 - NG-008 (Flottenoptimierung) grenzt REQ-ARCH-003 ab, NG-010 verweist auf
   DEC-012. Negativtest hand_written_non_goal.
+
+# Funktionsebene im Modell, 05.11.2026
+
+- `sysml/baseline_a1/12_functions.sysml`: neun Funktionen als `action def`.
+  Teilsysteme fuehren sie per `perform` aus; `dependency`-Beziehungen nennen
+  die Requirements, zu denen sie beitragen. Die Kette Requirement ->
+  Funktion -> Teilsystem aus Kapitel 10 ist damit im Modell vorhanden.
+- Die FUN-IDs in den Quelle-Feldern sind entfallen; der Generator setzt sie
+  aus den Beziehungen in die Traceability.
+- Funktionstabelle (Kapitel 8, neu mit Spalte "Ausgefuehrt von") und
+  HW/SW-Allokation (Kapitel 9) werden erzeugt.
+- Inhaltliche Aenderungen: FUN-TRN-001 "Werkstuecktraeger handhaben" (vorher
+  Materialkiste), FUN-LOC-001 "Pose bestimmen"; FUN-MOT-001 traegt neu zu
+  REQ-NAV-001 und REQ-PERF-001 bei (vorher von keinem Requirement genannt).
+- FUN-MIS-001, FUN-STA-001 und FUN-ENE-001 sind noch nicht alloziert (keine
+  HW/SW-Anteile).
+
+# Energiefunktion, Kettenregel und Vererbung, 05.11.2026
+
+- Neue Funktion FUN-ENE-001 "Energiezustand ueberwachen", ausgefuehrt vom
+  EnergySystem; sie traegt zu REQ-PWR-001 bei. Die bisherige Zuordnung
+  FUN-STA-001 -> REQ-PWR-001 entfaellt, die Kette schliesst sich jetzt.
+- Der Generator verlangt: Traegt eine Funktion zu einem Requirement bei, ist
+  mindestens ein ausfuehrendes Teilsystem diesem Requirement zugeordnet.
+  Negativtest open_function_chain.
+- Der Generator loest Spezialisierungen (part def X :> Y) auf: geerbte Parts
+  zuerst, 'redefines' ersetzt an derselben Stelle, Zyklen sind ein Fehler.
+  Die Probe inheritance_check baut die Struktur in einer Kopie wie in PR #2
+  um (Basistyp mit fuenf Teilsystemen) und verlangt dieselbe Tabelle.
+
+# Energieueberwachung im MVP, 05.11.2026
+
+- REQ-PWR-001 ist "MVP reduziert": Erkennen und Melden eines niedrigen
+  Ladezustands gehoeren ins MVP, weil REQ-PWR-002 (2 h Betrieb) sonst nicht
+  nachweisbar ist. Ein genaues Energiemodell folgt spaeter.
+- FUN-ENE-001 ist alloziert: Batterie mit Spannungs- und Strommessung,
+  Energiemonitor mit Schwellwert. Konkrete Bauteile und der Schwellwert
+  selbst sind nicht festgelegt.
+- Neue Annahme A-011 (Offen): Der Schwellwert fuer niedrigen Ladezustand
+  reicht fuer den Weg vom entferntesten Punkt zur Ladestation bei
+  Nominalgeschwindigkeit. Verknuepft mit FUN-ENE-001,
+  ReturnToChargingStation, REQ-PWR-001, REQ-PWR-002 und REQ-PERF-001.
+
+# Niedriger Ladezustand waehrend eines Auftrags, DEC-017, 05.11.2026
+
+- Variante "nur melden": Ereignis LowEnergyDetected, Attribut
+  MissionStatus.lowEnergyWarning. Kein Zustandswechsel; der Bediener
+  entscheidet. FUN-ENE-001 und TC-PWR-001 sind angepasst.
+- Bedienweg zur Ladestation mit vorhandenen Befehlen: operationalStop
+  (paused), cancelMission (stopped), acknowledge (ready),
+  returnToChargingStation.
+- Ergaenzung: paused --ReturnRequested--> returningToChargingStation, der
+  Auftrag bleibt erhalten. chargingInterfaceReached --ResumeRequested
+  (ResumePermitted)--> orderAccepted setzt ihn fort; Quittierung dort
+  verwirft ihn. Geplanter Test TC-UI-005.
+
+# Stopp waehrend der Rueckkehr, DEC-018, 05.11.2026
+
+- Neuer Zustand returnPaused (auch in MissionStatusKind).
+  returningToChargingStation --OperationalStopRequested--> returnPaused;
+  --ResumeRequested (ResumePermitted)--> returningToChargingStation;
+  --AcknowledgeRequested--> ready. Geplanter Test TC-UI-006.
+- Die Sicherheitsregel aus DEC-016 hat den neuen Zustand ohne Pflege einer
+  Liste erfasst: Ohne UnsafeCondition- und TechnicalFault-Uebergang meldete
+  der Validator ihn sofort.
+
+# Zustandsdiagramm aus dem Modell, 05.11.2026
+
+- Kapitel 8, Abschnitt "Betriebszustaende": TikZ-Diagramm von
+  RobotOperationState, erzeugt nach tables/generated/state_machine_a1.tex.
+  Querformatseite (Paket rotating).
+- Layout (Koordinaten, Pfeilstile) in figures/tikz/state_machine_layout.tex,
+  von Hand gepflegt. Der Generator verlangt fuer jeden Zustand genau eine
+  Koordinate (Negativtest missing_state_position).
+- Die 26 Sicherheitsuebergaenge aus DEC-016 stehen als Hinweiskasten statt
+  als Pfeile; der Generator bricht ab, falls einer davon im Modell fehlt.

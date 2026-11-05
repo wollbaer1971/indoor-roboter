@@ -203,8 +203,10 @@ package MobileMaterialRobot_Verification_A1 {
     ID: TC-PWR-001
     Name: Niedriger Energiezustand
     Ablauf: Simulierten Energiezustand beobachten.
-    Erwartet: Warnung bei niedrigem Ladezustand wird erzeugt und gemeldet.
-    Hinweis: Batteriemodell und Schwellwerte sind offen.
+    Erwartet: Warnung bei niedrigem Ladezustand wird erzeugt und im
+      Missionsstatus gemeldet; ein laufender Auftrag wird dadurch nicht
+      unterbrochen (DEC-017).
+    Hinweis: Batteriemodell und Schwellwerte sind offen (A-011).
     */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_PWR_001; }
   }
@@ -274,6 +276,43 @@ package MobileMaterialRobot_Verification_A1 {
       Kartenfreigabe fehlen noch, deshalb wuerde das Review heute scheitern.
     */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_003; }
+  }
+
+  verification def TC_UI_005 {
+    subject testRobot : MobileMaterialRobot;
+    doc /*
+    ID: TC-UI-005
+    Name: Laden mit pausiertem Auftrag
+    Ablauf: Auftrag pausieren, Rueckkehr zur Ladestation ausloesen, nach
+      Erreichen der Ladestation einmal fortsetzen und einmal quittieren.
+    Erwartet: Der pausierte Auftrag bleibt waehrend der Rueckkehr erhalten;
+      Fortsetzung fuehrt ueber orderAccepted zurueck in die Fahrt,
+      Quittierung verwirft ihn (DEC-017).
+    Hinweis: Geplant; keine Auswertungslogik und kein Nachweis.
+    */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
+  }
+
+  verification def TC_UI_006 {
+    subject testRobot : MobileMaterialRobot;
+    doc /*
+    ID: TC-UI-006
+    Name: Stopp waehrend der Rueckkehr
+    Ablauf: Rueckkehr zur Ladestation ausloesen, unterwegs betrieblichen
+      Stopp ausloesen, dann Fortsetzung mit und ohne Freigabe anfordern und
+      einmal quittieren.
+    Erwartet: Der Roboter haelt an und meldet Rueckkehr pausiert; nur
+      Fortsetzung mit Freigabe setzt die Rueckkehr fort, Quittierung fuehrt
+      nach bereit (DEC-018).
+    Hinweis: Geplant; keine Auswertungslogik und kein Nachweis.
+    */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
   }
 
   verification def TC_DIAG_001 {

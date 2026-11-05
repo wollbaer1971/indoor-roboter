@@ -4,6 +4,9 @@ package MobileMaterialRobot_Decisions_A1 {
   private import MobileMaterialRobot_Verification_A1::*;
   private import MobileMaterialRobot_Simulation_A1::SimulationTestBench;
   private import MobileMaterialRobot_Structure_A1::*;
+  private import MobileMaterialRobot_Functions_A1::FUN_ENE_001;
+  private import MobileMaterialRobot_Interfaces_A1::MissionStatus;
+  private import MobileMaterialRobot_Behavior_A1::LowEnergyDetected;
 
   doc /*
   Entscheidungsprotokoll. Jede Entscheidung ist ein benannter Kommentar.
@@ -175,6 +178,43 @@ package MobileMaterialRobot_Decisions_A1 {
       relevant wie waehrend der Fahrt, beim Laden sogar wahrscheinlicher.
       Eine Ausnahmeliste ist kuerzer und sicherer als eine Positivliste,
       die bei jedem neuen Zustand gepflegt werden muesste.
+  */
+
+  comment DEC_017 about REQ_PWR_001, FUN_ENE_001, MissionStatus, LowEnergyDetected, TC_PWR_001,
+      REQ_UI_002, TC_UI_005 /*
+    ID: DEC-017
+    Art: Baseline
+    Entscheidung: Erreicht der Ladezustand waehrend eines Auftrags den
+      Schwellwert, meldet der Roboter eine Warnung im Missionsstatus und
+      faehrt weiter. Er unterbricht den Auftrag nicht selbst und faehrt nicht
+      selbst zur Ladestation; der Bediener entscheidet. Ein pausierter
+      Auftrag kann zum Laden geschickt werden und bleibt dabei erhalten;
+      nach dem Laden setzt der Bediener ihn manuell fort oder verwirft ihn
+      per Quittierung.
+    Status: Angenommen
+    Datum: 05.11.2026
+    Begruendung: Braucht im MVP keine neue Steuerlogik und folgt dem Muster
+      bewusster Bedienhandlungen aus DEC-013 und DEC-015. Der Weg zum Laden
+      ist kurz (Stopp, Rueckkehr), und der Auftrag geht nicht verloren, wie
+      es DEC-013 verlangt. A-011 muss die Reserve fuer diese Bedienzeit
+      einschliessen.
+  */
+
+  comment DEC_018 about REQ_UI_002, REQ_MIS_002, TC_UI_006 /*
+    ID: DEC-018
+    Art: Baseline
+    Entscheidung: Ein betrieblicher Stopp waehrend der Rueckkehr zur
+      Ladestation haelt den Roboter an und fuehrt in den eigenen Zustand
+      Rueckkehr pausiert. Fortsetzen mit manueller Freigabe setzt die
+      Rueckkehr fort, Quittierung bricht sie ab. Ein erhaltener Auftrag
+      bleibt bis zur Quittierung erhalten.
+    Status: Angenommen
+    Datum: 05.11.2026
+    Begruendung: Der Bediener muss den Roboter auch auf dem Weg zur
+      Ladestation normal anhalten koennen, ohne einen Fehler- oder sicheren
+      Zustand auszuloesen. Ein eigener Zustand statt eines Merkers in paused
+      haelt den Zustandsautomaten eindeutig; die Freigaberegel bleibt die
+      aus DEC-013.
   */
 
   // Architektur- und Prozessentscheidungen

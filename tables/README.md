@@ -124,6 +124,40 @@ Reihenfolge im Modell ist die Reihenfolge im Dokument; Komma und Schlusspunkt
 setzt der Generator. Eine von Hand ergänzte `\item`-Zeile in dieser Liste
 lehnt die Prüfung ab.
 
+## Funktionen
+
+`sysml/baseline_a1/12_functions.sysml`, je Funktion eine `action def` mit
+`ID`, `Name`, `Zweck` und optional `HW-Anteil`, `SW-Anteil`, `Status` (alle
+drei oder keines). Welches Teilsystem eine Funktion ausführt, steht als
+`perform action ... : FUN_...;` im Teilsystem in `03_structure.sysml`. Zu
+welchen Requirements sie beiträgt, steht als `dependency` am Ende der
+Funktionsdatei. Daraus entstehen die Funktionstabelle (Kapitel 8), die
+HW/SW-Allokation (Kapitel 9) und die FUN-IDs in der Quelle-Spalte der
+Traceability. FUN-IDs schreibt man deshalb nicht mehr ins `Quelle`-Feld.
+Eine Funktion ohne ausführendes Teilsystem oder ohne Requirement lehnt der
+Generator ab.
+
+## Zustandsdiagramm
+
+Die Abbildung „Betriebszustände“ in Kapitel 8 entsteht aus
+`RobotOperationState` in `sysml/baseline_a1/05_behavior.sysml`
+(`tables/generated/state_machine_a1.tex`). Zustände, Pfeile, Ereignisse und
+Bedingungen kommen aus dem Modell. Die Sicherheitsübergänge aus DEC-016 sind
+in einem Hinweiskasten zusammengefasst; der Generator prüft vorher, dass sie
+vollständig sind.
+
+Das Aussehen steht in `figures/tikz/state_machine_layout.tex` und wird in
+Overleaf gepflegt:
+
+- `\coordinate (pos-<Zustand>) at (x, y);` setzt die Position eines Zustands.
+  Jeder Zustand braucht genau eine; ein neuer Zustand im Modell ohne
+  Koordinate lässt den Generator abbrechen.
+- `e-<von>-<nach>/.style={...}` formt einen einzelnen Pfeil, z. B.
+  `bend left=40` oder `out=60, in=-120` für einen Bogen und
+  `every node/.append style={pos=0.3}` für die Lage der Beschriftung.
+- Stile `state`, `terminal`, `transition`, `event`, `note` für Kästen,
+  Pfeile, Beschriftungen und den Hinweiskasten.
+
 ## Teilsysteme und ROS2
 
 - Teilsystem: Felder `Verantwortung` und `MVP-Status` im `part def` in
@@ -155,7 +189,8 @@ Alles außer der Zeile `\modeltable{...}` ist Layout und darf frei geändert
 werden: Spaltenbreiten, Kopfzeile, `\small`, `\caption`, Umgebung.
 Nur die Spaltenzahl muss bleiben: Requirements 4, MVP 3, Tests 4,
 Traceability 5, Entscheidungen Kapitel 3: 3, Anhang A: 4, ADR-Blatt: 2,
-Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4, Annahmen 3. Eine Spalte weglassen oder umsortieren geht nur im Generator.
+Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4, Annahmen 3, Funktionen 4,
+Allokation 4. Eine Spalte weglassen oder umsortieren geht nur im Generator.
 
 ## Was die Prüfung ablehnt
 
@@ -169,5 +204,5 @@ Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4, Annahmen 3. Eine Spalte weglassen 
 
 ## Noch nicht aus dem Modell erzeugt
 
-Interne Schnittstellen und Funktionen (Kapitel 8), HW/SW-Allokation
-(Kapitel 9) und die Use-Case-Beschreibungen sind noch Handarbeit.
+Interne Schnittstellen (Kapitel 8) und die Use-Case-Beschreibungen sind
+noch Handarbeit.

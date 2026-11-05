@@ -11,11 +11,13 @@ TC-UI-001 & Web-App-Auftrag & REQ-UI-001, REQ-MIS-001 & Start und Ziel werden ue
 TC-UI-002 & Grundbefehle & REQ-UI-002 & Status, betrieblicher Stopp und Rueckkehr zur Ladestation erzeugen nachvollziehbare Systemreaktionen. \\
 TC-PWR-002 & Unterrichtsprofil 2 h & REQ-PWR-002 & Roboter erreicht ein definiertes Demonstrationsprofil von ca. 2 h ohne Zwischenladen. \\
 TC-PERF-001 & Nominalgeschwindigkeit & REQ-PERF-001 & Fahrprofil wird mit ca. $0{,}5\,\mathrm{m/s}$ innerhalb definierter Toleranz ausgefuehrt. \\
-TC-PWR-001 & Niedriger Energiezustand & REQ-PWR-001 & Warnung bei niedrigem Ladezustand wird erzeugt und gemeldet. \\
+TC-PWR-001 & Niedriger Energiezustand & REQ-PWR-001 & Warnung bei niedrigem Ladezustand wird erzeugt und im Missionsstatus gemeldet; ein laufender Auftrag wird dadurch nicht unterbrochen (DEC-017). \\
 TC-STA-001 & Missionsstatus melden & REQ-STA-001, REQ-MIS-002 & Statuswechsel werden korrekt ausgegeben. \\
 TC-TRC-001 & Traceability-Review & REQ-ARCH-001, REQ-ARCH-002 & Jede MVP-Anforderung ist mit Funktion, Element, Schnittstelle und Test verknuepft; MVP-Elemente verweisen auf Zielsystem-Elemente. \\
 TC-UI-004 & Abbruch und Quittierung & REQ-UI-002, REQ-MIS-002 & Abbruch fuehrt nach gestoppt, der Auftrag ist verworfen; erst die Quittierung fuehrt nach bereit, aus Fehler und sicherem Zustand nur bei erfuellten Voraussetzungen (DEC-015). \\
 TC-ARCH-001 & Mehr-Roboter-Review & REQ-ARCH-003 & Auftrag und Status tragen eine Roboterkennung, Topics liegen je Roboter in einem Namensraum, die Freigabe dauerhafter Kartenaenderungen ist geregelt. \\
+TC-UI-005 & Laden mit pausiertem Auftrag & REQ-UI-002, REQ-MIS-002 & Der pausierte Auftrag bleibt waehrend der Rueckkehr erhalten; Fortsetzung fuehrt ueber orderAccepted zurueck in die Fahrt, Quittierung verwirft ihn (DEC-017). \\
+TC-UI-006 & Stopp waehrend der Rueckkehr & REQ-UI-002, REQ-MIS-002 & Der Roboter haelt an und meldet Rueckkehr pausiert; nur Fortsetzung mit Freigabe setzt die Rueckkehr fort, Quittierung fuehrt nach bereit (DEC-018). \\
 TC-DIAG-001 & Diagnosemeldung & REQ-DIAG-001 & Bei simuliertem Fehler enthaelt die Meldung Ursache, betroffene Funktion und Zeitstempel. \\
 TC-MNT-001 & Wartungsreview & REQ-MNT-001 & Zugang zu zentralen Komponenten ohne unverhaeltnismaessige Demontage; erst mit mechanischem Entwurf ausfuehrbar. \\
 TC-TRN-001 & Kistentransport & REQ-TRN-001 & Manuell aufgesetzter Werkstuecktraeger erreicht das Ziel; Nutzlastdaten und Zieltoleranz vor Ausfuehrung festlegen. \\

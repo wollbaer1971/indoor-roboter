@@ -29,9 +29,42 @@ GROUPS = {"Initial": "initial", "Iteration A": "iteration_a"}
 
 
 def blocks(source: str, keyword: str, prefix: str) -> list[tuple[str, str]]:
-    """Top-level blocks such as 'requirement REQ_X {' in file order."""
-    pattern = rf"^  {keyword} ({prefix}\w+) \{{\n(.*?)^  \}}"
+    """Top-level blocks such as 'requirement REQ_X {' or 'part def X :> Y {' in file order."""
+    pattern = rf"^  {keyword} ({prefix}\w+)(?:\s*:>\s*[\w:]+)? \{{\n(.*?)^  \}}"
     return re.findall(pattern, source, flags=re.M | re.S)
+
+
+def part_defs(source: str) -> dict[str, tuple[str | None, str]]:
+    """part def name -> (specialized base or None, body)."""
+    pattern = r"^  part def (\w+)(?:\s*:>\s*(?:\w+::)*(\w+))? \{\n(.*?)^  \}"
+    return {name: (base or None, body) for name, base, body in re.findall(pattern, source, flags=re.M | re.S)}
+
+
+def composed_parts(defs: dict[str, tuple[str | None, str]], name: str) -> list[tuple[str, str]]:
+    """(usage, type) of all parts of a part def, inherited ones first; 'redefines' replaces in place."""
+    chain, current = [], name
+    while current:
+        if current in chain:
+            raise ValueError(f"specialization cycle: {' -> '.join(chain + [current])}")
+        if current not in defs:
+            raise ValueError(f"part def {current} not found (specialization of {chain[-1] if chain else name})")
+        chain.append(current)
+        current = defs[current][0]
+    parts: list[tuple[str, str]] = []
+    for definition in reversed(chain):
+        body = defs[definition][1]
+        for redefines, usage, part_type in re.findall(
+                r"^    part (redefines )?(\w+) : (\w+)\s*[;{]", body, flags=re.M):
+            names = [u for u, _ in parts]
+            if redefines:
+                if usage not in names:
+                    raise ValueError(f"{definition}: redefines unknown part {usage}")
+                parts[names.index(usage)] = (usage, part_type)
+            elif usage in names:
+                raise ValueError(f"{definition}: part {usage} hides an inherited part; use 'redefines'")
+            else:
+                parts.append((usage, part_type))
+    return parts
 
 
 def fields(body: str, name: str) -> dict[str, str]:
@@ -92,7 +125,7 @@ def requirement_text(model: dict, rid: str, data: dict[str, str]) -> str:
     return text
 
 
-DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3}|NG-\d{3})\b")
+DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3}|NG-\d{3}|FUN-[A-Z]+-\d{3})\b")
 REFERENCE_SOURCES = ("sysml/**/*.sysml", "chapters/*.tex", "appendices/*.tex", "docs/*.md", "*.md")
 
 
@@ -114,7 +147,8 @@ def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[s
             decided_by.setdefault(dashed(target.split("::")[-1]), []).append(data["ID"])
     assumptions = load_assumptions(root)
     known = ({did for did, _ in decisions} | {aid for aid, _ in assumptions}
-             | {nid for nid, _ in load_non_goals(root)})
+             | {nid for nid, _ in load_non_goals(root)}
+             | {fid for fid, *_ in load_functions(root)})
     unknown = set()
     for pattern in REFERENCE_SOURCES:
         for path in root.glob(pattern):
@@ -134,11 +168,10 @@ def load_architecture(root: Path, requirement_ids: set[str]) -> dict:
     """Subsystems of the canonical robot, ROS2 node candidates and their topics."""
     a1 = root / "sysml/baseline_a1"
     structure = (a1 / "03_structure.sysml").read_text(encoding="utf-8")
-    robot = dict(blocks(structure, "part def", ""))["MobileMaterialRobot"]
-    defs = dict(blocks(structure, "part def", ""))
+    defs = part_defs(structure)
     subsystems = []
-    for part_type in re.findall(r"^    part \w+ : (\w+);", robot, flags=re.M):
-        data = fields(defs[part_type], part_type)
+    for _, part_type in composed_parts(defs, "MobileMaterialRobot"):
+        data = fields(defs[part_type][1], part_type)
         require(data, part_type, "Verantwortung", "MVP-Status")
         subsystems.append((part_type, data))
 
@@ -202,6 +235,38 @@ def load_assumptions(root: Path) -> list[tuple[str, dict[str, str]]]:
     return assumptions
 
 
+ALLOCATION_FIELDS = ("HW-Anteil", "SW-Anteil", "Status")
+
+
+def load_functions(root: Path) -> list[tuple[str, dict[str, str], list[str], list[str]]]:
+    """Functions with the subsystems performing them and the requirements they support."""
+    a1 = root / "sysml/baseline_a1"
+    source = (a1 / "12_functions.sysml").read_text(encoding="utf-8")
+    supports: dict[str, list[str]] = {}
+    for function, req in re.findall(r"^  dependency from (FUN_\w+) to (REQ_\w+);", source, flags=re.M):
+        supports.setdefault(function, []).append(dashed(req))
+    performers: dict[str, list[str]] = {}
+    structure = (a1 / "03_structure.sysml").read_text(encoding="utf-8")
+    for part, body in blocks(structure, "part def", ""):
+        for function in re.findall(r"^    perform action \w+ : (FUN_\w+);", body, flags=re.M):
+            performers.setdefault(function, []).append(part)
+    functions = []
+    for name, body in blocks(source, "action def", "FUN_"):
+        data = fields(body, name)
+        require(data, name, "ID", "Name", "Zweck")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        present = [k for k in ALLOCATION_FIELDS if data.get(k)]
+        if present and len(present) != len(ALLOCATION_FIELDS):
+            raise ValueError(f"{name}: allocation needs all of {', '.join(ALLOCATION_FIELDS)}")
+        if not performers.get(name):
+            raise ValueError(f"{name}: no subsystem performs this function")
+        if not supports.get(name):
+            raise ValueError(f"{name}: function supports no requirement")
+        functions.append((data["ID"], data, performers[name], supports[name]))
+    return functions
+
+
 def load_non_goals(root: Path) -> list[tuple[str, dict[str, str]]]:
     source = (root / "sysml/baseline_a1/11_non_goals.sysml").read_text(encoding="utf-8")
     non_goals = []
@@ -215,6 +280,69 @@ def load_non_goals(root: Path) -> list[tuple[str, dict[str, str]]]:
 
 
 ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Ersetzt")
+
+
+STATE_LAYOUT = Path("figures/tikz/state_machine_layout.tex")
+SAFETY_EXITS = (("UnsafeCondition", "safeState"), ("TechnicalFault", "fault"))
+
+
+def render_state_machine(root: Path) -> str:
+    """TikZ state diagram of RobotOperationState; positions and styles come from the layout file."""
+    source = (root / "sysml/baseline_a1/05_behavior.sysml").read_text(encoding="utf-8")
+    body = re.search(r"state def RobotOperationState \{(.*?)\n  \}", source, re.S)[1]
+    doc = re.search(r"doc /\*(.*?)\*/", body, re.S)[1]
+    unmonitored = split_list(re.search(r"Ohne Sicherheitsuebergaenge:([^\n]*)", doc)[1])
+    states = re.findall(r"^\s+state (\w+);", body, re.M)
+    start = re.search(r"entry; then (\w+);", body)[1]
+    transitions = []
+    for source_state, event, rest, target in re.findall(
+            r"transition first (\w+)\s+accept\s+(?:\w+\s*:\s*)?(\w+)(.*?)then (\w+);", body, re.S):
+        guard = ""
+        if "ResumePermitted" in rest:
+            guard = "ResumePermitted"
+        elif condition := re.search(r"if\s+\w+\.(\w+)", rest):
+            guard = condition[1]
+        transitions.append((source_state, event, guard, target))
+
+    # Safety exits are summarized in a note, so they must really exist for every monitored state.
+    monitored = [s for s in states if s not in unmonitored]
+    for state in monitored:
+        for event, target in SAFETY_EXITS:
+            if not any(t[0] == state and t[1] == event and t[3] == target for t in transitions):
+                raise ValueError(f"state diagram: {state} lacks {event} -> {target}; the summary note would be wrong")
+    shown = [t for t in transitions if (t[1], t[3]) not in SAFETY_EXITS]
+
+    layout = (root / STATE_LAYOUT).read_text(encoding="utf-8")
+    positions = set(re.findall(r"\\coordinate \(pos-(\w+)\)", layout)) - {"note"}
+    if positions != set(states):
+        raise ValueError(f"{STATE_LAYOUT}: missing positions {sorted(set(states) - positions)}, "
+                         f"unknown {sorted(positions - set(states))}")
+
+    pairs = {(s, d) for s, _, _, d in shown}
+    lines = [r"\begin{tikzpicture}", r"\input{" + STATE_LAYOUT.with_suffix("").as_posix() + "}"]
+    for state in states:
+        style = "terminal" if state in ("fault", "safeState") else "state"
+        lines.append(rf"\node[{style}] (s-{state}) at (pos-{state}) {{{tex(state)}}};")
+    lines.append(rf"\fill (s-{start}.west) ++(-6mm,0) circle (1.2mm) coordinate (start);")
+    lines.append(rf"\draw[transition] (start) -- (s-{start});")
+    grouped: dict[tuple[str, str], list[str]] = {}
+    for source_state, event, guard, target in shown:
+        label = event.removesuffix("Requested") + (f" [{guard}]" if guard else "")
+        grouped.setdefault((source_state, target), []).append(label)
+    for (source_state, target), labels in grouped.items():
+        # Each edge may be styled in the layout file as e-<source>-<target> (bend, label position).
+        bend = ", bend left=14" if (target, source_state) in pairs else ""
+        text = r"\\".join(tex(label) for label in labels)
+        lines.append(rf"\draw[transition{bend}, e-{source_state}-{target}/.try] (s-{source_state}) to "
+                     rf"node[event, align=center] {{{text}}} (s-{target});")
+    note = (r"\textbf{Sicherheit (DEC-016):} Aus jedem Zustand ausser "
+            + ", ".join(rf"\texttt{{{tex(s)}}}" for s in unmonitored)
+            + r" fuehrt \texttt{UnsafeCondition} nach \texttt{safeState} und \texttt{TechnicalFault} nach"
+            r" \texttt{fault}. Diese " + str(2 * len(monitored)) + " Uebergaenge sind nicht einzeln gezeichnet."
+            r" Ereignisnamen ohne die Endung \texttt{Requested}.")
+    lines.append(rf"\node[note] at (pos-note) {{{note}}};")
+    lines.append(r"\end{tikzpicture}")
+    return TEX_HEADER + "\n".join(lines) + "\n"
 
 
 def decision_status(data: dict[str, str]) -> str:
@@ -276,9 +404,30 @@ def load(root: Path) -> dict:
             raise ValueError(f"{rid}: not verified by any test definition")
     decisions, decided_by = load_decisions(root)
     architecture = load_architecture(root, {rid for rid, _ in requirements})
+    functions = load_functions(root)
+    functions_of: dict[str, list[str]] = {}
+    for fid, _, _, supported in functions:
+        unknown = set(supported) - {rid for rid, _ in requirements}
+        if unknown:
+            raise ValueError(f"{fid}: unknown requirement(s) {sorted(unknown)}")
+        for rid in supported:
+            functions_of.setdefault(rid, []).append(fid)
+    # Chain closure: requirement -> function -> subsystem must meet requirement -> subsystem.
+    for fid, _, performers, supported in functions:
+        for rid in supported:
+            allocated = elements.get(rid, [])
+            if not set(performers) & set(allocated):
+                raise ValueError(f"{fid} supports {rid}, but none of its performers {performers} "
+                                 f"is allocated to {rid} {allocated}: chain not closed")
     return {"requirements": requirements, "elements": elements, "tests": tests,
             "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by,
+            "functions": functions, "functions_of": functions_of,
             **architecture}
+
+
+def source_list(model: dict, rid: str, data: dict[str, str]) -> str:
+    """Documented sources plus the functions modelled as supporting the requirement."""
+    return ", ".join(split_list(data["Quelle"]) + model["functions_of"].get(rid, []))
 
 
 def element_list(model: dict, rid: str, data: dict[str, str]) -> list[str]:
@@ -297,7 +446,7 @@ def render(root: Path) -> dict[Path, str]:
         table(f"requirements_a1_{suffix}",
               [row(rid, tex(d["Typ"]), requirement_text(model, rid, d), tex(d["Akzeptanz"])) for rid, d in selected])
         table(f"traceability_a1_{suffix}",
-              [row(rid, tex(d["Quelle"]), tex(", ".join(element_list(model, rid, d))),
+              [row(rid, tex(source_list(model, rid, d)), tex(", ".join(element_list(model, rid, d))),
                    tex(d["Schnittstelle"]), ", ".join(model["tests_of"][rid])) for rid, d in selected])
     table("mvp_a1", [row(rid, tex(d["MVP"]), tex(d["MVP-Begruendung"]))
                      for rid, d in model["requirements"] if "MVP" in d])
@@ -342,6 +491,10 @@ def render(root: Path) -> dict[Path, str]:
                                      row("Auswirkung", tex(d["Auswirkung"])),
                                      row("Risiko", tex(d["Risiko"]))])
 
+    table("functions_a1", [row(fid, tex(d["Name"]), tex(d["Zweck"]), tex(", ".join(parts)))
+                           for fid, d, parts, _ in model["functions"]])
+    table("allocation_a1", [row(fid, tex(d["HW-Anteil"]), tex(d["SW-Anteil"]), tex(d["Status"]))
+                            for fid, d, _, _ in model["functions"] if d.get("HW-Anteil")])
     table("subsystems_a1", [row(name, tex(d["Verantwortung"]), tex(d["MVP-Status"]))
                             for name, d in model["subsystems"]])
     table("ros2_mapping_a1", [
@@ -352,10 +505,12 @@ def render(root: Path) -> dict[Path, str]:
     table("ros2_topics_a1", [row(tex(topic), tex(d["Typ"]), tex(direction(pub, sub)), tex(d["Zweck"]))
                              for topic, d, pub, sub in model["topics"]])
 
+    out[GENERATED / "state_machine_a1.tex"] = render_state_machine(root)
+
     md_rows = ["| Requirement | Quelle | Systemelement | Schnittstelle / ROS2 | Test | Status |",
                "| --- | --- | --- | --- | --- | --- |"]
     for rid, d in model["requirements"]:
-        md_rows.append("| " + " | ".join([rid, d["Quelle"], ", ".join(element_list(model, rid, d)),
+        md_rows.append("| " + " | ".join([rid, source_list(model, rid, d), ", ".join(element_list(model, rid, d)),
                                            d["Schnittstelle"], ", ".join(model["tests_of"][rid]), d["Status"]]) + " |")
     matrix = (root / MATRIX).read_text(encoding="utf-8")
     if BEGIN not in matrix or END not in matrix:
