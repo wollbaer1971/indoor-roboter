@@ -1,119 +1,267 @@
 package MobileMaterialRobot_ROS2Mapping_A1 {
   doc /*
-  Preliminary ROS2 mapping for later implementation work.
-  Baseline A.1 does not require ROS2 as a system requirement. ROS2 is documented
-  here as a likely architecture mapping, not as a final technology decision.
+  Vorlaeufiges ROS2-Mapping fuer die spaetere Implementierung. Baseline A.1
+  fordert ROS2 nicht als Systemanforderung; das Mapping ist eine
+  wahrscheinliche Architekturzuordnung, keine endgueltige Technologie-
+  entscheidung (ADR-0004).
+
+  Nodes: Die Felder sind Quelle der ROS2-Mapping-Tabelle in Kapitel 9.
+  Publiziert/Abonniert nennen Topics; daraus leitet der Generator die
+  Richtung jedes Topics ab. Eintraege ohne fuehrenden Schraegstrich
+  (z. B. Sensor-Topics) sind noch nicht festgelegte Quellen.
+  Topics: je eine item def mit Name, Typ und Zweck.
   */
 
   part def MissionManagerNode {
     doc /*
-    SysML element: MissionSystem
-    Possible ROS2 node: mission_manager_node
-    Publishes: /mission_state, /goal_pose
-    Subscribes: /transport_order, /operator_command, /navigation_result, /battery_state
-    Owns: order validation, mission state, completion/blockage reporting.
-    Related requirements: REQ-MIS-001, REQ-MIS-002, REQ-STA-001.
+    Node: mission_manager_node
+    Kurzname: Mission
+    Schnittstellenidee: Auftrag, Ziel, Missionszustand
+    Publiziert: /mission_state, /goal_pose
+    Abonniert: /transport_order, /operator_command, /navigation_result,
+      /battery_state, /safety_state
+    Verantwortung: Auftragsvalidierung, Missionszustand, Meldung von
+      Abschluss oder Blockade; Wechsel in safeState bei unsicherem
+      Safety-Zustand.
+    Anforderungen: REQ-MIS-001, REQ-MIS-002, REQ-STA-001
     */
   }
 
   part def WebInterfaceNode {
     doc /*
-    SysML element: UserInterfaceSystem / CommunicationSystem
-    Possible ROS2 node: web_interface_node
-    Publishes: /transport_order, /operator_command
-    Subscribes: /mission_state, /diagnostics
-    Related requirements: REQ-UI-001, REQ-UI-002.
-    */
-  }
-
-  part def MapManagementNode {
-    doc /*
-    SysML element: NavigationSystem (owns map management)
-    Possible ROS2 node: map_management_node
-    Publishes: /map, /map_update_candidate
-    Subscribes: /local_obstacles
-    Related requirements: REQ-MAP-001, REQ-MAP-003.
-    */
-  }
-
-  part def LocalizationNode {
-    doc /*
-    SysML element: NavigationSystem
-    Possible ROS2 node: localization_node
-    Publishes: /robot_pose
-    Subscribes: /map, sensor topics
-    Related requirement: REQ-LOC-001.
-    */
-  }
-
-  part def PerceptionNode {
-    doc /*
-    SysML element: PerceptionSystem
-    Possible ROS2 node: perception_node
-    Publishes: /local_obstacles
-    Subscribes: sensor topics
-    Related requirements: REQ-MAP-002, REQ-SAFE-002.
+    Node: web_interface_node
+    Kurzname: Web-Interface
+    Schnittstellenidee: Auftraege und Bedienbefehle von der Web-App, Status
+      und Diagnose zur Web-App
+    Publiziert: /transport_order, /operator_command
+    Abonniert: /mission_state, /diagnostics
+    Anforderungen: REQ-UI-001, REQ-UI-002
     */
   }
 
   part def NavigationNode {
     doc /*
-    SysML element: NavigationSystem
-    Possible ROS2 node: navigation_node
-    Publishes: /cmd_vel, /navigation_result
-    Subscribes: /goal_pose, /robot_pose, /map, /local_obstacles, /safety_state
-    Parameters: nominal_speed, speed_limit, planner_config
-    Related requirements: REQ-NAV-001 through REQ-NAV-005, REQ-PERF-001.
+    Node: navigation_node
+    Ergaenzung: z. B. auf Basis Nav2
+    Kurzname: Navigation
+    Schnittstellenidee: Zielaktion, Pfad, Bewegungsbefehl
+    Publiziert: /cmd_vel, /navigation_result
+    Abonniert: /goal_pose, /robot_pose, /odom, /map, /local_obstacles,
+      /safety_state
+    Parameter: nominal_speed, speed_limit, planner_config
+    Anforderungen: REQ-NAV-001, REQ-NAV-002, REQ-NAV-003, REQ-NAV-004,
+      REQ-NAV-005, REQ-PERF-001
     */
   }
 
-  part def SafetySupervisorNode {
+  part def MapManagementNode {
     doc /*
-    SysML element: SafetySystem
-    Possible ROS2 node: safety_supervisor_node
-    Publishes: /safety_state
-    Subscribes: /local_obstacles, /cmd_vel, safety inputs
-    Related requirements: REQ-SAFE-001, REQ-SAFE-002.
+    Node: map_management_node
+    Rolle: Kartenverwaltung
+    Kurzname: Kartenverwaltung
+    Schnittstellenidee: Karte bereitstellen, Kartenupdate-Kandidaten
+    Publiziert: /map, /map_update_candidate
+    Abonniert: /local_obstacles
+    Anforderungen: REQ-MAP-001, REQ-MAP-003
     */
   }
 
-  part def EnergyMonitorNode {
+  part def LocalizationNode {
     doc /*
-    SysML element: EnergySystem
-    Possible ROS2 node: energy_monitor_node
-    Publishes: /battery_state
-    Subscribes: battery hardware interface
-    Related requirements: REQ-PWR-001, REQ-PWR-002.
+    Node: localization_node
+    Rolle: Lokalisierung
+    Kurzname: Lokalisierung
+    Schnittstellenidee: Pose, Transformationsdaten
+    Publiziert: /robot_pose
+    Abonniert: /map, Sensor-Topics
+    Anforderungen: REQ-LOC-001
+    */
+  }
+
+  part def PerceptionNode {
+    doc /*
+    Node: perception_node
+    Ergaenzung: ggf. aufgeteilt in Sensortreiber und Hindernisverarbeitung
+    Kurzname: Perception
+    Schnittstellenidee: Sensordaten, Hindernisse, lokale Karte
+    Publiziert: /local_obstacles
+    Abonniert: Sensor-Topics
+    Anforderungen: REQ-MAP-002, REQ-SAFE-002
     */
   }
 
   part def MotionControllerNode {
     doc /*
-    SysML element: MotionSystem
-    Candidate only; no physical driver or simulator selected.
-    Subscribes: /cmd_vel, /safety_state
-    Owns: execution of permitted motion commands.
+    Node: motion_controller_node
+    Ergaenzung: ggf. mit MCU-Firmware
+    Kurzname: Motion
+    Schnittstellenidee: Geschwindigkeitsvorgabe, Odometrie, Motorstatus
+    Publiziert: /odom
+    Abonniert: /cmd_vel, /safety_state
+    Verantwortung: Ausfuehrung zulaessiger Bewegungsbefehle und Odometrie.
+    Anforderungen: REQ-NAV-001
+    Hinweis: Nur Kandidat; weder Treiber noch Simulator ausgewaehlt.
+    */
+  }
+
+  part def SafetySupervisorNode {
+    doc /*
+    Node: safety_supervisor_node
+    Ergaenzung: spaeter plus Hardware-Stopp
+    Kurzname: Safety
+    Schnittstellenidee: Safety-Zustand, Stoppgrund
+    Publiziert: /safety_state
+    Abonniert: /local_obstacles, /cmd_vel, Safety-Eingaenge
+    Anforderungen: REQ-SAFE-001, REQ-SAFE-002
+    */
+  }
+
+  part def EnergyMonitorNode {
+    doc /*
+    Node: energy_monitor_node
+    Kurzname: Energy
+    Schnittstellenidee: Batterie- und Warnstatus
+    Publiziert: /battery_state
+    Abonniert: Batterie-Hardwareschnittstelle
+    Anforderungen: REQ-PWR-001, REQ-PWR-002
     */
   }
 
   part def DiagnosticsNode {
     doc /*
-    SysML element: DiagnosticsSystem
-    Candidate only; no concrete diagnostic sources selected.
-    Publishes: /diagnostics
+    Node: diagnostics_node
+    Kurzname: Diagnose
+    Schnittstellenidee: Diagnosemeldungen
+    Publiziert: /diagnostics
+    Anforderungen: REQ-DIAG-001
+    Hinweis: Nur Kandidat; noch keine konkreten Diagnosequellen ausgewaehlt.
     */
   }
 
-  // Candidate technology mapping; these dependencies are not allocations or evidence.
-  dependency from MotionControllerNode to MobileMaterialRobot_Structure_A1::MotionSystem;
-  dependency from DiagnosticsNode to MobileMaterialRobot_Structure_A1::DiagnosticsSystem;
+  // Topics der Kandidaten-Architektur. Typ "offen" heisst: noch nicht entschieden.
+
+  item def GoalPoseTopic {
+    doc /*
+    Name: /goal_pose
+    Typ: Topic/Action offen
+    Zweck: Zielvorgabe fuer Navigation
+    */
+  }
+
+  item def CmdVelTopic {
+    doc /*
+    Name: /cmd_vel
+    Typ: Topic
+    Zweck: Geschwindigkeitsvorgabe
+    */
+  }
+
+  item def OdomTopic {
+    doc /*
+    Name: /odom
+    Typ: Topic
+    Zweck: Odometriedaten
+    */
+  }
+
+  item def MapTopic {
+    doc /*
+    Name: /map
+    Typ: Topic/Service
+    Zweck: Grundkarte
+    */
+  }
+
+  item def LocalObstaclesTopic {
+    doc /*
+    Name: /local_obstacles
+    Typ: Topic
+    Zweck: erkannte Hindernisse
+    */
+  }
+
+  item def MissionStateTopic {
+    doc /*
+    Name: /mission_state
+    Typ: Topic
+    Zweck: Missionsstatus
+    */
+  }
+
+  item def SafetyStateTopic {
+    doc /*
+    Name: /safety_state
+    Typ: Topic
+    Zweck: Safety-Zustand und Stoppgrund
+    */
+  }
+
+  item def BatteryStateTopic {
+    doc /*
+    Name: /battery_state
+    Typ: Topic
+    Zweck: Energiezustand
+    */
+  }
+
+  item def TransportOrderTopic {
+    doc /*
+    Name: /transport_order
+    Typ: Topic
+    Zweck: Transportauftrag
+    */
+  }
+
+  item def OperatorCommandTopic {
+    doc /*
+    Name: /operator_command
+    Typ: Topic
+    Zweck: Status, Stopp, Fortsetzung, Abbruch, Quittierung, Rueckkehr
+    */
+  }
+
+  item def NavigationResultTopic {
+    doc /*
+    Name: /navigation_result
+    Typ: Topic
+    Zweck: Ziel erreicht, blockiert, nicht erreichbar
+    */
+  }
+
+  item def RobotPoseTopic {
+    doc /*
+    Name: /robot_pose
+    Typ: Topic
+    Zweck: geschaetzte Pose
+    */
+  }
+
+  item def MapUpdateCandidateTopic {
+    doc /*
+    Name: /map_update_candidate
+    Typ: Topic
+    Zweck: vorgeschlagene dauerhafte Kartenaenderung
+    */
+  }
+
+  item def DiagnosticsTopic {
+    doc /*
+    Name: /diagnostics
+    Typ: Topic
+    Zweck: Diagnosemeldungen
+    */
+  }
+
+  // Kandidaten-Zuordnung Node -> Teilsystem; keine Allokation, kein Nachweis.
   dependency from MissionManagerNode to MobileMaterialRobot_Structure_A1::MissionSystem;
   dependency from WebInterfaceNode to MobileMaterialRobot_Structure_A1::UserInterfaceSystem;
   dependency from WebInterfaceNode to MobileMaterialRobot_Structure_A1::CommunicationSystem;
+  dependency from NavigationNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
   dependency from MapManagementNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
   dependency from LocalizationNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
   dependency from PerceptionNode to MobileMaterialRobot_Structure_A1::PerceptionSystem;
-  dependency from NavigationNode to MobileMaterialRobot_Structure_A1::NavigationSystem;
+  dependency from MotionControllerNode to MobileMaterialRobot_Structure_A1::MotionSystem;
   dependency from SafetySupervisorNode to MobileMaterialRobot_Structure_A1::SafetySystem;
   dependency from EnergyMonitorNode to MobileMaterialRobot_Structure_A1::EnergySystem;
+  dependency from DiagnosticsNode to MobileMaterialRobot_Structure_A1::DiagnosticsSystem;
 }

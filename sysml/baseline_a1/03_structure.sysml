@@ -2,9 +2,10 @@ package MobileMaterialRobot_Structure_A1 {
   private import MobileMaterialRobot_Interfaces_A1::*;
   private import MobileMaterialRobot_Behavior_A1::*;
   doc /*
-  Top-level structural decomposition for Baseline A.1.
-  This is not a final physical architecture. It separates responsibilities so
-  requirements, interfaces and tests can be allocated later.
+  Strukturelle Zerlegung der Baseline A.1. Keine endgueltige physische
+  Architektur; sie trennt Verantwortlichkeiten, damit Anforderungen,
+  Schnittstellen und Tests zugeordnet werden koennen. Die Felder der
+  Teilsysteme sind Quelle der Teilsystemtabelle in Kapitel 8.
   */
 
   part def MobileMaterialRobot {
@@ -32,8 +33,9 @@ package MobileMaterialRobot_Structure_A1 {
 
   part def MissionSystem {
     doc /*
-    Owns transport order handling, mission state, target validation, mission
-    progress and completion or blockage reporting.
+    Verantwortung: Auftragsannahme, Missionszustand, Zielvalidierung,
+      Ablaufkoordination, Meldung von Abschluss oder Blockade
+    MVP-Status: Teilweise
     */
     ref item activeOrder : TransportOrder[0..1];
     perform action transportMission : ExecuteTransportMission;
@@ -43,12 +45,17 @@ package MobileMaterialRobot_Structure_A1 {
     perform action resumeMission : ResumeMission {
       in item redefines pausedOrder = MissionSystem::activeOrder;
     }
+    perform action cancelMission : CancelMission {
+      in item redefines pausedOrder = MissionSystem::activeOrder;
+    }
   }
 
   part def NavigationSystem {
     doc /*
-    Owns map use, localization, route planning, local planning and handling of
-    non-reachable targets or blocked routes.
+    Verantwortung: Kartennutzung und Kartenverwaltung, Lokalisierung, globale
+      und lokale Planung, Zielerreichung, Behandlung nicht erreichbarer Ziele
+      und blockierter Wege
+    MVP-Status: MVP
     */
     perform action passDoor : PassOpenDoor;
     perform action handleObstacle : HandleTemporaryObstacle;
@@ -56,59 +63,71 @@ package MobileMaterialRobot_Structure_A1 {
 
   part def PerceptionSystem {
     doc /*
-    Owns onboard sensing and interpretation of current environment information.
-    Sensor choice is intentionally open in Baseline A.1.
+    Verantwortung: Sensoranbindung, Hinderniserkennung, lokale Umgebungskarte
+    MVP-Status: MVP
+    Hinweis: Die Sensorwahl ist in Baseline A.1 bewusst offen.
     */
   }
 
   part def MotionSystem {
     doc /*
-    Owns vehicle movement, drive control and execution of planned motion within
-    speed and safety limits.
+    Verantwortung: Bewegungsregelung, Motoransteuerung, Odometriedaten;
+      Ausfuehrung geplanter Bewegungen innerhalb der Geschwindigkeits- und
+      Sicherheitsgrenzen
+    MVP-Status: MVP
     */
   }
 
   part def TransportSystem {
     doc /*
-    Owns the mechanical payload interface to the workpiece carrier. Active
-    loading is not part of MVP 1, but the interface is part of the target system.
+    Verantwortung: Mechanische Schnittstelle zum Werkstuecktraeger
+    MVP-Status: Zielsystem
+    Hinweis: Aktives Beladen ist nicht Teil von MVP 1; die Schnittstelle gehoert
+      zum Zielsystem.
     */
   }
 
   part def EnergySystem {
     doc /*
-    Owns energy storage, state-of-charge monitoring and return-to-charging
-    behavior coordination. Automatic charging remains open.
+    Verantwortung: Energiespeicher, Ueberwachung des Ladezustands, Koordination
+      der Rueckkehr zur Ladestation; spaeter Laden/Docking
+    MVP-Status: Minimal
+    Hinweis: Automatisches Laden ist offen.
     */
     perform action returnToCharger : ReturnToChargingStation;
   }
 
   part def CommunicationSystem {
     doc /*
-    Owns network communication, command/status exchange, logs and future
-    integration points.
+    Verantwortung: Netzwerkkommunikation, Befehls- und Statusaustausch, Logs,
+      spaetere Integrationspunkte
+    MVP-Status: Minimal
     */
   }
 
   part def UserInterfaceSystem {
     doc /*
-    Owns the robot-side endpoint for the external web app, operator commands,
-    status exchange and basic commands. The WebApp presentation is outside
-    the system boundary; no hosting technology is selected here.
+    Verantwortung: Roboterseitiger Anschluss fuer die externe Web-App:
+      Auftraege, Bedienbefehle, Status. Die Web-App selbst liegt ausserhalb der
+      Systemgrenze.
+    MVP-Status: Minimal
+    Hinweis: Keine Hosting-Technologie festgelegt.
     */
   }
 
   part def SafetySystem {
     doc /*
-    Owns safety-relevant state evaluation, safety stop decisions and future
-    emergency-stop integration.
+    Verantwortung: Bewertung sicherheitsrelevanter Zustaende, Entscheidung ueber
+      den sicheren Stopp, spaetere Not-Halt-Integration
+    MVP-Status: MVP reduziert
     */
     perform action safetyStop : SafetyStop;
   }
 
   part def DiagnosticsSystem {
     doc /*
-    Owns diagnostic information for test, maintenance and fault analysis.
+    Verantwortung: Diagnoseinformationen fuer Test, Wartung und Fehleranalyse
+    MVP-Status: Minimal
     */
   }
 }

@@ -1,0 +1,12 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+MissionSystem & Auftragsannahme, Missionszustand, Zielvalidierung, Ablaufkoordination, Meldung von Abschluss oder Blockade & Teilweise \\
+NavigationSystem & Kartennutzung und Kartenverwaltung, Lokalisierung, globale und lokale Planung, Zielerreichung, Behandlung nicht erreichbarer Ziele und blockierter Wege & MVP \\
+PerceptionSystem & Sensoranbindung, Hinderniserkennung, lokale Umgebungskarte & MVP \\
+MotionSystem & Bewegungsregelung, Motoransteuerung, Odometriedaten; Ausfuehrung geplanter Bewegungen innerhalb der Geschwindigkeits- und Sicherheitsgrenzen & MVP \\
+TransportSystem & Mechanische Schnittstelle zum Werkstuecktraeger & Zielsystem \\
+EnergySystem & Energiespeicher, Ueberwachung des Ladezustands, Koordination der Rueckkehr zur Ladestation; spaeter Laden/Docking & Minimal \\
+CommunicationSystem & Netzwerkkommunikation, Befehls- und Statusaustausch, Logs, spaetere Integrationspunkte & Minimal \\
+UserInterfaceSystem & Roboterseitiger Anschluss fuer die externe Web-App: Auftraege, Bedienbefehle, Status. Die Web-App selbst liegt ausserhalb der Systemgrenze. & Minimal \\
+SafetySystem & Bewertung sicherheitsrelevanter Zustaende, Entscheidung ueber den sicheren Stopp, spaetere Not-Halt-Integration & MVP reduziert \\
+DiagnosticsSystem & Diagnoseinformationen fuer Test, Wartung und Fehleranalyse & Minimal \\

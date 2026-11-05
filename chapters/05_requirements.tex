@@ -20,24 +20,7 @@ Jede Anforderung erhaelt:
 \toprule
 ID & Typ & Requirement & Akzeptanzidee \\
 \midrule
-REQ-MIS-001 & Funktional & Das System muss einen Transportauftrag mit Start- und Zielstandort annehmen koennen. & Auftrag wird angenommen, validiert und mit Status versehen. \\
-REQ-TRN-001 & Funktional & Das System muss eine kleine Materialkiste zwischen zwei definierten Transportstationen transportieren koennen. & Kiste erreicht Zielstation in definiertem Testaufbau. \\
-REQ-MAP-001 & Funktional & Das System muss eine vorhandene Grundkarte des Betriebsbereichs laden koennen. & Karte wird geladen und fuer Lokalisierung genutzt. \\
-REQ-MAP-002 & Funktional & Das System muss relevante Veraenderungen der befahrbaren Umgebung waehrend des Betriebs erkennen. & Hindernis erscheint in lokaler Umgebungsdarstellung. \\
-REQ-LOC-001 & Funktional & Das System muss seine Position innerhalb des definierten Betriebsbereichs bestimmen koennen. & Positionsabweichung liegt innerhalb noch festzulegender Toleranz. \\
-REQ-NAV-001 & Funktional & Das System muss einen vorgegebenen Zielstandort autonom anfahren koennen. & Ziel wird ohne manuelle Steuerung erreicht. \\
-REQ-NAV-002 & Funktional & Das System muss erkannte Hindernisse bei der Bewegungs- oder Pfadplanung beruecksichtigen. & Roboter stoppt oder plant lokale Umfahrung. \\
-REQ-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. & Kein Kontakt mit Hindernis; Statusmeldung Blockade. \\
-REQ-STA-001 & Funktional & Das System muss seinen Missions- und Betriebsstatus melden koennen. & Status ist fuer Bediener/Betreiber abrufbar. \\
-REQ-DIAG-001 & Operational & Das System muss Diagnoseinformationen fuer Fehlersuche bereitstellen. & Fehlermeldungen enthalten Ursache, betroffene Funktion und Zeitstempel. \\
-REQ-PWR-001 & Nichtfunktional & Das System muss seinen Energiezustand ueberwachen. & Niedriger Ladezustand wird erkannt und gemeldet. \\
-REQ-PWR-002 & Nichtfunktional & Die erste Version soll eine Betriebsdauer von ca. 2 h fuer einen Unterrichtsblock abdecken. & Testprofil fuer Unterrichtsbetrieb wird definiert und erreicht. \\
-REQ-UI-001 & Funktional & Das System muss Transportauftraege in der ersten Version ueber eine Web-App entgegennehmen koennen. & Benutzer kann Start und Ziel auswaehlen und Auftrag starten. \\
-REQ-UI-002 & Funktional & Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen Stopp und Rueckkehr zur Ladestation bereitstellen. & Befehle sind ausloesbar und erzeugen nachvollziehbare Systemreaktionen. \\
-REQ-NAV-004 & Funktional & Das System muss im definierten Fahrbereich mehrere Raeume und einen verbindenden Flur erreichen koennen. & Testfahrt fuehrt ueber mindestens zwei Raeume und einen Flur. \\
-REQ-NAV-005 & Funktional & Das System muss offene Tueren im definierten Fahrbereich durchfahren koennen. & Testfahrt passiert eine offene Tuer ohne manuelle Fahrzeugsteuerung. \\
-REQ-PERF-001 & Nichtfunktional & Die Nominalgeschwindigkeit des MVP soll ca. $0{,}5\,\mathrm{m/s}$ betragen. & Fahrprofil wird mit definierter Toleranz gemessen. \\
-REQ-ARCH-001 & Constraint & Jede wesentliche Funktion muss auf mindestens ein logisches Systemelement und eine Verifikationsidee abbildbar sein. & Traceability-Matrix enthaelt keine leeren Kernspalten. \\
+\modeltable{requirements_a1_initial}
 \bottomrule
 \end{longtable}
 
@@ -49,20 +32,7 @@ Fuer den ersten MVP werden zunaechst die Anforderungen priorisiert, die den tech
 \toprule
 Requirement & MVP-Status & Begruendung \\
 \midrule
-REQ-MAP-001 & MVP & Ohne Grundkarte ist der geplante Navigationskern nicht nachweisbar. \\
-REQ-MAP-002 & MVP & Laufzeitaktualisierung der Umgebung ist Kern der Projektidee. \\
-REQ-LOC-001 & MVP & Lokalisierung ist Voraussetzung fuer zielgerichtete Navigation. \\
-REQ-NAV-001 & MVP & Autonomes Zielanfahren ist zentraler Funktionsnachweis. \\
-REQ-NAV-002 & MVP & Hindernisbehandlung prueft die Kopplung von Wahrnehmung und Navigation. \\
-REQ-SAFE-001 & MVP reduziert & Fuer MVP mindestens sicheres Stoppen; spaetere Safety-Auslegung bleibt offen. \\
-REQ-STA-001 & MVP & Statusmeldung ist fuer Testbarkeit und Bedienbarkeit erforderlich. \\
-REQ-UI-001 & MVP & Die Web-App ist die erste reale Auftragsschnittstelle. \\
-REQ-UI-002 & MVP reduziert & Status, betrieblicher Stopp und Rueckkehr zur Ladestation werden als Grundbefehle betrachtet. \\
-REQ-NAV-004 & MVP & Mehrere Raeume und Flur bilden den Demonstrationskern. \\
-REQ-NAV-005 & MVP & Offene Tueren sind zentrale Randbedingung der Umgebung. \\
-REQ-PERF-001 & MVP & Niedrige Geschwindigkeit reduziert Risiko und erleichtert Unterricht und Tests. \\
-REQ-PWR-002 & MVP & 2 h Betriebsdauer decken einen 90-min-Unterrichtsblock mit Reserve ab. \\
-REQ-TRN-001 & Nicht MVP & Materialumschlag wird im Zielsystem modelliert, aber im ersten MVP noch nicht voll implementiert. \\
+\modeltable{mvp_a1}
 \bottomrule
 \end{longtable}
 
@@ -90,13 +60,7 @@ Aus den detaillierten Needs, Betriebsfaellen und dem Kartenkonzept ergeben sich 
 \toprule
 ID & Typ & Requirement & Akzeptanzidee \\
 \midrule
-REQ-MIS-002 & Funktional & Das System muss melden, ob ein Transportauftrag angenommen, abgelehnt, pausiert, blockiert oder abgeschlossen wurde. & Statuswechsel sind fuer Bedienung und Test nachvollziehbar. \\
-REQ-TRN-002 & Safety/Funktional & Das System muss die transportierte Kiste waehrend des Transports so halten oder sichern, dass sie keine zusaetzliche Gefaehrdung verursacht. & Kiste bleibt bei spezifiziertem Fahrprofil innerhalb der zulaessigen Lage. \\
-REQ-MAP-003 & Constraint & Das System muss zwischen Basisinformationen, aktuellen Umgebungsinformationen und moeglichen dauerhaften Kartenupdates unterscheiden koennen. & Temporaeres Hindernis veraendert die Langzeitkarte nicht automatisch. \\
-REQ-NAV-003 & Funktional & Das System muss erkennen koennen, wenn ein Ziel oder Fahrweg nicht erreichbar ist. & System meldet Blockade oder Nichterreichbarkeit mit nachvollziehbarem Status. \\
-REQ-SAFE-002 & Safety & Das System muss Personen im Fahrbereich bei der Bewegungsentscheidung sicherheitsrelevant beruecksichtigen. & Roboter reduziert Bewegung, stoppt oder waehlt Alternative gemaess spaeterem Safety-Konzept. \\
-REQ-MNT-001 & Operational & Zentrale Komponenten und Verschleissteile muessen fuer Wartung zugaenglich sein. & Wartungsreview bestaetigt Zugang ohne unverhaeltnismaessige Demontage. \\
-REQ-ARCH-002 & Constraint & Das System muss so strukturiert werden, dass ein MVP als Teilmenge des Zielsystems markiert werden kann. & MVP-Elemente referenzieren Zielsystem-Elemente statt ein separates Wegwerfmodell zu bilden. \\
+\modeltable{requirements_a1_iteration_a}
 \bottomrule
 \end{longtable}
 

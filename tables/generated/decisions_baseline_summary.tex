@@ -1,0 +1,18 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+DEC-001 & Das Zielsystem ist ein Indoor-Demonstrator. & Angenommen \\
+DEC-002 & Einsatzort ist ein produktionsaehnlicher Schulbereich. & Angenommen \\
+DEC-003 & Transportgut ist ein Werkstuecktraeger eines Transfersystems. & Angenommen \\
+DEC-004 & Die Beladung erfolgt zunaechst extern durch Mensch oder Transfersystem. & Angenommen \\
+DEC-005 & Der Fahrbereich umfasst mehrere Raeume und einen Flur. & Angenommen \\
+DEC-006 & Offene Tueren muessen befahrbar sein. & Angenommen \\
+DEC-007 & Die MVP-Geschwindigkeit liegt bei ca. $0{,}5\,\mathrm{m/s}$. & Angenommen \\
+DEC-008 & Die Zielbetriebsdauer der ersten Version liegt bei ca. 2 h. & Angenommen \\
+DEC-009 & Transportauftraege werden zunaechst ueber eine Web-App ausgeloest. & Angenommen \\
+DEC-010 & Eine einfache Bedienoberflaeche fuer Status, Stopp und Rueckkehr zur Ladestation ist vorgesehen. & Angenommen \\
+DEC-011 & Rueckkehr zur Ladestation gehoert zum Zielsystem. & Angenommen \\
+DEC-012 & Hoehere Geschwindigkeit wird als spaetere Erweiterung gefuehrt. & Angenommen \\
+DEC-013 & Ein betrieblicher Stopp pausiert den laufenden Transportauftrag. Auftrags-ID, Start und Ziel bleiben erhalten. Fortsetzung nur nach ausdruecklicher manueller Freigabe; Sicherheits- und Routenpruefung werden dabei nicht umgangen. & Angenommen (28.10.2026) \\
+DEC-014 & Verifikation erfolgt zunaechst ausschliesslich in der Simulation, ohne reale Hardware. Der Simulator ist noch nicht ausgewaehlt. & Angenommen (28.10.2026) \\
+DEC-015 & Ein pausierter Auftrag kann vom Bediener abgebrochen werden; er wird verworfen, der Roboter meldet gestoppt. Aus gestoppt, abgeschlossen, abgelehnt, blockiert, Ladebereich erreicht, Fehler und sicherem Zustand fuehrt nur eine manuelle Quittierung zurueck in den Bereitschaftszustand. Aus Fehler nur bei behobenem Fehler, aus sicherem Zustand nur wenn die Bewegung wieder sicher ist. Die Quittierung setzt keinen Not-Halt zurueck. & Angenommen (05.11.2026) \\
+DEC-016 & Unsichere Situationen fuehren in den sicheren Zustand, technische Fehler in den Fehlerzustand, und zwar in jedem Betriebszustand ausser ausgeschaltet, Fehlerzustand und sicherem Zustand. Das gilt auch im Stillstand, beim Hochfahren und an der Ladestation; neue Zustaende sind automatisch eingeschlossen. & Angenommen (05.11.2026) \\

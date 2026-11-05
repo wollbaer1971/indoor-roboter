@@ -28,33 +28,21 @@ FUN-TRN-001 & Materialkiste handhaben & Kiste aufnehmen, sichern und abgeben \\
 \toprule
 Teilsystem & Verantwortung & MVP-Status \\
 \midrule
-MissionSystem & Auftragsannahme, Missionszustand, Zielverwaltung, Ablaufkoordination & Teilweise \\
-TransportSystem & Mechanische und logische Handhabung der Materialkiste & Zielsystem \\
-NavigationSystem & Lokalisierung, globale Planung, lokale Planung, Zielerreichung & MVP \\
-PerceptionSystem & Sensoranbindung, Hinderniserkennung, lokale Umgebungskarte & MVP \\
-MotionSystem & Bewegungsregelung, Motoransteuerung, Odometriedaten & MVP \\
-EnergySystem & Batterieueberwachung, Energiezustand, spaeter Laden/Docking & Minimal \\
-SafetySystem & Ueberwachung sicherheitsrelevanter Zustaende, sicherer Stopp & MVP reduziert \\
-CommunicationSystem & Status, Diagnose, Auftrags- und Datenschnittstellen & Minimal \\
-UserInterface & Bedien- und Statusschnittstelle fuer Mensch oder externes System & Minimal \\
+\modeltable{subsystems_a1}
 \bottomrule
 \end{longtable}
 
 \section{Architekturentscheidung ADR-0001}
 
-\begin{decisionbox}{Entscheidung}
-Das Gesamtmodell wird von Beginn an mit allen zentralen Zielsystem-Teilsystemen aufgebaut. Der MVP implementiert nur einen markierten Teil davon.
+\begin{decisionbox}{Entscheidung}%
+\modeltext{adr_0001_decision}
 \end{decisionbox}
 
 \begin{longtable}{L{0.20\textwidth} L{0.64\textwidth}}
 \toprule
 Aspekt & Inhalt \\
 \midrule
-Status & Angenommen fuer Version 0.1 \\
-Alternativen & Separates MVP-Modell; direkte Implementierung ohne Zielarchitektur; vollstaendige Zielarchitektur vor erstem Prototyp \\
-Begruendung & Ein separates MVP-Modell wuerde spaeter Doppelarbeit erzeugen. Eine direkte Implementierung wuerde Traceability verlieren. Eine vollstaendige Zielarchitektur vor dem ersten Prototyp waere zu schwerfaellig. \\
-Auswirkung & Alle Artefakte benoetigen Status- und Prioritaetsattribute. MVP-Elemente bleiben auf Zielsystem-Elemente rueckfuehrbar. \\
-Risiko & Noch nicht implementierte Zielsystembereiche koennen zu grob bleiben. Dieses Risiko wird durch offene Punkte und spaetere Iterationen kontrolliert. \\
+\modeltable{adr_0001_details}
 \bottomrule
 \end{longtable}
 
@@ -70,6 +58,6 @@ IF-MOT-NAV-001 & MotionSystem & NavigationSystem & Odometriedaten, Bewegungsstat
 IF-PER-NAV-001 & PerceptionSystem & NavigationSystem & Hindernisse, lokale Karte, freie Flaechen \\
 IF-SAFE-MOT-001 & SafetySystem & MotionSystem & sicherheitsrelevanter Stopp oder Freigabe \\
 IF-ENG-MIS-001 & EnergySystem & MissionSystem & Energiezustand, Warnung niedriger Ladezustand \\
-IF-MIS-UI-001 & MissionSystem & UserInterface & Missionsstatus, Fehler, Zielerreichung \\
+IF-MIS-UI-001 & MissionSystem & UserInterfaceSystem & Missionsstatus, Fehler, Zielerreichung \\
 \bottomrule
 \end{longtable}

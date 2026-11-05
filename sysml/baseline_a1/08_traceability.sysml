@@ -40,4 +40,12 @@ package MobileMaterialRobot_Traceability_A1 {
   dependency from MobileMaterialRobot_Structure_A1::SafetySystem to MobileMaterialRobot_Requirements_A1::REQ_PERF_001;
   dependency from MobileMaterialRobot_Structure_A1::MissionSystem to MobileMaterialRobot_Requirements_A1::REQ_STA_001;
   dependency from MobileMaterialRobot_Structure_A1::UserInterfaceSystem to MobileMaterialRobot_Requirements_A1::REQ_STA_001;
+  dependency from MobileMaterialRobot_Structure_A1::DiagnosticsSystem to MobileMaterialRobot_Requirements_A1::REQ_DIAG_001;
+  dependency from MobileMaterialRobot_Structure_A1::CommunicationSystem to MobileMaterialRobot_Requirements_A1::REQ_DIAG_001;
+  // Maintenance access concerns the physical robot as a whole; no
+  // mechanical/electrical breakdown exists yet to allocate it more precisely.
+  dependency from MobileMaterialRobot_Structure_A1::MobileMaterialRobot to MobileMaterialRobot_Requirements_A1::REQ_MNT_001;
+  dependency from MobileMaterialRobot_Structure_A1::MissionSystem to MobileMaterialRobot_Requirements_A1::REQ_ARCH_003;
+  dependency from MobileMaterialRobot_Structure_A1::NavigationSystem to MobileMaterialRobot_Requirements_A1::REQ_ARCH_003;
+  dependency from MobileMaterialRobot_Structure_A1::CommunicationSystem to MobileMaterialRobot_Requirements_A1::REQ_ARCH_003;
 }

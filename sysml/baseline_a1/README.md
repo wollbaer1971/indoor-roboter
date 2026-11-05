@@ -13,13 +13,16 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | --- | --- |
 | `00_overview.sysml` | Modellzusammenstellung mit oeffentlichen Imports, Scope und Entscheidungen |
 | `01_context.sysml` | Externe Akteure, kanonische externe Typen, Kontext und Verbindungen |
-| `02_requirements.sysml` | 22 Anforderungen mit typisiertem Subject; wiederverwendbare Raum-/Tuerkriterien |
+| `02_requirements.sysml` | 26 Anforderungen mit typisiertem Subject; wiederverwendbare Raum-/Tuerkriterien |
 | `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
 | `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
 | `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
-| `06_tests.sysml` | 18 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `06_tests.sysml` | 22 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
+| `09_decisions.sysml` | Entscheidungsprotokoll (DEC, ADR) als benannte Kommentare mit `about`-Bezug |
+| `10_assumptions.sysml` | Annahmen A-001 bis A-010 als benannte Kommentare mit `about`-Bezug |
+| `11_non_goals.sysml` | Nicht-Ziele NG-001 bis NG-010 der ersten Entwicklungsstufe |
 | `90_simulation_testbench.sysml` | Pruefstand mit kanonischem Roboter, Welt, Adapter und Beobachter |
 | `91_simulation_verification.sysml` | Bindung von TC_NAV_002 an den Pruefstandsroboter |
 | `92_model_checks.sysml` | Ausschliesslich synthetische Testdaten fuer die Modell-Auswertung |
@@ -75,6 +78,13 @@ Raumzahl, Flur, offene Tuer, autonome Fahrt und fehlende Nachweise sowie
 manuelle Freigabe, Auftragserhalt und Bewegungsstopp in der Pausenphase.
 Drei Negativtests entfernen in temporaeren Kopien ein Importziel bzw.
 veraendern Feature und Subject-Typ. Sie muessen vom Validator erkannt werden.
+
+Das Modell ist die fuehrende Quelle der Doku. Die Doc-Felder der Requirements
+und Tests (deutsch) erzeugen mit `python tools/generate_docs.py` die Tabellen
+in `tables/generated/` und die Matrix in `traceability_matrix.md`.
+Der Validator lehnt veraltete oder von Hand geaenderte erzeugte Dateien und
+handgeschriebene Requirement-/Testzeilen in den Kapiteln ab. Zwei weitere
+Negativtests pruefen beides. Ablauf: [tables/README.md](../../tables/README.md).
 Keine synthetische Eingabe ist ein beobachteter Simulatorlauf.
 
 ## Diagramme
@@ -100,8 +110,15 @@ Bestaetigte Stoppregel: Ein betrieblicher Stopp pausiert den laufenden Auftrag.
 ID, Start und Ziel bleiben erhalten. Der neue Befehl resumeMission verlangt
 eine ausdrueckliche manuelle Freigabe. Ohne Freigabe bleibt der Auftrag pausiert.
 Freigabe umgeht weder Sicherheit noch Navigation: erst orderAccepted, dann
-nach RouteReady wieder driving. Recovery nach Blockade, technischem Fehler
-und Sicherheitsstopp sowie die vollstaendige Sicherheitsbehandlung bleiben offen.
+nach RouteReady wieder driving.
+
+Abbruch und Quittierung (DEC-015): Ein pausierter Auftrag kann mit
+cancelMission abgebrochen werden (stopped). Aus stopped, completed, rejected,
+blocked, chargingInterfaceReached, fault und safeState fuehrt nur die manuelle
+Quittierung acknowledge zurueck nach ready; aus fault nur bei behobenem Fehler,
+aus safeState nur bei safeToMove. Kein Zustand ist eine Sackgasse; der
+Validator prueft das. Offen bleibt die vollstaendige Sicherheitsbehandlung,
+insbesondere der Not-Halt (OI-SAFE-001).
 Siehe [Pausenregel](../../docs/operational-pause.md).
 
 Es gibt keinen erfolgreichen Fahr-, Nutzlast-, Sicherheits- oder Dauertest.

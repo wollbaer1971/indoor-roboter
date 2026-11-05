@@ -18,6 +18,8 @@ import tempfile
 import urllib.request
 import zipfile
 
+import generate_docs  # same directory; the model leads the generated documentation
+
 RELEASE = "2025-10"
 VERSION = "0.53.0"
 SHA256 = "bbd51b1827d9d4a586644d4a1d16e6f17c01a7ffa80ab49e3f8774fa1f46ce5e"
@@ -108,6 +110,143 @@ def architecture_checks(model: Path) -> None:
     print(f"ARCHITECTURE canonical_robot=1 requirements={len(req_names)} covered={len(verified)} matrix_tests_resolve=true")
 
 
+def _doc_list(doc: str, key: str) -> list[str]:
+    """Comma list after 'key:' in a doc block; deeper-indented lines continue it."""
+    lines = doc.splitlines()
+    for i, line in enumerate(lines):
+        if line.strip().startswith(key + ":"):
+            value = line.split(":", 1)[1]
+            for follow in lines[i + 1:]:
+                if not follow.startswith(" " * 6):
+                    break
+                value += " " + follow.strip()
+            items = [v.strip() for v in value.split(",") if v.strip()]
+            return [] if items == ["keine"] else items
+    raise RuntimeError(f"RobotOperationState doc: '{key}:' missing")
+
+
+def state_machine_checks(model: Path) -> None:
+    """Safety and fault exits in every state not declared unmonitored; reachability; no dead ends."""
+    source = (model / "baseline_a1/05_behavior.sysml").read_text(encoding="utf-8")
+    block = re.search(r"state def RobotOperationState \{(.*?)\n  \}", source, re.S)
+    if not block:
+        raise RuntimeError("state def RobotOperationState not found")
+    body = block[1]
+    doc = re.search(r"doc /\*(.*?)\*/", body, re.S)[1]
+    unmonitored, exempt = _doc_list(doc, "Ohne Sicherheitsuebergaenge"), _doc_list(doc, "Noch ohne Zugang")
+    final = _doc_list(doc, "Endzustaende")
+    states = re.findall(r"^\s+state (\w+);", body, re.M)
+    start = re.search(r"entry; then (\w+);", body)[1]
+    transitions = re.findall(r"transition first (\w+)\s+accept\s+(?:\w+\s*:\s*)?(\w+)[^;]*?then (\w+);", body, re.S)
+    problems = [f"declared state {s} does not exist" for s in unmonitored + exempt + final if s not in states]
+    active = [s for s in states if s not in unmonitored]
+    # A regular exit is any transition other than the safety/fault exits.
+    exits = {source_state for source_state, event, _ in transitions
+             if event not in ("UnsafeCondition", "TechnicalFault")}
+    for state in states:
+        if state not in exits and state not in final:
+            problems.append(f"state {state} has no regular outgoing transition (dead end)")
+        if state in exits and state in final:
+            problems.append(f"state {state} has an exit now; remove it from 'Endzustaende'")
+    for state in active:
+        for event, target in (("UnsafeCondition", "safeState"), ("TechnicalFault", "fault")):
+            if (state, event, target) not in transitions:
+                problems.append(f"state {state} lacks '{event} -> {target}'")
+    reachable, frontier = {start}, [start]
+    while frontier:
+        current = frontier.pop()
+        for source_state, _, target in transitions:
+            if source_state == current and target not in reachable:
+                reachable.add(target)
+                frontier.append(target)
+    for state in states:
+        if state not in reachable and state not in exempt:
+            problems.append(f"state {state} is unreachable")
+        if state in reachable and state in exempt:
+            problems.append(f"state {state} is reachable now; remove it from 'Noch ohne Zugang'")
+    if problems:
+        raise RuntimeError("State machine rules violated:\n  " + "\n  ".join(problems))
+    print(f"STATE_MACHINE states={len(states)} reachable={len(reachable)} monitored={len(active)} "
+          f"unmonitored={','.join(unmonitored)} "
+          f"safety_exits=complete open_without_entry={','.join(exempt) or 'none'} "
+          f"dead_ends={','.join(final) or 'none'}")
+
+
+def negative_state_machine_check(model: Path) -> None:
+    """Remove a safety exit and an acknowledgement in temporary copies; the check must fail."""
+    with tempfile.TemporaryDirectory(prefix="states-negative-") as temporary:
+        copy = Path(temporary) / "sysml"
+        shutil.copytree(model, copy)
+        behavior = copy / "baseline_a1/05_behavior.sysml"
+        text = behavior.read_text(encoding="utf-8")
+        mutated = text.replace("    transition first paused accept UnsafeCondition then safeState;\n", "", 1)
+        if mutated == text:
+            raise RuntimeError("Negative state machine test could not remove the paused safety exit")
+        behavior.write_text(mutated, encoding="utf-8")
+        try:
+            state_machine_checks(copy)
+        except RuntimeError:
+            print("NEGATIVE missing_safety_exit: detected")
+        else:
+            raise RuntimeError("Negative state machine test did not detect a missing safety exit")
+        behavior.write_text(text.replace("    transition first completed accept AcknowledgeRequested then ready;\n", "", 1),
+                            encoding="utf-8")
+        try:
+            state_machine_checks(copy)
+        except RuntimeError:
+            print("NEGATIVE dead_end_state: detected")
+            return
+        raise RuntimeError("Negative state machine test did not detect a dead-end state")
+
+
+def _ids(text: str) -> set[str]:
+    return set(re.findall(r"(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+", text))
+
+
+def documentation_checks(docs: Path) -> None:
+    """The model leads: generated tables must be current and nothing model-bound is hand-written."""
+    problems = []
+    try:
+        problems += [f"{rel}: stale or hand-edited; run python tools/generate_docs.py"
+                     for rel in generate_docs.stale(docs)]
+    except ValueError as error:
+        raise RuntimeError(f"Model documentation fields: {error}") from error
+
+    tex = {p: p.read_text(encoding="utf-8")
+           for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
+    for path, text in tex.items():
+        for number, line in enumerate(text.splitlines(), 1):
+            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|A-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
+                problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, decision, subsystem or topic); "
+                                "maintain it in the model")
+    for path, text in tex.items():
+        for block in re.findall(r"\\begin\{itemize\}(.*?)\\end\{itemize\}", text, re.S):
+            if "\\modeltext{" in block and "\\item" in block:
+                problems.append(f"{path.relative_to(docs)}: hand-written \\item in a generated list")
+    used = set(re.findall(r"\\model(?:table|text)\{(\w+)\}", "".join(tex.values())))
+    generated = {p.stem for p in (docs / generate_docs.GENERATED).glob("*.tex")}
+    if used != generated:
+        problems.append(f"\\modeltable includes: not used={sorted(generated - used)}, unknown={sorted(used - generated)}")
+
+    # B.1 use-case derivations are still prose in chapter 12 and in the B.1 review matrix.
+    b1 = (docs / "sysml/baseline_b1/02_requirements.sysml").read_text(encoding="utf-8")
+    model_uc: dict[str, set[str]] = {}
+    for req, uc in re.findall(r"dependency from (REQ_B_\w+) to UC_B_(\d+)_", b1):
+        model_uc.setdefault(f"UC-B-{uc}", set()).add(req.replace("_", "-"))
+    chapter12 = (docs / "chapters/12_iteration_b_usecases_requirements.tex").read_text(encoding="utf-8")
+    for uc, derived in re.findall(r"subsection\{(UC-B-\d+).*?Abgeleitete Requirements & (.*?)\\\\", chapter12, re.S):
+        if _ids(derived) != model_uc.get(uc, set()):
+            problems.append(f"chapters/12 {uc}: LaTeX={sorted(_ids(derived))}, model={sorted(model_uc.get(uc, []))}")
+    b1_matrix = (docs / "sysml/baseline_b1/traceability_matrix.md").read_text(encoding="utf-8")
+    for uc, cell in re.findall(r"^\| (UC-B-\d+) \| (.*?) \|", b1_matrix, re.M):
+        if _ids(cell) != model_uc.get(uc, set()):
+            problems.append(f"baseline_b1/traceability_matrix.md {uc}: matrix={sorted(_ids(cell))}, model={sorted(model_uc.get(uc, []))}")
+
+    if problems:
+        raise RuntimeError("Documentation drifts from model:\n  " + "\n  ".join(problems))
+    print(f"DOCUMENTATION generated_tables={len(generated)} up_to_date=true hand_written_rows=0 b1_use_cases_match=true")
+
+
 def negative_checks(java: str, home: Path, model: Path) -> None:
     for name in ("missing_import_target", "missing_feature", "wrong_subject_type"):
         with tempfile.TemporaryDirectory(prefix="sysml-negative-") as temporary:
@@ -127,6 +266,46 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
             print(f"NEGATIVE {name}: detected ({summary[1]} errors, {summary[2]} warnings)")
 
 
+def negative_documentation_check() -> None:
+    """Mutate temporary copies of docs and model; every mutation must fail the documentation check."""
+    mutations = {
+        "generated_table_edited": ("tables/generated/requirements_a1_initial.tex",
+                                   lambda text: text.replace("annehmen koennen.", "annehmen.", 1)),
+        "hand_written_row": ("chapters/05_requirements.tex",
+                             lambda text: text.replace("\\modeltable{requirements_a1_initial}",
+                                                       "\\modeltable{requirements_a1_initial}\nREQ-XYZ-001 & a & b & c \\\\", 1)),
+        "unknown_decision_reference": ("chapters/10_verifikation_traceability.tex",
+                                       lambda text: text.replace("Gemaess DEC-014", "Gemaess DEC-099", 1)),
+        "undeclared_ros2_topic": ("sysml/baseline_a1/07_ros2_mapping.sysml",
+                                  lambda text: text.replace("Publiziert: /odom", "Publiziert: /odom, /undeclared", 1)),
+        "hand_written_subsystem_row": ("chapters/08_architektur.tex",
+                                       lambda text: text.replace("\\modeltable{subsystems_a1}",
+                                                                 "\\modeltable{subsystems_a1}\nExtraSystem & x & y \\\\", 1)),
+        "hand_written_non_goal": ("chapters/03_systemdefinition.tex",
+                                  lambda text: text.replace("\\modeltext{non_goals_a1}",
+                                                            "\\modeltext{non_goals_a1}\n  \\item Raumfahrt.", 1)),
+        "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
+                                         lambda text: text.replace("A-001 bis A-010", "A-001 bis A-011", 1)),
+    }
+    for name, (rel, mutate) in mutations.items():
+        with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
+            copy = Path(temporary)
+            for folder in ("chapters", "appendices", "tables", "sysml"):
+                shutil.copytree(REPO / folder, copy / folder)
+            target = copy / rel
+            original = target.read_text(encoding="utf-8")
+            changed = mutate(original)
+            if changed == original:
+                raise RuntimeError(f"Negative documentation test {name} did not change {rel}")
+            target.write_text(changed, encoding="utf-8")
+            try:
+                documentation_checks(copy)
+            except RuntimeError:
+                print(f"NEGATIVE {name}: detected")
+                continue
+            raise RuntimeError(f"Negative documentation test did not detect {name}")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--java", help="Java 21+ executable")
@@ -139,6 +318,9 @@ def main() -> int:
     home = pilot_home(args.pilot_home)
     model = args.model.resolve()
     architecture_checks(model)
+    state_machine_checks(model)
+    if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
+        documentation_checks(REPO)
     result = invoke(java, home, model, args.self_test)
     print(result.stdout, end="")
     print(result.stderr, end="", file=sys.stderr)
@@ -146,6 +328,9 @@ def main() -> int:
         return result.returncode
     if args.negative_tests:
         negative_checks(java, home, model)
+        negative_state_machine_check(model)
+        if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
+            negative_documentation_check()
     return 0
 
 

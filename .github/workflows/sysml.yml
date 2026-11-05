@@ -1,10 +1,10 @@
 name: SysML model validation
 on:
   pull_request:
-    paths: ['sysml/**', 'tools/**', '.github/workflows/sysml.yml']
+    paths: ['sysml/**', 'tools/**', 'chapters/**', 'appendices/**', 'tables/**', '.github/workflows/sysml.yml']
   push:
     branches: [main]
-    paths: ['sysml/**', 'tools/**', '.github/workflows/sysml.yml']
+    paths: ['sysml/**', 'tools/**', 'chapters/**', 'appendices/**', 'tables/**', '.github/workflows/sysml.yml']
 permissions:
   contents: read
 jobs:

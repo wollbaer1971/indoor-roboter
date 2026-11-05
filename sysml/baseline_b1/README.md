@@ -4,7 +4,7 @@ Candidate Requirements und Use Cases fuer Iteration B.
 
 - `01_use_cases.sysml`: zehn echte `use case def` mit kanonischem
   Robotertyp als Subject und dem Bediener als externem Akteur.
-- `02_requirements.sysml`: 17 Candidate Requirements mit typisiertem Subject
+- `02_requirements.sysml`: 18 Candidate Requirements mit typisiertem Subject
   und expliziten Quellen-Abhaengigkeiten zu den Use Cases.
 - `traceability_matrix.md`: Review-Zuordnung von Use Cases zu Requirements
   und offenen Entscheidungen. Die Source-Felder und Modell-Abhaengigkeiten

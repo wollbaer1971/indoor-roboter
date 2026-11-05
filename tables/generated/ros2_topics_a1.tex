@@ -1,0 +1,16 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+\texttt{/goal\_\allowbreak{}pose} & Topic/Action offen & Mission zu Navigation & Zielvorgabe fuer Navigation \\
+\texttt{/cmd\_\allowbreak{}vel} & Topic & Navigation zu Motion, Safety & Geschwindigkeitsvorgabe \\
+\texttt{/odom} & Topic & Motion zu Navigation & Odometriedaten \\
+\texttt{/map} & Topic/Service & Kartenverwaltung zu Navigation, Lokalisierung & Grundkarte \\
+\texttt{/local\_\allowbreak{}obstacles} & Topic & Perception zu Navigation, Kartenverwaltung, Safety & erkannte Hindernisse \\
+\texttt{/mission\_\allowbreak{}state} & Topic & Mission zu Web-Interface & Missionsstatus \\
+\texttt{/safety\_\allowbreak{}state} & Topic & Safety zu Mission, Navigation, Motion & Safety-Zustand und Stoppgrund \\
+\texttt{/battery\_\allowbreak{}state} & Topic & Energy zu Mission & Energiezustand \\
+\texttt{/transport\_\allowbreak{}order} & Topic & Web-Interface zu Mission & Transportauftrag \\
+\texttt{/operator\_\allowbreak{}command} & Topic & Web-Interface zu Mission & Status, Stopp, Fortsetzung, Abbruch, Quittierung, Rueckkehr \\
+\texttt{/navigation\_\allowbreak{}result} & Topic & Navigation zu Mission & Ziel erreicht, blockiert, nicht erreichbar \\
+\texttt{/robot\_\allowbreak{}pose} & Topic & Lokalisierung zu Navigation & geschaetzte Pose \\
+\texttt{/map\_\allowbreak{}update\_\allowbreak{}candidate} & Topic & Kartenverwaltung (noch kein Abnehmer) & vorgeschlagene dauerhafte Kartenaenderung \\
+\texttt{/diagnostics} & Topic & Diagnose zu Web-Interface & Diagnosemeldungen \\
