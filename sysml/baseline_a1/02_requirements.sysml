@@ -27,7 +27,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-MIS-001
     Typ: Funktional
     Gruppe: Initial
-    Quelle: SN-UI-001, UC-001, SN-001, FUN-MIS-001
+    Quelle: SN-UI-001, UC-001, SN-001
     Text: Das System muss einen Transportauftrag mit Start- und Zielstandort
       annehmen koennen.
     Akzeptanz: Auftrag wird angenommen, validiert und mit Status versehen.
@@ -57,7 +57,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-TRN-001
     Typ: Funktional
     Gruppe: Initial
-    Quelle: SN-TRN-001, SN-002, FUN-TRN-001
+    Quelle: SN-TRN-001, SN-002
     Text: Das System muss einen Werkstuecktraeger zwischen zwei definierten
       Transportorten transportieren koennen.
     Akzeptanz: Der Werkstuecktraeger erreicht den Zielort im definierten
@@ -93,7 +93,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-MAP-001
     Typ: Funktional
     Gruppe: Initial
-    Quelle: Kartenkonzept Baseline A.1, FUN-MAP-001
+    Quelle: Kartenkonzept Baseline A.1
     Text: Das System muss eine vorhandene Grundkarte des Betriebsbereichs laden
       koennen.
     Akzeptanz: Karte wird geladen und fuer Lokalisierung genutzt.
@@ -111,7 +111,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-MAP-002
     Typ: Funktional
     Gruppe: Initial
-    Quelle: SN-NAV-002, SN-006, FUN-PER-001
+    Quelle: SN-NAV-002, SN-006
     Text: Das System muss relevante Veraenderungen der befahrbaren Umgebung
       waehrend des Betriebs erkennen.
     Akzeptanz: Hindernis erscheint in lokaler Umgebungsdarstellung.
@@ -146,7 +146,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-LOC-001
     Typ: Funktional
     Gruppe: Initial
-    Quelle: UC-006, FUN-LOC-001
+    Quelle: UC-006
     Text: Das System muss seine Pose innerhalb des definierten Betriebsbereichs
       bestimmen koennen.
     Akzeptanz: Die Posenabweichung liegt innerhalb einer noch festzulegenden
@@ -165,7 +165,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-NAV-001
     Typ: Funktional
     Gruppe: Initial
-    Quelle: UC-003, FUN-NAV-001
+    Quelle: UC-003
     Text: Das System muss einen vorgegebenen Zielstandort autonom anfahren
       koennen.
     Akzeptanz: Ziel wird ohne manuelle Steuerung erreicht.
@@ -182,7 +182,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-NAV-002
     Typ: Funktional
     Gruppe: Initial
-    Quelle: UC-007, FUN-NAV-001
+    Quelle: UC-007
     Text: Das System muss erkannte Hindernisse bei der Bewegungs- oder
       Pfadplanung beruecksichtigen.
     Akzeptanz: Roboter stoppt oder plant lokale Umfahrung.
@@ -263,7 +263,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-SAFE-001
     Typ: Safety
     Gruppe: Initial
-    Quelle: SN-SAFE-002, SN-004, FUN-SAFE-001
+    Quelle: SN-SAFE-002, SN-004
     Text: Das System muss bei nicht sicher behandelbaren Hindernissen in einen
       sicheren Zustand uebergehen.
     Akzeptanz: Kein Kontakt mit Hindernis; Statusmeldung Blockade.
@@ -335,7 +335,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-PWR-001
     Typ: Nichtfunktional
     Gruppe: Initial
-    Quelle: Bedarf Energieueberwachung, FUN-STA-001
+    Quelle: Bedarf Energieueberwachung
     Text: Das System muss seinen Energiezustand ueberwachen.
     Akzeptanz: Niedriger Ladezustand wird erkannt und gemeldet.
     Schnittstelle: EnergyMonitorNode, /battery_state
@@ -384,7 +384,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-STA-001
     Typ: Funktional
     Gruppe: Initial
-    Quelle: SN-OPS-001, SN-003, FUN-STA-001
+    Quelle: SN-OPS-001, SN-003
     Text: Das System muss seinen Missions- und Betriebsstatus melden koennen.
     Akzeptanz: Status ist fuer Bediener/Betreiber abrufbar.
     MVP: MVP
@@ -418,7 +418,7 @@ package MobileMaterialRobot_Requirements_A1 {
     ID: REQ-DIAG-001
     Typ: Operational
     Gruppe: Initial
-    Quelle: SN-005, SN-MNT-001, FUN-STA-001
+    Quelle: SN-005, SN-MNT-001
     Text: Das System muss Diagnoseinformationen fuer Fehlersuche bereitstellen.
     Akzeptanz: Fehlermeldungen enthalten Ursache, betroffene Funktion und
       Zeitstempel.

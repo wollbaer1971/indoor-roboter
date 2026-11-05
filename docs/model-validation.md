@@ -239,3 +239,21 @@ Overleaf passt nur ihr Aussehen an.
 - Die Aufzaehlung in Kapitel 3 wird erzeugt; Text und Reihenfolge unveraendert.
 - NG-008 (Flottenoptimierung) grenzt REQ-ARCH-003 ab, NG-010 verweist auf
   DEC-012. Negativtest hand_written_non_goal.
+
+# Funktionsebene im Modell, 05.11.2026
+
+- `sysml/baseline_a1/12_functions.sysml`: neun Funktionen als `action def`.
+  Teilsysteme fuehren sie per `perform` aus; `dependency`-Beziehungen nennen
+  die Requirements, zu denen sie beitragen. Die Kette Requirement ->
+  Funktion -> Teilsystem aus Kapitel 10 ist damit im Modell vorhanden.
+- Die FUN-IDs in den Quelle-Feldern sind entfallen; der Generator setzt sie
+  aus den Beziehungen in die Traceability.
+- Funktionstabelle (Kapitel 8, neu mit Spalte "Ausgefuehrt von") und
+  HW/SW-Allokation (Kapitel 9) werden erzeugt.
+- Inhaltliche Aenderungen: FUN-TRN-001 "Werkstuecktraeger handhaben" (vorher
+  Materialkiste), FUN-LOC-001 "Pose bestimmen"; FUN-MOT-001 traegt neu zu
+  REQ-NAV-001 und REQ-PERF-001 bei (vorher von keinem Requirement genannt).
+- Offen: FUN-STA-001 traegt zu REQ-PWR-001 bei, wird aber von MissionSystem
+  und DiagnosticsSystem ausgefuehrt, waehrend REQ-PWR-001 nur dem
+  EnergySystem zugeordnet ist. Die Kette schliesst sich dort nicht.
+- FUN-MIS-001 und FUN-STA-001 sind noch nicht alloziert (keine HW/SW-Anteile).

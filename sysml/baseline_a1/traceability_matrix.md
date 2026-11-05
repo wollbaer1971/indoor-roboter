@@ -14,7 +14,7 @@ Aenderungen gehoeren in `02_requirements.sysml`, `06_tests.sysml` und `08_tracea
 | REQ-MAP-002 | SN-NAV-002, SN-006, FUN-PER-001 | PerceptionSystem, NavigationSystem | PerceptionNode, /local_obstacles | TC-OBS-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-MAP-003 | ADR-0007, SN-NAV-002, R-09 | NavigationSystem | MapManagementNode | TC-MAP-002 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-LOC-001 | UC-006, FUN-LOC-001 | NavigationSystem | LocalizationNode, /robot_pose | TC-LOC-001 | Geplant; kein Ausfuehrungsnachweis |
-| REQ-NAV-001 | UC-003, FUN-NAV-001 | NavigationSystem, MotionSystem | NavigationNode, /cmd_vel | TC-NAV-001 | Geplant; kein Ausfuehrungsnachweis |
+| REQ-NAV-001 | UC-003, FUN-NAV-001, FUN-MOT-001 | NavigationSystem, MotionSystem | NavigationNode, /cmd_vel | TC-NAV-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-NAV-002 | UC-007, FUN-NAV-001 | NavigationSystem, PerceptionSystem | NavigationNode, PerceptionNode | TC-OBS-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-NAV-003 | UC-008, SN-NAV-004 | NavigationSystem, MissionSystem | /navigation_result, /mission_state | TC-OBS-002 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-NAV-004 | SN-NAV-005, UC-004 | NavigationSystem, MotionSystem | IF-005 | TC-NAV-002 | Geplant; kein Ausfuehrungsnachweis |
@@ -25,7 +25,7 @@ Aenderungen gehoeren in `02_requirements.sysml`, `06_tests.sysml` und `08_tracea
 | REQ-UI-002 | SN-UI-002, UC-009, UC-010 | UserInterfaceSystem, MissionSystem, EnergySystem | WebInterfaceNode | TC-UI-002, TC-UI-004, TC-UI-003 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PWR-001 | Bedarf Energieueberwachung, FUN-STA-001 | EnergySystem | EnergyMonitorNode, /battery_state | TC-PWR-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PWR-002 | SN-ENE-001, DEC-008 | EnergySystem | EnergyMonitorNode | TC-PWR-002 | Geplant; kein Ausfuehrungsnachweis |
-| REQ-PERF-001 | DEC-007 | MotionSystem, SafetySystem | NavigationNode Parameter nominal_speed | TC-PERF-001 | Geplant; kein Ausfuehrungsnachweis |
+| REQ-PERF-001 | DEC-007, FUN-MOT-001 | MotionSystem, SafetySystem | NavigationNode Parameter nominal_speed | TC-PERF-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-STA-001 | SN-OPS-001, SN-003, FUN-STA-001 | MissionSystem, UserInterfaceSystem | /mission_state | TC-OBS-002, TC-STA-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-ARCH-001 | SN-DEV-003, SN-008 | Gesamtmodell | Traceability-Artefakte | TC-TRC-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-DIAG-001 | SN-005, SN-MNT-001, FUN-STA-001 | DiagnosticsSystem, CommunicationSystem | DiagnosticsNode, /diagnostics | TC-DIAG-001 | Geplant; Meldungsfelder noch nicht modelliert |

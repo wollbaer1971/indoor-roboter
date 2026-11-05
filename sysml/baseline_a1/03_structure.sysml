@@ -1,6 +1,7 @@
 package MobileMaterialRobot_Structure_A1 {
   private import MobileMaterialRobot_Interfaces_A1::*;
   private import MobileMaterialRobot_Behavior_A1::*;
+  private import MobileMaterialRobot_Functions_A1::*;
   doc /*
   Strukturelle Zerlegung der Baseline A.1. Keine endgueltige physische
   Architektur; sie trennt Verantwortlichkeiten, damit Anforderungen,
@@ -48,6 +49,8 @@ package MobileMaterialRobot_Structure_A1 {
     perform action cancelMission : CancelMission {
       in item redefines pausedOrder = MissionSystem::activeOrder;
     }
+    perform action handleTransportOrder : FUN_MIS_001;
+    perform action reportMissionStatus : FUN_STA_001;
   }
 
   part def NavigationSystem {
@@ -59,6 +62,9 @@ package MobileMaterialRobot_Structure_A1 {
     */
     perform action passDoor : PassOpenDoor;
     perform action handleObstacle : HandleTemporaryObstacle;
+    perform action manageBaseMap : FUN_MAP_001;
+    perform action estimatePose : FUN_LOC_001;
+    perform action planRouteAndMotion : FUN_NAV_001;
   }
 
   part def PerceptionSystem {
@@ -67,6 +73,7 @@ package MobileMaterialRobot_Structure_A1 {
     MVP-Status: MVP
     Hinweis: Die Sensorwahl ist in Baseline A.1 bewusst offen.
     */
+    perform action senseEnvironment : FUN_PER_001;
   }
 
   part def MotionSystem {
@@ -76,6 +83,7 @@ package MobileMaterialRobot_Structure_A1 {
       Sicherheitsgrenzen
     MVP-Status: MVP
     */
+    perform action executeMotion : FUN_MOT_001;
   }
 
   part def TransportSystem {
@@ -85,6 +93,7 @@ package MobileMaterialRobot_Structure_A1 {
     Hinweis: Aktives Beladen ist nicht Teil von MVP 1; die Schnittstelle gehoert
       zum Zielsystem.
     */
+    perform action handleCarrier : FUN_TRN_001;
   }
 
   part def EnergySystem {
@@ -122,6 +131,7 @@ package MobileMaterialRobot_Structure_A1 {
     MVP-Status: MVP reduziert
     */
     perform action safetyStop : SafetyStop;
+    perform action establishSafeState : FUN_SAFE_001;
   }
 
   part def DiagnosticsSystem {
@@ -129,6 +139,7 @@ package MobileMaterialRobot_Structure_A1 {
     Verantwortung: Diagnoseinformationen fuer Test, Wartung und Fehleranalyse
     MVP-Status: Minimal
     */
+    perform action reportDiagnostics : FUN_STA_001;
   }
 }
 

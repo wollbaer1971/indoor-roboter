@@ -92,7 +92,7 @@ def requirement_text(model: dict, rid: str, data: dict[str, str]) -> str:
     return text
 
 
-DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3}|NG-\d{3})\b")
+DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3}|NG-\d{3}|FUN-[A-Z]+-\d{3})\b")
 REFERENCE_SOURCES = ("sysml/**/*.sysml", "chapters/*.tex", "appendices/*.tex", "docs/*.md", "*.md")
 
 
@@ -114,7 +114,8 @@ def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[s
             decided_by.setdefault(dashed(target.split("::")[-1]), []).append(data["ID"])
     assumptions = load_assumptions(root)
     known = ({did for did, _ in decisions} | {aid for aid, _ in assumptions}
-             | {nid for nid, _ in load_non_goals(root)})
+             | {nid for nid, _ in load_non_goals(root)}
+             | {fid for fid, *_ in load_functions(root)})
     unknown = set()
     for pattern in REFERENCE_SOURCES:
         for path in root.glob(pattern):
@@ -202,6 +203,38 @@ def load_assumptions(root: Path) -> list[tuple[str, dict[str, str]]]:
     return assumptions
 
 
+ALLOCATION_FIELDS = ("HW-Anteil", "SW-Anteil", "Status")
+
+
+def load_functions(root: Path) -> list[tuple[str, dict[str, str], list[str], list[str]]]:
+    """Functions with the subsystems performing them and the requirements they support."""
+    a1 = root / "sysml/baseline_a1"
+    source = (a1 / "12_functions.sysml").read_text(encoding="utf-8")
+    supports: dict[str, list[str]] = {}
+    for function, req in re.findall(r"^  dependency from (FUN_\w+) to (REQ_\w+);", source, flags=re.M):
+        supports.setdefault(function, []).append(dashed(req))
+    performers: dict[str, list[str]] = {}
+    structure = (a1 / "03_structure.sysml").read_text(encoding="utf-8")
+    for part, body in blocks(structure, "part def", ""):
+        for function in re.findall(r"^    perform action \w+ : (FUN_\w+);", body, flags=re.M):
+            performers.setdefault(function, []).append(part)
+    functions = []
+    for name, body in blocks(source, "action def", "FUN_"):
+        data = fields(body, name)
+        require(data, name, "ID", "Name", "Zweck")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        present = [k for k in ALLOCATION_FIELDS if data.get(k)]
+        if present and len(present) != len(ALLOCATION_FIELDS):
+            raise ValueError(f"{name}: allocation needs all of {', '.join(ALLOCATION_FIELDS)}")
+        if not performers.get(name):
+            raise ValueError(f"{name}: no subsystem performs this function")
+        if not supports.get(name):
+            raise ValueError(f"{name}: function supports no requirement")
+        functions.append((data["ID"], data, performers[name], supports[name]))
+    return functions
+
+
 def load_non_goals(root: Path) -> list[tuple[str, dict[str, str]]]:
     source = (root / "sysml/baseline_a1/11_non_goals.sysml").read_text(encoding="utf-8")
     non_goals = []
@@ -276,9 +309,23 @@ def load(root: Path) -> dict:
             raise ValueError(f"{rid}: not verified by any test definition")
     decisions, decided_by = load_decisions(root)
     architecture = load_architecture(root, {rid for rid, _ in requirements})
+    functions = load_functions(root)
+    functions_of: dict[str, list[str]] = {}
+    for fid, _, _, supported in functions:
+        unknown = set(supported) - {rid for rid, _ in requirements}
+        if unknown:
+            raise ValueError(f"{fid}: unknown requirement(s) {sorted(unknown)}")
+        for rid in supported:
+            functions_of.setdefault(rid, []).append(fid)
     return {"requirements": requirements, "elements": elements, "tests": tests,
             "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by,
+            "functions": functions, "functions_of": functions_of,
             **architecture}
+
+
+def source_list(model: dict, rid: str, data: dict[str, str]) -> str:
+    """Documented sources plus the functions modelled as supporting the requirement."""
+    return ", ".join(split_list(data["Quelle"]) + model["functions_of"].get(rid, []))
 
 
 def element_list(model: dict, rid: str, data: dict[str, str]) -> list[str]:
@@ -297,7 +344,7 @@ def render(root: Path) -> dict[Path, str]:
         table(f"requirements_a1_{suffix}",
               [row(rid, tex(d["Typ"]), requirement_text(model, rid, d), tex(d["Akzeptanz"])) for rid, d in selected])
         table(f"traceability_a1_{suffix}",
-              [row(rid, tex(d["Quelle"]), tex(", ".join(element_list(model, rid, d))),
+              [row(rid, tex(source_list(model, rid, d)), tex(", ".join(element_list(model, rid, d))),
                    tex(d["Schnittstelle"]), ", ".join(model["tests_of"][rid])) for rid, d in selected])
     table("mvp_a1", [row(rid, tex(d["MVP"]), tex(d["MVP-Begruendung"]))
                      for rid, d in model["requirements"] if "MVP" in d])
@@ -342,6 +389,10 @@ def render(root: Path) -> dict[Path, str]:
                                      row("Auswirkung", tex(d["Auswirkung"])),
                                      row("Risiko", tex(d["Risiko"]))])
 
+    table("functions_a1", [row(fid, tex(d["Name"]), tex(d["Zweck"]), tex(", ".join(parts)))
+                           for fid, d, parts, _ in model["functions"]])
+    table("allocation_a1", [row(fid, tex(d["HW-Anteil"]), tex(d["SW-Anteil"]), tex(d["Status"]))
+                            for fid, d, _, _ in model["functions"] if d.get("HW-Anteil")])
     table("subsystems_a1", [row(name, tex(d["Verantwortung"]), tex(d["MVP-Status"]))
                             for name, d in model["subsystems"]])
     table("ros2_mapping_a1", [
@@ -355,7 +406,7 @@ def render(root: Path) -> dict[Path, str]:
     md_rows = ["| Requirement | Quelle | Systemelement | Schnittstelle / ROS2 | Test | Status |",
                "| --- | --- | --- | --- | --- | --- |"]
     for rid, d in model["requirements"]:
-        md_rows.append("| " + " | ".join([rid, d["Quelle"], ", ".join(element_list(model, rid, d)),
+        md_rows.append("| " + " | ".join([rid, source_list(model, rid, d), ", ".join(element_list(model, rid, d)),
                                            d["Schnittstelle"], ", ".join(model["tests_of"][rid]), d["Status"]]) + " |")
     matrix = (root / MATRIX).read_text(encoding="utf-8")
     if BEGIN not in matrix or END not in matrix:
