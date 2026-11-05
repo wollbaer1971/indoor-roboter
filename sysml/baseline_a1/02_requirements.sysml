@@ -480,12 +480,14 @@ package MobileMaterialRobot_Requirements_A1 {
       zugeordnet werden; ROS2-Topics sind je Roboter in einem eigenen
       Namensraum adressierbar; fuer dauerhafte Kartenaenderungen ist
       festgelegt, wer sie freigibt.
-    Schnittstelle: TransportOrder, MissionStatus, MapManagementNode,
-      ROS2-Namensraum
-    Status: Geplant; Roboterkennung und Namensraum noch nicht modelliert
-    Hinweis: Entstanden aus der frueheren Annahme A-010. Heute fehlt in
-      TransportOrder und MissionStatus eine Roboterkennung, und die Topics
-      sind global benannt; das Review TC-ARCH-001 muss das aufdecken.
+    Schnittstelle: TransportOrder, MissionStatus, OperatorCommand,
+      MapManagementNode, ROS2-Namensraum
+    Status: Geplant; Roboterkennung modelliert, Namensraum und
+      Kartenfreigabe offen
+    Hinweis: Entstanden aus der frueheren Annahme A-010. TransportOrder,
+      MissionStatus und OperatorCommand tragen eine Roboterkennung (robotId).
+      Offen sind der ROS2-Namensraum je Roboter und die Freigabe dauerhafter
+      Kartenaenderungen.
     */
   }
 }

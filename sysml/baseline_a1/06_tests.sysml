@@ -270,8 +270,8 @@ package MobileMaterialRobot_Verification_A1 {
     Erwartet: Auftrag und Status tragen eine Roboterkennung, Topics liegen
       je Roboter in einem Namensraum, die Freigabe dauerhafter
       Kartenaenderungen ist geregelt.
-    Hinweis: Geplant. Nach heutigem Modellstand wuerde das Review scheitern;
-      das ist der Zweck des Tests.
+    Hinweis: Geplant. Die Roboterkennung ist modelliert; Namensraum und
+      Kartenfreigabe fehlen noch, deshalb wuerde das Review heute scheitern.
     */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_003; }
   }

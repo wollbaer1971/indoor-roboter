@@ -7,7 +7,9 @@ package MobileMaterialRobot_Interfaces_A1 {
   */
 
   item def TransportOrder {
+    doc /* robotId ist leer, solange der Auftrag keinem Roboter zugeteilt ist (REQ-ARCH-003). */
     attribute orderId : String;
+    attribute robotId : String[0..1];
     attribute startLocation : String;
     attribute targetLocation : String;
   }
@@ -17,6 +19,8 @@ package MobileMaterialRobot_Interfaces_A1 {
     returningToChargingStation; chargingInterfaceReached; fault; safeState;
   }
   item def MissionStatus {
+    doc /* Jeder Status nennt den meldenden Roboter (REQ-ARCH-003). */
+    attribute robotId : String;
     attribute orderId : String;
     attribute statusKind : MissionStatusKind;
   }
@@ -25,6 +29,12 @@ package MobileMaterialRobot_Interfaces_A1 {
     acknowledge; returnToChargingStation;
   }
   item def OperatorCommand {
+    doc /*
+    robotId adressiert den Roboter. Leer bedeutet: der einzige Roboter
+    (A-009). Bei mehreren Robotern darf ein Befehl nicht ohne Adressat
+    wirken (REQ-ARCH-003).
+    */
+    attribute robotId : String[0..1];
     attribute kind : OperatorCommandKind;
   }
   item def DiagnosticMessage {

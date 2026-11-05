@@ -223,3 +223,11 @@ Overleaf passt nur ihr Aussehen an.
   Verweis auf ein existierendes Requirement zeigt.
 - Bekannte Luecke, die TC-ARCH-001 aufdecken soll: TransportOrder und
   MissionStatus haben keine Roboterkennung, ROS2-Topics sind global benannt.
+
+# Roboterkennung, 05.11.2026
+
+- `robotId` in `TransportOrder` (optional: noch nicht zugeteilt),
+  `MissionStatus` (Pflicht: meldender Roboter) und `OperatorCommand`
+  (optional: leer = der einzige Roboter nach A-009).
+- REQ-ARCH-003 ist damit zu einem Drittel erfuellt; offen bleiben der
+  ROS2-Namensraum je Roboter und die Freigabe dauerhafter Kartenaenderungen.

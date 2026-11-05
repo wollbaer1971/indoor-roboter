@@ -31,7 +31,7 @@ Aenderungen gehoeren in `02_requirements.sysml`, `06_tests.sysml` und `08_tracea
 | REQ-DIAG-001 | SN-005, SN-MNT-001, FUN-STA-001 | DiagnosticsSystem, CommunicationSystem | DiagnosticsNode, /diagnostics | TC-DIAG-001 | Geplant; Meldungsfelder noch nicht modelliert |
 | REQ-MNT-001 | SN-MNT-002 | MobileMaterialRobot | offen | TC-MNT-001 | Geplant; erfordert mechanischen Entwurf |
 | REQ-ARCH-002 | SN-DEV-001, SN-DEV-002 | Gesamtmodell | MVP-Markierung (noch nicht modelliert) | TC-TRC-001 | Geplant; MVP-Status nur als Dokumentationsfeld, noch keine SysML-Metadaten |
-| REQ-ARCH-003 | A-010, SN-DEV-001, SN-DEV-002 | MissionSystem, NavigationSystem, CommunicationSystem | TransportOrder, MissionStatus, MapManagementNode, ROS2-Namensraum | TC-ARCH-001 | Geplant; Roboterkennung und Namensraum noch nicht modelliert |
+| REQ-ARCH-003 | A-010, SN-DEV-001, SN-DEV-002 | MissionSystem, NavigationSystem, CommunicationSystem | TransportOrder, MissionStatus, OperatorCommand, MapManagementNode, ROS2-Namensraum | TC-ARCH-001 | Geplant; Roboterkennung modelliert, Namensraum und Kartenfreigabe offen |
 <!-- END GENERATED -->
 
 ## Deferred Open Issues
