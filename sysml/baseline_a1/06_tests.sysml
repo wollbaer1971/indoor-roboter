@@ -260,6 +260,22 @@ package MobileMaterialRobot_Verification_A1 {
     }
   }
 
+  verification def TC_ARCH_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /*
+    ID: TC-ARCH-001
+    Name: Mehr-Roboter-Review
+    Ablauf: Schnittstellen, ROS2-Mapping und Kartenverwaltung darauf pruefen,
+      ob ein zweiter Roboter ohne Umbau der Architektur ergaenzt werden kann.
+    Erwartet: Auftrag und Status tragen eine Roboterkennung, Topics liegen
+      je Roboter in einem Namensraum, die Freigabe dauerhafter
+      Kartenaenderungen ist geregelt.
+    Hinweis: Geplant. Nach heutigem Modellstand wuerde das Review scheitern;
+      das ist der Zweck des Tests.
+    */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_003; }
+  }
+
   verification def TC_DIAG_001 {
     subject testRobot : MobileMaterialRobot;
     doc /*

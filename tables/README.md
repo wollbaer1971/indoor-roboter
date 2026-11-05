@@ -109,7 +109,9 @@ comment A_011 about REQ_PWR_002 /*
 ```
 
 `Status` ist einer von `Vorlaeufig`, `Offen`, `Sicherheitsrelevant`,
-`Architekturziel`; andere Werte lehnt der Generator ab. `about` nennt, was von
+`Ersetzt`; andere Werte lehnt der Generator ab. Eine Annahme, die sich als
+Forderung an das System herausstellt, wird nicht gelöscht: Sie bekommt
+`Status: Ersetzt` und `Ersetzt-durch: REQ-...`, so wie A-010. `about` nennt, was von
 der Annahme abhängt. Fällt sie, ist das die Liste der zu prüfenden Elemente.
 Jede Nennung von `A-nnn` im Repository muss eine Annahme im Modell haben.
 

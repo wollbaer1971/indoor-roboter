@@ -210,3 +210,16 @@ Overleaf passt nur ihr Aussehen an.
   unveraendert.
 - Status ist auf vier Werte beschraenkt; jede A-nnn-Nennung im Repository
   muss eine Annahme im Modell haben (Negativtest unknown_assumption_reference).
+
+# A-010 wird REQ-ARCH-003, 05.11.2026
+
+- A-010 ("Mehr-Roboter-Erweiterung nicht verhindern") war keine Annahme ueber
+  die Umgebung, sondern eine Forderung an das System. Neu: REQ-ARCH-003
+  (Constraint) mit pruefbarem Akzeptanzkriterium, zugeordnet MissionSystem,
+  NavigationSystem und CommunicationSystem; Schnittstellen TransportOrder,
+  MissionStatus, MapManagementNode. Geplanter Review-Test TC-ARCH-001.
+- A-010 bleibt mit Status "Ersetzt" und Verweis auf REQ-ARCH-003 erhalten,
+  damit die ID nachvollziehbar bleibt. Der Generator prueft, dass der
+  Verweis auf ein existierendes Requirement zeigt.
+- Bekannte Luecke, die TC-ARCH-001 aufdecken soll: TransportOrder und
+  MissionStatus haben keine Roboterkennung, ROS2-Topics sind global benannt.

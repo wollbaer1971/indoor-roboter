@@ -9,7 +9,9 @@ package MobileMaterialRobot_Assumptions_A1 {
   'about' nennt die Modellelemente, die von ihr abhaengen. Faellt eine
   Annahme, zeigt 'about', was zu pruefen ist. Die Felder sind Quelle der
   Annahmentabelle in Kapitel 3; siehe tables/README.md.
-  Status: Vorlaeufig, Offen, Sicherheitsrelevant oder Architekturziel.
+  Status: Vorlaeufig, Offen, Sicherheitsrelevant oder Ersetzt. Eine ersetzte
+  Annahme bleibt mit ihrer ID stehen und nennt in 'Ersetzt-durch' das
+  Element, das sie abloest.
   */
 
   comment A_001 about REQ_NAV_004, MotionSystem, NavigationSystem /*
@@ -71,10 +73,13 @@ package MobileMaterialRobot_Assumptions_A1 {
     Status: Vorlaeufig
   */
 
-  comment A_010 about CommunicationSystem /*
+  comment A_010 about REQ_ARCH_003 /*
     ID: A-010
     Annahme: Eine spaetere Erweiterung auf mehrere Roboter soll
       architektonisch nicht unnoetig verhindert werden.
-    Status: Architekturziel
+    Status: Ersetzt
+    Ersetzt-durch: REQ-ARCH-003
+    Hinweis: Kein Sachverhalt ueber die Umgebung, sondern eine Forderung an
+      das System; deshalb als Requirement gefuehrt (05.11.2026).
   */
 }

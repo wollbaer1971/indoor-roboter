@@ -195,11 +195,13 @@ def load_assumptions(root: Path) -> list[tuple[str, dict[str, str]]]:
             raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
         if data["Status"] not in ASSUMPTION_STATUS:
             raise ValueError(f"{name}: Status must be one of {', '.join(ASSUMPTION_STATUS)}")
+        if (data["Status"] == "Ersetzt") != bool(data.get("Ersetzt-durch")):
+            raise ValueError(f"{name}: 'Ersetzt-durch' is required exactly when Status is Ersetzt")
         assumptions.append((data["ID"], data))
     return assumptions
 
 
-ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Architekturziel")
+ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Ersetzt")
 
 
 def decision_status(data: dict[str, str]) -> str:
@@ -292,7 +294,16 @@ def render(root: Path) -> dict[Path, str]:
                               for rid, d in model["b1"]])
     table("mvp_b1", [row(rid, tex(d["MVP"]), tex(d["MVP-Begruendung"])) for rid, d in model["b1"] if "MVP" in d])
 
-    table("assumptions_a1", [row(aid, tex(d["Annahme"]), tex(d["Status"])) for aid, d in load_assumptions(root)])
+    requirement_ids = {rid for rid, _ in model["requirements"]} | {rid for rid, _ in model["b1"]}
+    assumption_rows = []
+    for aid, d in load_assumptions(root):
+        status = d["Status"]
+        if status == "Ersetzt":
+            if d["Ersetzt-durch"] not in requirement_ids:
+                raise ValueError(f"{aid}: replacement {d['Ersetzt-durch']} is not a requirement")
+            status = f"Ersetzt durch {d['Ersetzt-durch']}"
+        assumption_rows.append(row(aid, tex(d["Annahme"]), tex(status)))
+    table("assumptions_a1", assumption_rows)
 
     baseline = [(did, d) for did, d in model["decisions"] if d["Art"] == "Baseline"]
     architecture = [(did, d) for did, d in model["decisions"] if d["Art"] == "Architektur"]

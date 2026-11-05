@@ -466,5 +466,27 @@ package MobileMaterialRobot_Requirements_A1 {
       Requirement, noch nicht als SysML-Metadaten.
     */
   }
+
+  requirement REQ_ARCH_003 {
+    subject robot : MobileMaterialRobot;
+    doc /*
+    ID: REQ-ARCH-003
+    Typ: Constraint
+    Gruppe: Iteration A
+    Quelle: A-010, SN-DEV-001, SN-DEV-002
+    Text: Das System muss so strukturiert werden, dass eine spaetere
+      Erweiterung auf mehrere Roboter nicht unnoetig verhindert wird.
+    Akzeptanz: Transportauftrag und Missionsstatus koennen einem Roboter
+      zugeordnet werden; ROS2-Topics sind je Roboter in einem eigenen
+      Namensraum adressierbar; fuer dauerhafte Kartenaenderungen ist
+      festgelegt, wer sie freigibt.
+    Schnittstelle: TransportOrder, MissionStatus, MapManagementNode,
+      ROS2-Namensraum
+    Status: Geplant; Roboterkennung und Namensraum noch nicht modelliert
+    Hinweis: Entstanden aus der frueheren Annahme A-010. Heute fehlt in
+      TransportOrder und MissionStatus eine Roboterkennung, und die Topics
+      sind global benannt; das Review TC-ARCH-001 muss das aufdecken.
+    */
+  }
 }
 

@@ -13,11 +13,11 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | --- | --- |
 | `00_overview.sysml` | Modellzusammenstellung mit oeffentlichen Imports, Scope und Entscheidungen |
 | `01_context.sysml` | Externe Akteure, kanonische externe Typen, Kontext und Verbindungen |
-| `02_requirements.sysml` | 25 Anforderungen mit typisiertem Subject; wiederverwendbare Raum-/Tuerkriterien |
+| `02_requirements.sysml` | 26 Anforderungen mit typisiertem Subject; wiederverwendbare Raum-/Tuerkriterien |
 | `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
 | `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
 | `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
-| `06_tests.sysml` | 21 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `06_tests.sysml` | 22 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
 | `09_decisions.sysml` | Entscheidungsprotokoll (DEC, ADR) als benannte Kommentare mit `about`-Bezug |
