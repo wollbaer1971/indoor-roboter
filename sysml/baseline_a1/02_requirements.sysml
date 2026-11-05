@@ -338,6 +338,10 @@ package MobileMaterialRobot_Requirements_A1 {
     Quelle: Bedarf Energieueberwachung
     Text: Das System muss seinen Energiezustand ueberwachen.
     Akzeptanz: Niedriger Ladezustand wird erkannt und gemeldet.
+    MVP: MVP reduziert
+    MVP-Begruendung: Ohne Ladezustand ist der 2-h-Nachweis aus REQ-PWR-002
+      nicht moeglich; im MVP genuegt Erkennen und Melden eines niedrigen
+      Ladezustands, ein genaues Energiemodell folgt spaeter.
     Schnittstelle: EnergyMonitorNode, /battery_state
     Status: Geplant; kein Ausfuehrungsnachweis
     */

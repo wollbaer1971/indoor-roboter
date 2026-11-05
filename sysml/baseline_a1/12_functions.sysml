@@ -107,6 +107,9 @@ package MobileMaterialRobot_Functions_A1 {
     Name: Energiezustand ueberwachen
     Zweck: Ladezustand erfassen, niedrigen Ladezustand erkennen und an die
       Missionssteuerung melden
+    HW-Anteil: Batterie, Spannungs- und Strommessung
+    SW-Anteil: Energiemonitor, Schwellwert fuer niedrigen Ladezustand
+    Status: MVP reduziert
     */
   }
 

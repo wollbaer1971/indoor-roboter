@@ -268,3 +268,12 @@ Overleaf passt nur ihr Aussehen an.
   zuerst, 'redefines' ersetzt an derselben Stelle, Zyklen sind ein Fehler.
   Die Probe inheritance_check baut die Struktur in einer Kopie wie in PR #2
   um (Basistyp mit fuenf Teilsystemen) und verlangt dieselbe Tabelle.
+
+# Energieueberwachung im MVP, 05.11.2026
+
+- REQ-PWR-001 ist "MVP reduziert": Erkennen und Melden eines niedrigen
+  Ladezustands gehoeren ins MVP, weil REQ-PWR-002 (2 h Betrieb) sonst nicht
+  nachweisbar ist. Ein genaues Energiemodell folgt spaeter.
+- FUN-ENE-001 ist alloziert: Batterie mit Spannungs- und Strommessung,
+  Energiemonitor mit Schwellwert. Konkrete Bauteile und der Schwellwert
+  selbst sind nicht festgelegt.
