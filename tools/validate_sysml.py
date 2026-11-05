@@ -216,7 +216,7 @@ def documentation_checks(docs: Path) -> None:
            for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
     for path, text in tex.items():
         for number, line in enumerate(text.splitlines(), 1):
-            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
+            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|A-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
                 problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, decision, subsystem or topic); "
                                 "maintain it in the model")
     used = set(re.findall(r"\\model(?:table|text)\{(\w+)\}", "".join(tex.values())))
@@ -277,6 +277,8 @@ def negative_documentation_check() -> None:
         "hand_written_subsystem_row": ("chapters/08_architektur.tex",
                                        lambda text: text.replace("\\modeltable{subsystems_a1}",
                                                                  "\\modeltable{subsystems_a1}\nExtraSystem & x & y \\\\", 1)),
+        "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
+                                         lambda text: text.replace("A-001 bis A-010", "A-001 bis A-011", 1)),
     }
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:

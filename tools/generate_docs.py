@@ -92,7 +92,7 @@ def requirement_text(model: dict, rid: str, data: dict[str, str]) -> str:
     return text
 
 
-DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4})\b")
+DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3})\b")
 REFERENCE_SOURCES = ("sysml/**/*.sysml", "chapters/*.tex", "appendices/*.tex", "docs/*.md", "*.md")
 
 
@@ -112,7 +112,8 @@ def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[s
         decisions.append((data["ID"], data))
         for target in filter(None, (a.strip() for a in about.split(","))):
             decided_by.setdefault(dashed(target.split("::")[-1]), []).append(data["ID"])
-    known = {did for did, _ in decisions}
+    assumptions = load_assumptions(root)
+    known = {did for did, _ in decisions} | {aid for aid, _ in assumptions}
     unknown = set()
     for pattern in REFERENCE_SOURCES:
         for path in root.glob(pattern):
@@ -120,7 +121,7 @@ def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[s
                 unknown |= {f"{ref} in {path.relative_to(root)}"
                             for ref in DECISION_REF.findall(path.read_text(encoding="utf-8")) if ref not in known}
     if unknown:
-        raise ValueError("decision reference(s) without record in 09_decisions.sysml: " + ", ".join(sorted(unknown)))
+        raise ValueError("decision/assumption reference(s) without record in the model: " + ", ".join(sorted(unknown)))
     return decisions, decided_by
 
 
@@ -182,6 +183,23 @@ def typewriter(name: str) -> str:
 def direction(publishers: list[str], subscribers: list[str]) -> str:
     source = ", ".join(publishers)
     return f"{source} zu {', '.join(subscribers)}" if subscribers else f"{source} (noch kein Abnehmer)"
+
+
+def load_assumptions(root: Path) -> list[tuple[str, dict[str, str]]]:
+    source = (root / "sysml/baseline_a1/10_assumptions.sysml").read_text(encoding="utf-8")
+    assumptions = []
+    for name, body in re.findall(r"^  comment (A_\d+)(?: about [^/]*?)? /\*(.*?)\*/", source, flags=re.M | re.S):
+        data = parse_fields(body)
+        require(data, name, "ID", "Annahme", "Status")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        if data["Status"] not in ASSUMPTION_STATUS:
+            raise ValueError(f"{name}: Status must be one of {', '.join(ASSUMPTION_STATUS)}")
+        assumptions.append((data["ID"], data))
+    return assumptions
+
+
+ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Architekturziel")
 
 
 def decision_status(data: dict[str, str]) -> str:
@@ -273,6 +291,8 @@ def render(root: Path) -> dict[Path, str]:
     table("requirements_b1", [row(rid, tex(d["Typ"]), requirement_text(model, rid, d), tex(d["Akzeptanz"]))
                               for rid, d in model["b1"]])
     table("mvp_b1", [row(rid, tex(d["MVP"]), tex(d["MVP-Begruendung"])) for rid, d in model["b1"] if "MVP" in d])
+
+    table("assumptions_a1", [row(aid, tex(d["Annahme"]), tex(d["Status"])) for aid, d in load_assumptions(root)])
 
     baseline = [(did, d) for did, d in model["decisions"] if d["Art"] == "Baseline"]
     architecture = [(did, d) for did, d in model["decisions"] if d["Art"] == "Architektur"]

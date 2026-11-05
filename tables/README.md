@@ -96,6 +96,23 @@ und das Entscheidungsblatt in Kapitel 8.
 Jede Nennung von `DEC-nnn` oder `ADR-nnnn` im Repository muss eine Entscheidung
 im Modell haben, sonst schlägt die Prüfung fehl.
 
+## Annahmen
+
+Annahmen stehen in `sysml/baseline_a1/10_assumptions.sysml`, genauso aufgebaut:
+
+```
+comment A_011 about REQ_PWR_002 /*
+  ID: A-011
+  Annahme: Die Ladestation ist waehrend des Unterrichts frei zugaenglich.
+  Status: Vorlaeufig
+*/
+```
+
+`Status` ist einer von `Vorlaeufig`, `Offen`, `Sicherheitsrelevant`,
+`Architekturziel`; andere Werte lehnt der Generator ab. `about` nennt, was von
+der Annahme abhängt. Fällt sie, ist das die Liste der zu prüfenden Elemente.
+Jede Nennung von `A-nnn` im Repository muss eine Annahme im Modell haben.
+
 ## Teilsysteme und ROS2
 
 - Teilsystem: Felder `Verantwortung` und `MVP-Status` im `part def` in
@@ -127,7 +144,7 @@ Alles außer der Zeile `\modeltable{...}` ist Layout und darf frei geändert
 werden: Spaltenbreiten, Kopfzeile, `\small`, `\caption`, Umgebung.
 Nur die Spaltenzahl muss bleiben: Requirements 4, MVP 3, Tests 4,
 Traceability 5, Entscheidungen Kapitel 3: 3, Anhang A: 4, ADR-Blatt: 2,
-Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4. Eine Spalte weglassen oder umsortieren geht nur im Generator.
+Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4, Annahmen 3. Eine Spalte weglassen oder umsortieren geht nur im Generator.
 
 ## Was die Prüfung ablehnt
 
@@ -142,4 +159,5 @@ Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4. Eine Spalte weglassen oder umsorti
 ## Noch nicht aus dem Modell erzeugt
 
 Interne Schnittstellen und Funktionen (Kapitel 8), HW/SW-Allokation
-(Kapitel 9), Annahmen und die Use-Case-Beschreibungen sind noch Handarbeit.
+(Kapitel 9), Nicht-Ziele (Kapitel 3) und die Use-Case-Beschreibungen sind
+noch Handarbeit.

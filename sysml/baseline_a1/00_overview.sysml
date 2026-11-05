@@ -12,6 +12,7 @@ package MobileMaterialRobot_BaselineA1 {
   public import MobileMaterialRobot_Views_A1::*;
   public import MobileMaterialRobot_Traceability_A1::*;
   public import MobileMaterialRobot_Decisions_A1::*;
+  public import MobileMaterialRobot_Assumptions_A1::*;
   doc /*
   Model: Mobile Material Robot - System Definition Baseline A.1
   Purpose:
@@ -25,21 +26,6 @@ package MobileMaterialRobot_BaselineA1 {
     ROS2 mapping traceable. Concrete technologies remain open unless they
     were explicitly decided in Baseline A.1.
   */
-
-  item def BaselineA1_Assumptions {
-    doc /*
-    A-001: Robot moves mostly on one level.
-    A-002: Operating area is suitable for a small mobile robot.
-    A-003: Stairs are not handled autonomously.
-    A-004: Workpiece carrier size, mass and center of gravity are still open.
-    A-005: Transport locations are stable for a relevant period.
-    A-006: Humans may enter the robot operating area.
-    A-007: Temporary obstacles are part of normal operation.
-    A-008: Some environment changes may become long-term changes.
-    A-009: The first system works with one robot.
-    A-010: Later multi-robot extension should not be unnecessarily blocked.
-    */
-  }
 
   item def NonGoals_FirstDevelopmentStage {
     doc /*

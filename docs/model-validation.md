@@ -199,3 +199,14 @@ Overleaf passt nur ihr Aussehen an.
 - Der Doc-Block nennt nur noch die Ausnahmen ("Ohne Sicherheitsuebergaenge").
 - Die Sackgassen-Regel verlangt einen regulaeren Ausgang; Sicherheits- und
   Fehleruebergaenge allein zaehlen nicht.
+
+# Annahmen im Modell, 05.11.2026
+
+- `sysml/baseline_a1/10_assumptions.sysml`: A-001 bis A-010 als benannte
+  Kommentare mit ID, Annahme und Status; `about` verknuepft jede Annahme mit
+  den abhaengigen Requirements, Teilsystemen oder Kontextelementen.
+- Die englische Liste `BaselineA1_Assumptions` in `00_overview.sysml` ist
+  entfallen. Die Annahmentabelle in Kapitel 3 wird erzeugt; ihr Inhalt ist
+  unveraendert.
+- Status ist auf vier Werte beschraenkt; jede A-nnn-Nennung im Repository
+  muss eine Annahme im Modell haben (Negativtest unknown_assumption_reference).
