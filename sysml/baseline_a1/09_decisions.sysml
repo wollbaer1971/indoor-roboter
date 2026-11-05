@@ -200,6 +200,23 @@ package MobileMaterialRobot_Decisions_A1 {
       einschliessen.
   */
 
+  comment DEC_018 about REQ_UI_002, REQ_MIS_002, TC_UI_006 /*
+    ID: DEC-018
+    Art: Baseline
+    Entscheidung: Ein betrieblicher Stopp waehrend der Rueckkehr zur
+      Ladestation haelt den Roboter an und fuehrt in den eigenen Zustand
+      Rueckkehr pausiert. Fortsetzen mit manueller Freigabe setzt die
+      Rueckkehr fort, Quittierung bricht sie ab. Ein erhaltener Auftrag
+      bleibt bis zur Quittierung erhalten.
+    Status: Angenommen
+    Datum: 05.11.2026
+    Begruendung: Der Bediener muss den Roboter auch auf dem Weg zur
+      Ladestation normal anhalten koennen, ohne einen Fehler- oder sicheren
+      Zustand auszuloesen. Ein eigener Zustand statt eines Merkers in paused
+      haelt den Zustandsautomaten eindeutig; die Freigaberegel bleibt die
+      aus DEC-013.
+  */
+
   // Architektur- und Prozessentscheidungen
 
   comment ADR_0001 about REQ_ARCH_002 /*

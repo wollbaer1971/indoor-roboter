@@ -17,7 +17,7 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
 | `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
 | `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
-| `06_tests.sysml` | 23 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `06_tests.sysml` | 24 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
 | `09_decisions.sysml` | Entscheidungsprotokoll (DEC, ADR) als benannte Kommentare mit `about`-Bezug |

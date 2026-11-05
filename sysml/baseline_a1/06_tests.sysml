@@ -296,6 +296,25 @@ package MobileMaterialRobot_Verification_A1 {
     }
   }
 
+  verification def TC_UI_006 {
+    subject testRobot : MobileMaterialRobot;
+    doc /*
+    ID: TC-UI-006
+    Name: Stopp waehrend der Rueckkehr
+    Ablauf: Rueckkehr zur Ladestation ausloesen, unterwegs betrieblichen
+      Stopp ausloesen, dann Fortsetzung mit und ohne Freigabe anfordern und
+      einmal quittieren.
+    Erwartet: Der Roboter haelt an und meldet Rueckkehr pausiert; nur
+      Fortsetzung mit Freigabe setzt die Rueckkehr fort, Quittierung fuehrt
+      nach bereit (DEC-018).
+    Hinweis: Geplant; keine Auswertungslogik und kein Nachweis.
+    */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
+  }
+
   verification def TC_DIAG_001 {
     subject testRobot : MobileMaterialRobot;
     doc /*

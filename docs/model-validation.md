@@ -294,3 +294,13 @@ Overleaf passt nur ihr Aussehen an.
   Auftrag bleibt erhalten. chargingInterfaceReached --ResumeRequested
   (ResumePermitted)--> orderAccepted setzt ihn fort; Quittierung dort
   verwirft ihn. Geplanter Test TC-UI-005.
+
+# Stopp waehrend der Rueckkehr, DEC-018, 05.11.2026
+
+- Neuer Zustand returnPaused (auch in MissionStatusKind).
+  returningToChargingStation --OperationalStopRequested--> returnPaused;
+  --ResumeRequested (ResumePermitted)--> returningToChargingStation;
+  --AcknowledgeRequested--> ready. Geplanter Test TC-UI-006.
+- Die Sicherheitsregel aus DEC-016 hat den neuen Zustand ohne Pflege einer
+  Liste erfasst: Ohne UnsafeCondition- und TechnicalFault-Uebergang meldete
+  der Validator ihn sofort.

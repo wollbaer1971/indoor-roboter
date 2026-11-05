@@ -184,6 +184,11 @@ package MobileMaterialRobot_Behavior_A1 {
     Auftrag fort (orderAccepted, dann RouteReady); eine Quittierung dort
     verwirft ihn und fuehrt nach ready.
 
+    Stopp waehrend der Rueckkehr (DEC-018): Ein betrieblicher Stopp in
+    returningToChargingStation fuehrt nach returnPaused. Fortsetzen mit
+    manueller Freigabe (ResumePermitted, wie DEC-013) setzt die Rueckkehr
+    fort; Quittierung bricht sie ab und fuehrt nach ready.
+
     Regeln, die tools/validate_sysml.py prueft:
     In jedem Zustand fuehrt UnsafeCondition nach safeState und
     TechnicalFault nach fault (DEC-016), auch im Stillstand und beim
@@ -210,6 +215,7 @@ package MobileMaterialRobot_Behavior_A1 {
     state completed;
     state stopped;
     state returningToChargingStation;
+    state returnPaused;
     state chargingInterfaceReached;
     state fault;
     state safeState;
@@ -238,6 +244,13 @@ package MobileMaterialRobot_Behavior_A1 {
         retainedOrderAvailable = resumeAfterCharge.retainedOrderAvailable)
       then orderAccepted;
     transition first returningToChargingStation accept ChargingAreaReached then chargingInterfaceReached;
+    // DEC-018: operational stop during the return; same release rule as DEC-013.
+    transition first returningToChargingStation accept OperationalStopRequested then returnPaused;
+    transition first returnPaused accept continueReturn : ResumeRequested
+      if ResumePermitted(isPaused = true, manualRelease = continueReturn.manualRelease,
+        safeToMove = continueReturn.safeToMove, retainedOrderAvailable = true)
+      then returningToChargingStation;
+    transition first returnPaused accept AcknowledgeRequested then ready;
     transition first driving accept ObstacleDetected then avoidingObstacle;
     transition first avoidingObstacle accept ObstacleCleared then driving;
     transition first avoidingObstacle accept RouteBlocked then blocked;
@@ -266,6 +279,7 @@ package MobileMaterialRobot_Behavior_A1 {
     transition first rejected accept UnsafeCondition then safeState;
     transition first stopped accept UnsafeCondition then safeState;
     transition first returningToChargingStation accept UnsafeCondition then safeState;
+    transition first returnPaused accept UnsafeCondition then safeState;
     transition first chargingInterfaceReached accept UnsafeCondition then safeState;
     transition first initializing accept TechnicalFault then fault;
     transition first ready accept TechnicalFault then fault;
@@ -278,6 +292,7 @@ package MobileMaterialRobot_Behavior_A1 {
     transition first rejected accept TechnicalFault then fault;
     transition first stopped accept TechnicalFault then fault;
     transition first returningToChargingStation accept TechnicalFault then fault;
+    transition first returnPaused accept TechnicalFault then fault;
     transition first chargingInterfaceReached accept TechnicalFault then fault;
   }
 }

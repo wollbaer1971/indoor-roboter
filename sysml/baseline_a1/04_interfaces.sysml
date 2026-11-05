@@ -16,7 +16,8 @@ package MobileMaterialRobot_Interfaces_A1 {
   enum def MissionStatusKind {
     off; initializing; ready; orderAccepted; rejected; driving;
     avoidingObstacle; paused; blocked; completed; stopped;
-    returningToChargingStation; chargingInterfaceReached; fault; safeState;
+    returningToChargingStation; returnPaused; chargingInterfaceReached; fault;
+    safeState;
   }
   item def MissionStatus {
     doc /* Jeder Status nennt den meldenden Roboter (REQ-ARCH-003). */
