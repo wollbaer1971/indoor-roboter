@@ -150,3 +150,20 @@ Overleaf passt nur ihr Aussehen an.
   `/safety_state` hatte im Kapitel auch Mission als Abnehmer,
   `/battery_state` auch UI, `/mission_state` auch Logging. Im Modell
   abonniert keiner dieser Nodes das Topic; die Tabelle zeigt den Modellstand.
+
+# Sicherheitsuebergaenge im Zustandsautomaten, 05.11.2026
+
+- `MissionManagerNode` abonniert `/safety_state`; die Missionssteuerung
+  erfaehrt damit vom Safety-Zustand und kann nach `safeState` wechseln.
+- `RobotOperationState`: UnsafeCondition fuehrt jetzt aus allen aktiven
+  Zustaenden (orderAccepted, driving, avoidingObstacle, paused,
+  returningToChargingStation) nach `safeState`, TechnicalFault nach `fault`.
+  Vorher galt beides nur in `driving`.
+- `avoidingObstacle` ist erreichbar: driving --ObstacleDetected-->
+  avoidingObstacle --ObstacleCleared--> driving bzw. --RouteBlocked--> blocked,
+  wie in HandleTemporaryObstacle beschrieben.
+- `validate_sysml.py` prueft die Regeln aus dem Doc-Block des Zustandsautomaten:
+  Sicherheitsuebergaenge in allen aktiven Zustaenden, Erreichbarkeit aller
+  Zustaende. Einzige erklaerte Ausnahme: `stopped` (Abbruch eines pausierten
+  Auftrags ist nicht entschieden). Negativtest `missing_safety_exit`.
+- Weiter offen: Wiederanlauf aus `safeState`, `fault` und `blocked`.

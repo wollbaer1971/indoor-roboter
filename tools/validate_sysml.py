@@ -110,6 +110,74 @@ def architecture_checks(model: Path) -> None:
     print(f"ARCHITECTURE canonical_robot=1 requirements={len(req_names)} covered={len(verified)} matrix_tests_resolve=true")
 
 
+def _doc_list(doc: str, key: str) -> list[str]:
+    """Comma list after 'key:' in a doc block; deeper-indented lines continue it."""
+    lines = doc.splitlines()
+    for i, line in enumerate(lines):
+        if line.strip().startswith(key + ":"):
+            value = line.split(":", 1)[1]
+            for follow in lines[i + 1:]:
+                if not follow.startswith(" " * 6):
+                    break
+                value += " " + follow.strip()
+            return [v.strip() for v in value.split(",") if v.strip()]
+    raise RuntimeError(f"RobotOperationState doc: '{key}:' missing")
+
+
+def state_machine_checks(model: Path) -> None:
+    """Safety and fault exits in every active state; every state reachable unless declared open."""
+    source = (model / "baseline_a1/05_behavior.sysml").read_text(encoding="utf-8")
+    block = re.search(r"state def RobotOperationState \{(.*?)\n  \}", source, re.S)
+    if not block:
+        raise RuntimeError("state def RobotOperationState not found")
+    body = block[1]
+    doc = re.search(r"doc /\*(.*?)\*/", body, re.S)[1]
+    active, exempt = _doc_list(doc, "Aktive Zustaende"), _doc_list(doc, "Noch ohne Zugang")
+    states = re.findall(r"^\s+state (\w+);", body, re.M)
+    start = re.search(r"entry; then (\w+);", body)[1]
+    transitions = re.findall(r"transition first (\w+)\s+accept\s+(?:\w+\s*:\s*)?(\w+)[^;]*?then (\w+);", body, re.S)
+    problems = [f"declared state {s} does not exist" for s in active + exempt if s not in states]
+    for state in active:
+        for event, target in (("UnsafeCondition", "safeState"), ("TechnicalFault", "fault")):
+            if (state, event, target) not in transitions:
+                problems.append(f"active state {state} lacks '{event} -> {target}'")
+    reachable, frontier = {start}, [start]
+    while frontier:
+        current = frontier.pop()
+        for source_state, _, target in transitions:
+            if source_state == current and target not in reachable:
+                reachable.add(target)
+                frontier.append(target)
+    for state in states:
+        if state not in reachable and state not in exempt:
+            problems.append(f"state {state} is unreachable")
+        if state in reachable and state in exempt:
+            problems.append(f"state {state} is reachable now; remove it from 'Noch ohne Zugang'")
+    if problems:
+        raise RuntimeError("State machine rules violated:\n  " + "\n  ".join(problems))
+    print(f"STATE_MACHINE states={len(states)} reachable={len(reachable)} active={len(active)} "
+          f"safety_exits=complete open_without_entry={','.join(exempt) or 'none'}")
+
+
+def negative_state_machine_check(model: Path) -> None:
+    """Remove the unsafe-condition exit of 'paused' in a temporary copy; the check must fail."""
+    with tempfile.TemporaryDirectory(prefix="states-negative-") as temporary:
+        copy = Path(temporary) / "sysml"
+        shutil.copytree(model, copy)
+        behavior = copy / "baseline_a1/05_behavior.sysml"
+        text = behavior.read_text(encoding="utf-8")
+        mutated = text.replace("    transition first paused accept UnsafeCondition then safeState;\n", "", 1)
+        if mutated == text:
+            raise RuntimeError("Negative state machine test could not remove the paused safety exit")
+        behavior.write_text(mutated, encoding="utf-8")
+        try:
+            state_machine_checks(copy)
+        except RuntimeError:
+            print("NEGATIVE missing_safety_exit: detected")
+            return
+        raise RuntimeError("Negative state machine test did not detect a missing safety exit")
+
+
 def _ids(text: str) -> set[str]:
     return set(re.findall(r"(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+", text))
 
@@ -220,6 +288,7 @@ def main() -> int:
     home = pilot_home(args.pilot_home)
     model = args.model.resolve()
     architecture_checks(model)
+    state_machine_checks(model)
     if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
         documentation_checks(REPO)
     result = invoke(java, home, model, args.self_test)
@@ -229,6 +298,7 @@ def main() -> int:
         return result.returncode
     if args.negative_tests:
         negative_checks(java, home, model)
+        negative_state_machine_check(model)
         if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
             negative_documentation_check()
     return 0

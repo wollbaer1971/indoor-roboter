@@ -20,6 +20,12 @@ package MobileMaterialRobot_Behavior_A1 {
   item def ChargingAreaReached;
   item def TechnicalFault;
   item def UnsafeCondition;
+  item def ObstacleDetected {
+    doc /* Hindernis im Fahrweg, das lokal umfahren werden kann. */
+  }
+  item def ObstacleCleared {
+    doc /* Ein sicherer Weg um das Hindernis ist gefunden. */
+  }
 
   calc def ResumePermitted {
     in attribute isPaused : Boolean;
@@ -139,6 +145,16 @@ package MobileMaterialRobot_Behavior_A1 {
     Operational stop pauses the retained mission. Only explicit manual release
     can resume it, subject to the existing safety and route checks.
     Recovery after blocked route, fault or unsafe condition remains open.
+
+    Regeln, die tools/validate_sysml.py prueft:
+    Aktive Zustaende: orderAccepted, driving, avoidingObstacle, paused,
+      returningToChargingStation
+    In jedem aktiven Zustand fuehrt UnsafeCondition nach safeState und
+    TechnicalFault nach fault. Ein pausierter Auftrag kann so nicht
+    manuell fortgesetzt werden, wenn inzwischen ein Fehler aufgetreten ist.
+    Jeder Zustand muss vom Startzustand aus erreichbar sein, ausser:
+    Noch ohne Zugang: stopped
+    (Abbruch eines pausierten Auftrags ist fachlich nicht entschieden.)
     */
     entry; then off;
     state off;
@@ -174,7 +190,20 @@ package MobileMaterialRobot_Behavior_A1 {
       then orderAccepted;
     transition first ready accept ReturnRequested then returningToChargingStation;
     transition first returningToChargingStation accept ChargingAreaReached then chargingInterfaceReached;
-    transition first driving accept TechnicalFault then fault;
+    transition first driving accept ObstacleDetected then avoidingObstacle;
+    transition first avoidingObstacle accept ObstacleCleared then driving;
+    transition first avoidingObstacle accept RouteBlocked then blocked;
+
+    // Safety and fault handling in every active state.
+    transition first orderAccepted accept UnsafeCondition then safeState;
     transition first driving accept UnsafeCondition then safeState;
+    transition first avoidingObstacle accept UnsafeCondition then safeState;
+    transition first paused accept UnsafeCondition then safeState;
+    transition first returningToChargingStation accept UnsafeCondition then safeState;
+    transition first orderAccepted accept TechnicalFault then fault;
+    transition first driving accept TechnicalFault then fault;
+    transition first avoidingObstacle accept TechnicalFault then fault;
+    transition first paused accept TechnicalFault then fault;
+    transition first returningToChargingStation accept TechnicalFault then fault;
   }
 }

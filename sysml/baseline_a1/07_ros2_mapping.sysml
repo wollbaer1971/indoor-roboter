@@ -19,9 +19,10 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
     Schnittstellenidee: Auftrag, Ziel, Missionszustand
     Publiziert: /mission_state, /goal_pose
     Abonniert: /transport_order, /operator_command, /navigation_result,
-      /battery_state
+      /battery_state, /safety_state
     Verantwortung: Auftragsvalidierung, Missionszustand, Meldung von
-      Abschluss oder Blockade.
+      Abschluss oder Blockade; Wechsel in safeState bei unsicherem
+      Safety-Zustand.
     Anforderungen: REQ-MIS-001, REQ-MIS-002, REQ-STA-001
     */
   }
