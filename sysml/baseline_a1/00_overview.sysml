@@ -39,6 +39,10 @@ package MobileMaterialRobot_BaselineA1 {
     DEC-010: Simple UI for status, operational stop and return to charging station.
     DEC-011: Return to charging station belongs to the target system.
     DEC-012: Higher speed is a later extension.
+    DEC-013 (2026-10-28): Operational stop pauses the current order; order ID,
+      start and target are retained; resume only after explicit manual release.
+    DEC-014 (2026-10-28): Verification initially in simulation only, without
+      real hardware; simulator not yet selected.
     */
   }
 

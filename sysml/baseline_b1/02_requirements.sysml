@@ -32,7 +32,7 @@ package MobileMaterialRobot_Requirements_B1 {
     subject robot : MobileMaterialRobot;
     doc /*
     Type: functional
-    Source: UC-B-001, UC-B-003, UC-B-005, UC-B-007, UC-B-009
+    Source: UC-B-001, UC-B-003, UC-B-005, UC-B-006, UC-B-007, UC-B-009
     Text: The system shall report at least ready, accepted, driving, target
       reached, paused, blocked, stopped and fault.
     Verification idea: integration test checks status sequence.
@@ -64,7 +64,7 @@ package MobileMaterialRobot_Requirements_B1 {
     subject robot : MobileMaterialRobot;
     doc /*
     Type: functional
-    Source: UC-B-005
+    Source: UC-B-003, UC-B-005
     Text: The system shall detect and report when target or route is not reachable.
     Verification idea: block route and expect blocked/not reachable status.
     */
@@ -109,6 +109,17 @@ package MobileMaterialRobot_Requirements_B1 {
     Text: The system shall distinguish temporary obstacles from long-term map
       information.
     Verification idea: temporary obstacle does not automatically change long-term map.
+    */
+  }
+
+  requirement REQ_B_NAV_004 {
+    subject robot : MobileMaterialRobot;
+    doc /*
+    Type: functional
+    Source: UC-B-004
+    Text: The system shall stop, locally replan or report a blockage when a
+      temporary obstacle is in its path.
+    Verification idea: place obstacle in path and check the expected reaction.
     */
   }
 
@@ -195,11 +206,14 @@ package MobileMaterialRobot_Requirements_B1 {
   dependency from REQ_B_STA_001 to UC_B_001_TransportauftragErteilen;
   dependency from REQ_B_STA_001 to UC_B_003_AutonomeTransportmissionAusfuehren;
   dependency from REQ_B_STA_001 to UC_B_005_BlockiertenFahrwegBehandeln;
+  dependency from REQ_B_STA_001 to UC_B_006_PersonImFahrbereichBehandeln;
   dependency from REQ_B_STA_001 to UC_B_007_BetrieblichenStoppAusloesen;
   dependency from REQ_B_STA_001 to UC_B_009_TechnischenFehlerBehandeln;
   dependency from REQ_B_NAV_001 to UC_B_003_AutonomeTransportmissionAusfuehren;
   dependency from REQ_B_NAV_002 to UC_B_003_AutonomeTransportmissionAusfuehren;
+  dependency from REQ_B_NAV_003 to UC_B_003_AutonomeTransportmissionAusfuehren;
   dependency from REQ_B_NAV_003 to UC_B_005_BlockiertenFahrwegBehandeln;
+  dependency from REQ_B_NAV_004 to UC_B_004_TemporaeresHindernisBehandeln;
   dependency from REQ_B_LOC_001 to UC_B_003_AutonomeTransportmissionAusfuehren;
   dependency from REQ_B_PER_001 to UC_B_004_TemporaeresHindernisBehandeln;
   dependency from REQ_B_MAP_001 to UC_B_010_KarteUndUmgebungVerwalten;

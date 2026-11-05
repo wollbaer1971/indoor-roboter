@@ -4,24 +4,24 @@
 \toprule
 Requirement & Need/Funktion & Systemelement & Schnittstelle/ROS2 & Test \\
 \midrule
-REQ-MIS-001 & SN-001, FUN-MIS-001 & MissionSystem & \texttt{mission\_manager\_node} & TC-STA-001 \\
-REQ-TRN-001 & SN-002, FUN-TRN-001 & TransportSystem & offen & spaeter \\
-REQ-MAP-001 & FUN-MAP-001 & NavigationSystem/MapManagement & \texttt{map\_server}, \texttt{/map} & TC-MAP-001 \\
-REQ-MAP-002 & SN-006, FUN-PER-001 & PerceptionSystem & \texttt{/local\_obstacles} & TC-OBS-001 \\
-REQ-LOC-001 & FUN-LOC-001 & NavigationSystem & \texttt{localization\_node} & TC-LOC-001 \\
-REQ-NAV-001 & UC-003, FUN-NAV-001 & NavigationSystem, MotionSystem & \texttt{/goal\_pose}, \texttt{/cmd\_vel}, \texttt{/odom} & TC-NAV-001 \\
-REQ-NAV-002 & UC-007, FUN-NAV-001 & NavigationSystem, PerceptionSystem & \texttt{/local\_obstacles} & TC-OBS-001 \\
-REQ-SAFE-001 & SN-004, FUN-SAFE-001 & SafetySystem, MotionSystem & \texttt{/safety\_state} & TC-OBS-001, TC-OBS-002 \\
-REQ-STA-001 & SN-003, FUN-STA-001 & MissionSystem, UserInterface & \texttt{/mission\_state} & TC-STA-001 \\
-REQ-DIAG-001 & SN-005, FUN-STA-001 & DiagnosticsSystem, CommunicationSystem & \texttt{/diagnostics} & TC-DIAG-001 \\
-REQ-PWR-001 & FUN-STA-001 & EnergySystem & \texttt{/battery\_state} & TC-PWR-001 \\
-REQ-PWR-002 & SN-ENE-001 & EnergySystem & Batterieprofil offen & TC-PWR-002 \\
-REQ-UI-001 & SN-UI-001, UC-001 & UserInterface, MissionSystem & IF-001, IF-002 & TC-UI-001 \\
-REQ-UI-002 & SN-UI-002, UC-009, UC-010 & UserInterface, MissionSystem, EnergySystem & IF-001, IF-002, IF-007 & TC-UI-002 \\
+REQ-MIS-001 & SN-UI-001, UC-001, SN-001, FUN-MIS-001 & MissionSystem & IF-002, MissionManagerNode & TC-UI-001 \\
+REQ-TRN-001 & SN-TRN-001, SN-002, FUN-TRN-001 & TransportSystem & IF-003 & TC-TRN-001 \\
+REQ-MAP-001 & Kartenkonzept Baseline A.1, FUN-MAP-001 & NavigationSystem & MapManagementNode, \texttt{/map} & TC-MAP-001 \\
+REQ-MAP-002 & SN-NAV-002, SN-006, FUN-PER-001 & PerceptionSystem, NavigationSystem & PerceptionNode, \texttt{/local\_obstacles} & TC-OBS-001 \\
+REQ-LOC-001 & UC-006, FUN-LOC-001 & NavigationSystem & LocalizationNode, \texttt{/robot\_pose} & TC-LOC-001 \\
+REQ-NAV-001 & UC-003, FUN-NAV-001 & NavigationSystem, MotionSystem & NavigationNode, \texttt{/cmd\_vel} & TC-NAV-001 \\
+REQ-NAV-002 & UC-007, FUN-NAV-001 & NavigationSystem, PerceptionSystem & NavigationNode, PerceptionNode & TC-OBS-001 \\
+REQ-SAFE-001 & SN-SAFE-002, SN-004, FUN-SAFE-001 & SafetySystem, MotionSystem & SafetySupervisorNode, \texttt{/safety\_state} & TC-OBS-001, TC-OBS-002 \\
+REQ-STA-001 & SN-OPS-001, SN-003, FUN-STA-001 & MissionSystem, UserInterfaceSystem & \texttt{/mission\_state} & TC-OBS-002, TC-STA-001 \\
+REQ-DIAG-001 & SN-005, SN-MNT-001, FUN-STA-001 & DiagnosticsSystem, CommunicationSystem & DiagnosticsNode, \texttt{/diagnostics} & TC-DIAG-001 \\
+REQ-PWR-001 & Bedarf Energieueberwachung, FUN-STA-001 & EnergySystem & EnergyMonitorNode, \texttt{/battery\_state} & TC-PWR-001 \\
+REQ-PWR-002 & SN-ENE-001, DEC-008 & EnergySystem & EnergyMonitorNode & TC-PWR-002 \\
+REQ-UI-001 & SN-UI-001, UC-001 & UserInterfaceSystem, MissionSystem & IF-001, IF-002, WebInterfaceNode & TC-UI-001 \\
+REQ-UI-002 & SN-UI-002, UC-009, UC-010 & UserInterfaceSystem, MissionSystem, EnergySystem & WebInterfaceNode & TC-UI-002, TC-UI-003 \\
 REQ-NAV-004 & SN-NAV-005, UC-004 & NavigationSystem, MotionSystem & IF-005 & TC-NAV-002 \\
 REQ-NAV-005 & SN-NAV-006, UC-004 & NavigationSystem, MotionSystem & IF-005 & TC-NAV-002 \\
-REQ-PERF-001 & DEC-007 & MotionSystem, SafetySystem & Motion-Parameter offen & TC-PERF-001 \\
-REQ-ARCH-001 & SN-008 & Gesamtmodell & Traceability-Artefakte & TC-TRC-001 \\
+REQ-PERF-001 & DEC-007 & MotionSystem, SafetySystem & NavigationNode Parameter \texttt{nominal\_speed} & TC-PERF-001 \\
+REQ-ARCH-001 & SN-DEV-003, SN-008 & Gesamtmodell & Traceability-Artefakte & TC-TRC-001 \\
 \bottomrule
 \end{longtable}
 
@@ -31,12 +31,12 @@ REQ-ARCH-001 & SN-008 & Gesamtmodell & Traceability-Artefakte & TC-TRC-001 \\
 \toprule
 Requirement & Need/Funktion & Systemelement & Schnittstelle/ROS2 & Test \\
 \midrule
-REQ-MIS-002 & SN-USER-002, SN-USER-003 & MissionSystem, UserInterface & \texttt{/mission\_state} & TC-STA-001 \\
-REQ-TRN-002 & SN-TRN-002, SN-SAFE-003 & TransportSystem, SafetySystem & offen & spaeter \\
-REQ-MAP-003 & SN-NAV-002, R-09 & MapManagement & Kartenfreigabe offen & TC-MAP-002 \\
-REQ-NAV-003 & SN-NAV-004, UC-008 & NavigationSystem, MissionSystem & \texttt{/mission\_state} & TC-OBS-002 \\
-REQ-SAFE-002 & SN-SAFE-001, R-04 & SafetySystem, PerceptionSystem & Safety-Schnittstelle offen & spaeter \\
-REQ-MNT-001 & SN-MNT-002 & Gesamtsystem (Mechanik offen) & Wartungsschnittstellen offen & TC-MNT-001 (Review) \\
-REQ-ARCH-002 & SN-DEV-001, SN-DEV-002 & Gesamtmodell & MVP-Markierung & TC-TRC-001 \\
+REQ-MIS-002 & SN-USER-002, SN-USER-003 & MissionSystem, UserInterfaceSystem & \texttt{/mission\_state} & TC-STA-001, TC-UI-003 \\
+REQ-TRN-002 & SN-TRN-002, SN-SAFE-003 & TransportSystem, SafetySystem & IF-003 & TC-TRN-002 \\
+REQ-MAP-003 & ADR-0007, SN-NAV-002, R-09 & NavigationSystem & MapManagementNode & TC-MAP-002 \\
+REQ-NAV-003 & UC-008, SN-NAV-004 & NavigationSystem, MissionSystem & \texttt{/navigation\_result}, \texttt{/mission\_state} & TC-OBS-002 \\
+REQ-SAFE-002 & SN-SAFE-001, R-04 & SafetySystem, PerceptionSystem & IF-006, SafetySupervisorNode & TC-SAFE-002 \\
+REQ-MNT-001 & SN-MNT-002 & MobileMaterialRobot (Mechanik offen) & offen & TC-MNT-001 \\
+REQ-ARCH-002 & SN-DEV-001, SN-DEV-002 & Gesamtmodell & MVP-Markierung (noch nicht modelliert) & TC-TRC-001 \\
 \bottomrule
 \end{longtable}

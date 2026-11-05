@@ -61,7 +61,7 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
     SysML element: NavigationSystem
     Possible ROS2 node: navigation_node
     Publishes: /cmd_vel, /navigation_result
-    Subscribes: /goal_pose, /robot_pose, /map, /local_obstacles, /safety_state
+    Subscribes: /goal_pose, /robot_pose, /odom, /map, /local_obstacles, /safety_state
     Parameters: nominal_speed, speed_limit, planner_config
     Related requirements: REQ-NAV-001 through REQ-NAV-005, REQ-PERF-001.
     */
@@ -90,15 +90,18 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
   part def MotionControllerNode {
     doc /*
     SysML element: MotionSystem
+    Possible ROS2 node: motion_controller_node
     Candidate only; no physical driver or simulator selected.
+    Publishes: /odom
     Subscribes: /cmd_vel, /safety_state
-    Owns: execution of permitted motion commands.
+    Owns: execution of permitted motion commands and odometry reporting.
     */
   }
 
   part def DiagnosticsNode {
     doc /*
     SysML element: DiagnosticsSystem
+    Possible ROS2 node: diagnostics_node
     Candidate only; no concrete diagnostic sources selected.
     Publishes: /diagnostics
     */

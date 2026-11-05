@@ -108,6 +108,79 @@ def architecture_checks(model: Path) -> None:
     print(f"ARCHITECTURE canonical_robot=1 requirements={len(req_names)} covered={len(verified)} matrix_tests_resolve=true")
 
 
+def _ids(text: str) -> set[str]:
+    return set(re.findall(r"(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+", text))
+
+
+def _table_rows(text: str, prefix: str) -> dict[str, list[str]]:
+    """LaTeX table rows starting with an ID such as 'REQ-NAV-001 & ...'."""
+    rows = {}
+    for line in text.splitlines():
+        if re.match(rf"{prefix}-[A-Z]+(?:-[A-Z]+)?-\d+ &", line):
+            cells = [c.strip() for c in line.rstrip().removesuffix("\\\\").split("&")]
+            rows[cells[0]] = cells
+    return rows
+
+
+def documentation_checks(model: Path, docs: Path) -> None:
+    """Fail when the LaTeX documentation drifts from the SysML model."""
+    def read(rel: str) -> str:
+        return (docs / rel).read_text(encoding="utf-8")
+    def dashed(name: str) -> str:
+        return name.replace("_", "-")
+    problems = []
+
+    # A.1 requirement IDs: requirements chapter and appendix vs. model.
+    model_reqs = {dashed(n) for n in re.findall(
+        r"\brequirement (REQ_\w+)\s*\{", (model / "baseline_a1/02_requirements.sysml").read_text(encoding="utf-8"))}
+    chapter_reqs = set(_table_rows(read("chapters/05_requirements.tex"), "REQ"))
+    if chapter_reqs != model_reqs:
+        problems.append(f"chapters/05 requirements: only LaTeX={sorted(chapter_reqs-model_reqs)}, only model={sorted(model_reqs-chapter_reqs)}")
+
+    # Test definitions and their verified requirements: chapter 10 vs. model.
+    tests = (model / "baseline_a1/06_tests.sysml").read_text(encoding="utf-8")
+    model_tests = {}
+    for block in re.split(r"(?=\bverification def TC_)", tests)[1:]:
+        name = dashed(re.match(r"verification def (TC_\w+)", block)[1])
+        model_tests[name] = {dashed(r) for r in re.findall(r"verify MobileMaterialRobot_Requirements_A1::(REQ_\w+)", block)}
+    chapter_tests = {tc: _ids(cells[2]) for tc, cells in _table_rows(read("chapters/10_verifikation_traceability.tex"), "TC").items()}
+    for tc in sorted(set(model_tests) | set(chapter_tests)):
+        if model_tests.get(tc) != chapter_tests.get(tc):
+            problems.append(f"chapters/10 {tc}: LaTeX={sorted(chapter_tests.get(tc, []))}, model={sorted(model_tests.get(tc, []))}")
+
+    # Appendix traceability: requirement set and test column vs. review matrix.
+    matrix = {}
+    for line in (model / "baseline_a1/traceability_matrix.md").read_text(encoding="utf-8").splitlines():
+        cells = [c.strip() for c in line.strip().strip("|").split("|")]
+        if re.fullmatch(r"REQ-[A-Z]+-\d+", cells[0]):
+            matrix[cells[0]] = _ids(cells[4])
+    appendix = {req: _ids(cells[4]) for req, cells in _table_rows(read("appendices/c_traceability_matrix.tex"), "REQ").items()}
+    if set(matrix) != model_reqs:
+        problems.append(f"traceability_matrix.md requirements differ from model: {sorted(set(matrix) ^ model_reqs)}")
+    for req in sorted(set(matrix) | set(appendix)):
+        if matrix.get(req) != appendix.get(req):
+            problems.append(f"appendix C {req}: LaTeX tests={sorted(appendix.get(req, []))}, matrix={sorted(matrix.get(req, []))}")
+
+    # B.1 requirement IDs and use-case derivations: chapter 12 vs. model.
+    b1 = (model / "baseline_b1/02_requirements.sysml").read_text(encoding="utf-8")
+    b1_reqs = {dashed(n) for n in re.findall(r"\brequirement (REQ_B_\w+)\s*\{", b1)}
+    chapter12 = read("chapters/12_iteration_b_usecases_requirements.tex")
+    chapter_b1 = set(_table_rows(chapter12, "REQ"))
+    if chapter_b1 != b1_reqs:
+        problems.append(f"chapters/12 requirements: only LaTeX={sorted(chapter_b1-b1_reqs)}, only model={sorted(b1_reqs-chapter_b1)}")
+    model_uc = {}
+    for req, uc in re.findall(r"dependency from (REQ_B_\w+) to UC_B_(\d+)_", b1):
+        model_uc.setdefault(f"UC-B-{uc}", set()).add(dashed(req))
+    for uc, derived in re.findall(r"subsection\{(UC-B-\d+).*?Abgeleitete Requirements & (.*?)\\\\", chapter12, re.S):
+        if _ids(derived) != model_uc.get(uc, set()):
+            problems.append(f"chapters/12 {uc}: LaTeX={sorted(_ids(derived))}, model={sorted(model_uc.get(uc, []))}")
+
+    if problems:
+        raise RuntimeError("Documentation drifts from model:\n  " + "\n  ".join(problems))
+    print(f"DOCUMENTATION requirements_a1={len(model_reqs)} tests={len(model_tests)} "
+          f"requirements_b1={len(b1_reqs)} latex_matches_model=true")
+
+
 def negative_checks(java: str, home: Path, model: Path) -> None:
     for name in ("missing_import_target", "missing_feature", "wrong_subject_type"):
         with tempfile.TemporaryDirectory(prefix="sysml-negative-") as temporary:
@@ -127,6 +200,24 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
             print(f"NEGATIVE {name}: detected ({summary[1]} errors, {summary[2]} warnings)")
 
 
+def negative_documentation_check(model: Path) -> None:
+    """Drop a requirement row from a temporary LaTeX copy; the drift check must fail."""
+    with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
+        copy = Path(temporary)
+        for folder in ("chapters", "appendices"):
+            shutil.copytree(REPO / folder, copy / folder)
+        shutil.copytree(model, copy / "sysml")
+        chapter = copy / "chapters/05_requirements.tex"
+        text = chapter.read_text(encoding="utf-8")
+        chapter.write_text(re.sub(r"(?m)^REQ-NAV-001 &.*\n", "", text), encoding="utf-8")
+        try:
+            documentation_checks(copy / "sysml", copy)
+        except RuntimeError:
+            print("NEGATIVE documentation_drift: detected")
+            return
+        raise RuntimeError("Negative documentation test did not detect a removed requirement row")
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--java", help="Java 21+ executable")
@@ -139,6 +230,8 @@ def main() -> int:
     home = pilot_home(args.pilot_home)
     model = args.model.resolve()
     architecture_checks(model)
+    if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
+        documentation_checks(model, REPO)
     result = invoke(java, home, model, args.self_test)
     print(result.stdout, end="")
     print(result.stderr, end="", file=sys.stderr)
@@ -146,6 +239,8 @@ def main() -> int:
         return result.returncode
     if args.negative_tests:
         negative_checks(java, home, model)
+        if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
+            negative_documentation_check(model)
     return 0
 
 

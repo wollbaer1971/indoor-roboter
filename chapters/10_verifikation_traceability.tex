@@ -15,17 +15,31 @@ TC-MAP-002 & Karteninformation trennen & REQ-MAP-003 & Temporaere Hindernisse we
 TC-LOC-001 & Lokalisierung in Karte & REQ-LOC-001 & Roboterpose wird innerhalb definierter Toleranz geschaetzt. \\
 TC-NAV-001 & Autonomes Zielanfahren & REQ-NAV-001 & Roboter erreicht Ziel ohne manuelle Steuerung. \\
 TC-OBS-001 & Hindernis frontal & REQ-MAP-002, REQ-NAV-002, REQ-SAFE-001 & Hindernis wird erkannt; Roboter stoppt oder faehrt sicher ausweichend. \\
-TC-OBS-002 & Blockierter Fahrweg & REQ-SAFE-001, REQ-STA-001 & Roboter stoppt und meldet Blockade. \\
-TC-STA-001 & Missionsstatus melden & REQ-STA-001 & Statuswechsel werden korrekt ausgegeben. \\
+TC-OBS-002 & Blockierter Fahrweg & REQ-NAV-003, REQ-SAFE-001, REQ-STA-001 & Roboter stoppt und meldet Blockade. \\
+TC-STA-001 & Missionsstatus melden & REQ-STA-001, REQ-MIS-002 & Statuswechsel werden korrekt ausgegeben. \\
 TC-PWR-001 & Niedriger Energiezustand & REQ-PWR-001 & Warnung wird erzeugt und Mission kann bewertet werden. \\
 TC-PWR-002 & Unterrichtsprofil 2 h & REQ-PWR-002 & Roboter erreicht ein definiertes Demonstrationsprofil von ca. 2 h ohne Zwischenladen. \\
-TC-UI-001 & Web-App-Auftrag & REQ-UI-001 & Start und Ziel werden ueber Web-App gewaehlt und vom Roboter als Auftrag angenommen. \\
+TC-UI-001 & Web-App-Auftrag & REQ-UI-001, REQ-MIS-001 & Start und Ziel werden ueber Web-App gewaehlt und vom Roboter als Auftrag angenommen. \\
 TC-UI-002 & Grundbefehle & REQ-UI-002 & Status, betrieblicher Stopp und Rueckkehr zur Ladestation erzeugen nachvollziehbare Systemreaktionen. \\
 TC-NAV-002 & Raeume-Flur-Tuer-Test & REQ-NAV-004, REQ-NAV-005 & Roboter durchfaehrt mindestens zwei Raeume, einen Flurabschnitt und eine offene Tuer. \\
 TC-PERF-001 & Nominalgeschwindigkeit & REQ-PERF-001 & Fahrprofil wird mit ca. $0{,}5\,\mathrm{m/s}$ innerhalb definierter Toleranz ausgefuehrt. \\
-TC-TRC-001 & Traceability-Review & REQ-ARCH-001 & Jede MVP-Anforderung ist mit Funktion, Element, Schnittstelle und Test verknuepft. \\
+TC-TRC-001 & Traceability-Review & REQ-ARCH-001, REQ-ARCH-002 & Jede MVP-Anforderung ist mit Funktion, Element, Schnittstelle und Test verknuepft; MVP-Elemente verweisen auf Zielsystem-Elemente. \\
+TC-UI-003 & Pause und manuelle Fortsetzung & REQ-UI-002, REQ-MIS-002 & Betrieblicher Stopp pausiert den Auftrag, Bewegung ist gestoppt, Auftrag bleibt erhalten; Fortsetzung nur bei manueller Freigabe und erfuellten Voraussetzungen (DEC-013). \\
+TC-TRN-001 & Kistentransport & REQ-TRN-001 & Manuell aufgesetzter Werkstuecktraeger erreicht das Ziel; Nutzlastdaten und Zieltoleranz vor Ausfuehrung festlegen. \\
+TC-TRN-002 & Lage der Kiste & REQ-TRN-002 & Werkstuecktraeger bleibt im vereinbarten Fahrprofil innerhalb der zulaessigen Lage; Grenzwerte offen. \\
+TC-SAFE-002 & Person im Fahrweg & REQ-SAFE-002 & Reaktion auf eine Person im Fahrweg; Bewertungskriterium erst mit Safety-Konzept. \\
+TC-DIAG-001 & Diagnosemeldung & REQ-DIAG-001 & Bei simuliertem Fehler enthaelt die Meldung Ursache, betroffene Funktion und Zeitstempel. \\
+TC-MNT-001 & Wartungsreview & REQ-MNT-001 & Zugang zu zentralen Komponenten ohne unverhaeltnismaessige Demontage; erst mit mechanischem Entwurf ausfuehrbar. \\
 \bottomrule
 \end{longtable}
+
+Alle Testfaelle sind als Verifikationsdefinitionen im \sysml-Modell (\texttt{06\_tests.sysml}) hinterlegt. Keiner ist bisher an einem realen Roboter oder in einem dokumentierten Simulationslauf ausgefuehrt worden.
+
+\section{Simulationspruefstand und Modellpruefung}
+
+Gemaess DEC-014 wird zunaechst ausschliesslich in der Simulation verifiziert. Das Modell enthaelt dafuer einen logischen Pruefstand (\texttt{SimulationTestBench}) aus Roboter, Simulationswelt, Steuerungsadapter und Beobachter. Simulator, Weltgeometrie, Sensor- und Energiemodell sind noch nicht ausgewaehlt.
+
+TC-NAV-002 und TC-UI-003 besitzen auswertbare Kriterien. Ohne vollstaendige Nachweise lautet das Ergebnis \enquote{inconclusive}, nicht \enquote{pass}. Die Modellpruefung (\texttt{tools/validate\_sysml.py}) laedt das Gesamtmodell mit der offiziellen SysML-v2-Referenzimplementierung, wertet synthetische Testdaten aus und prueft absichtlich beschaedigte Modellkopien. Synthetische Testdaten sind keine Beobachtungen.
 
 \section{Testfallstruktur}
 

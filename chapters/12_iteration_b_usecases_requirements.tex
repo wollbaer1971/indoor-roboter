@@ -72,7 +72,7 @@ Vorbedingungen & Auftrag ist angenommen; Grundkarte ist geladen; Roboter ist lok
 Normalablauf & Roboter plant eine Route; faehrt mit MVP-Nominalgeschwindigkeit; durchfaehrt offene Tueren und Flurabschnitte; aktualisiert Missionsstatus; meldet Ziel erreicht. \\
 Alternativen & Hindernis wird erkannt; Person befindet sich im Fahrbereich; Lokalisierung unsicher; Ziel nicht erreichbar; Roboter stoppt, plant neu oder meldet Blockade. \\
 Ergebnis & Ziel wird erreicht oder die Nichtausfuehrung wird mit Grund gemeldet. \\
-Abgeleitete Requirements & REQ-B-NAV-001, REQ-B-NAV-002, REQ-B-NAV-003, REQ-B-PERF-001, REQ-B-LOC-001. \\
+Abgeleitete Requirements & REQ-B-NAV-001, REQ-B-NAV-002, REQ-B-NAV-003, REQ-B-PERF-001, REQ-B-LOC-001, REQ-B-STA-001. \\
 \bottomrule
 \end{longtable}
 
@@ -118,7 +118,7 @@ ID & Typ & Requirement & Akzeptanz- und Verifikationsidee \\
 \midrule
 REQ-B-MIS-001 & Funktional & Das System muss einen Transportauftrag mit eindeutigem Start- und Zielstandort annehmen oder begruendet ablehnen. & Test: gueltiger, ungueltiger und nicht ausfuehrbarer Auftrag ueber Web-App. \\
 REQ-B-UI-001 & Schnittstelle & Die erste Version muss Transportauftraege ueber eine Web-App ausloesen koennen. & Test: Bediener waehlt Start und Ziel; Roboter erhaelt Auftrag. \\
-REQ-B-STA-001 & Funktional & Das System muss den Auftragsstatus mindestens als bereit, angenommen, unterwegs, Ziel erreicht, blockiert, gestoppt oder Fehler melden. & Integrationstest mit Statusfolge je Use Case. \\
+REQ-B-STA-001 & Funktional & Das System muss den Auftragsstatus mindestens als bereit, angenommen, unterwegs, Ziel erreicht, pausiert, blockiert, gestoppt oder Fehler melden. & Integrationstest mit Statusfolge je Use Case. \\
 REQ-B-NAV-001 & Funktional & Das System muss einen definierten Zielstandort autonom anfahren. & Systemtest: Ziel wird ohne manuelle Fahrzeugsteuerung erreicht. \\
 REQ-B-NAV-002 & Funktional & Das System muss eine Route durch mehrere Raeume, einen Flur und mindestens eine offene Tuer ausfuehren koennen. & Systemtest im Schul-Demonstrationsbereich oder Testaufbau. \\
 REQ-B-NAV-003 & Funktional & Das System muss erkennen und melden, wenn Ziel oder Route nicht erreichbar sind. & Test: Route blockieren; Status blockiert oder nicht erreichbar erwarten. \\
@@ -129,7 +129,7 @@ REQ-B-MAP-002 & Constraint & Das System muss temporaere Hindernisse von dauerhaf
 REQ-B-NAV-004 & Funktional & Das System muss bei einem temporaeren Hindernis stoppen, lokal umplanen oder eine Blockade melden. & Test: Hindernis in Fahrweg platzieren; erwartete Reaktion pruefen. \\
 REQ-B-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. & Test: keine Kollision; Bewegung endet kontrolliert; Status wird gemeldet. \\
 REQ-B-SAFE-002 & Safety & Das System muss Personen im Fahrbereich als sicherheitsrelevante Umgebungselemente behandeln. & Safety-Testkonzept offen; zunaechst reduzierte MVP-Reaktion: stoppen und melden. \\
-REQ-B-SAFE-003 & Safety & Das System muss betrieblichen Stopp, SafetyStop und EmergencyStop begrifflich und funktional trennen. & Review und spaeterer Safety-Test; EmergencyStop bleibt Open Issue. \\
+REQ-B-SAFE-003 & Safety & Das System muss betrieblichen Stopp, SafetyStop und EmergencyStop begrifflich und funktional trennen. & Review, Pause-/Fortsetzungstests (betrieblicher Stopp pausiert den Auftrag, Fortsetzung nur nach manueller Freigabe, DEC-013) und spaeterer Safety-Test; EmergencyStop bleibt Open Issue. \\
 REQ-B-PERF-001 & Leistung & Die MVP-Nominalgeschwindigkeit soll ca. $0{,}5\,\mathrm{m/s}$ betragen. & Messfahrt mit noch festzulegender Toleranz. \\
 REQ-B-PWR-001 & Nichtfunktional & Die erste Version soll ein definiertes Unterrichtsprofil von ca. 2 h abdecken. & Dauertest mit noch zu definierendem Fahr-/Warte-/Demonstrationsprofil. \\
 REQ-B-TRN-001 & Schnittstelle & Der Roboter muss einen manuell aufgesetzten Werkstuecktraeger als Payload mitfuehren koennen. & Mechanischer Test offen, abhaengig von OI-MECH-001 und OI-MECH-002. \\

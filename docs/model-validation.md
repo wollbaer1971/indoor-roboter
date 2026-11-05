@@ -80,3 +80,27 @@ Der Stand ist ein pruefbares Engineering-Modell mit auswertbaren Kriterien
 und nominalem Verhalten einschliesslich expliziter manueller Pausenfreigabe.
 Er ist keine implementierte Robotersteuerung und
 kein ausgefuehrter physikalischer Simulationsversuch.
+
+# Abgleich LaTeX und Modell, 05.11.2026
+
+Die LaTeX-Dokumentation wurde auf den Modellstand gebracht. Bei B.1 wurde
+umgekehrt das Modell ergaenzt, wo es Zuordnungen aus dem Kapitel verloren hatte.
+
+- A.1: 25 Requirements, 20 Testdefinitionen in Kapitel 5, Kapitel 10 und
+  Anhang C identisch mit dem Modell. REQ-UI-002 enthaelt die Pausenregel.
+- Anhang C uebernimmt Systemelement, Schnittstelle und Test aus
+  `sysml/baseline_a1/traceability_matrix.md`. Die Need-Spalte vereinigt die
+  Quellen beider Fassungen.
+- DEC-013 (Pausenregel) und DEC-014 (zunaechst nur Simulation) stehen in
+  Entscheidungsprotokoll und Modell.
+- Kapitel 8 und 9 verwenden die Modellnamen (`UserInterfaceSystem`,
+  `DiagnosticsSystem`, ROS2-Kandidatennamen aus `07_ros2_mapping.sysml`).
+  `/odom` wurde aus dem LaTeX ins Modell-Mapping uebernommen.
+- B.1: REQ-B-NAV-004 ergaenzt; REQ-B-NAV-003 auch aus UC-B-003,
+  REQ-B-STA-001 auch aus UC-B-006 abgeleitet.
+
+`validate_sysml.py` prueft diesen Abgleich jetzt bei jedem Lauf.
+
+Bewusst nicht abgeglichen: Die internen Schnittstellen aus Kapitel 8
+(IF-MIS-NAV-001 usw.) sind im Modell nicht modelliert. Das ist
+Architekturarbeit (Ports und Inhalte der Teilsysteme), kein Abgleich.

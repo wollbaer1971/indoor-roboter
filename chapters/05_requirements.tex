@@ -33,7 +33,7 @@ REQ-DIAG-001 & Operational & Das System muss Diagnoseinformationen fuer Fehlersu
 REQ-PWR-001 & Nichtfunktional & Das System muss seinen Energiezustand ueberwachen. & Niedriger Ladezustand wird erkannt und gemeldet. \\
 REQ-PWR-002 & Nichtfunktional & Die erste Version soll eine Betriebsdauer von ca. 2 h fuer einen Unterrichtsblock abdecken. & Testprofil fuer Unterrichtsbetrieb wird definiert und erreicht. \\
 REQ-UI-001 & Funktional & Das System muss Transportauftraege in der ersten Version ueber eine Web-App entgegennehmen koennen. & Benutzer kann Start und Ziel auswaehlen und Auftrag starten. \\
-REQ-UI-002 & Funktional & Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen Stopp und Rueckkehr zur Ladestation bereitstellen. & Befehle sind ausloesbar und erzeugen nachvollziehbare Systemreaktionen. \\
+REQ-UI-002 & Funktional & Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen Stopp, ausdrueckliche manuelle Fortsetzung des Auftrags und Rueckkehr zur Ladestation bereitstellen. Ein betrieblicher Stopp pausiert den laufenden Auftrag; Auftrags-ID, Start und Ziel bleiben erhalten (DEC-013). & Befehle sind ausloesbar und erzeugen nachvollziehbare Systemreaktionen. Ohne manuelle Freigabe wird nicht automatisch fortgesetzt. \\
 REQ-NAV-004 & Funktional & Das System muss im definierten Fahrbereich mehrere Raeume und einen verbindenden Flur erreichen koennen. & Testfahrt fuehrt ueber mindestens zwei Raeume und einen Flur. \\
 REQ-NAV-005 & Funktional & Das System muss offene Tueren im definierten Fahrbereich durchfahren koennen. & Testfahrt passiert eine offene Tuer ohne manuelle Fahrzeugsteuerung. \\
 REQ-PERF-001 & Nichtfunktional & Die Nominalgeschwindigkeit des MVP soll ca. $0{,}5\,\mathrm{m/s}$ betragen. & Fahrprofil wird mit definierter Toleranz gemessen. \\
@@ -57,7 +57,7 @@ REQ-NAV-002 & MVP & Hindernisbehandlung prueft die Kopplung von Wahrnehmung und 
 REQ-SAFE-001 & MVP reduziert & Fuer MVP mindestens sicheres Stoppen; spaetere Safety-Auslegung bleibt offen. \\
 REQ-STA-001 & MVP & Statusmeldung ist fuer Testbarkeit und Bedienbarkeit erforderlich. \\
 REQ-UI-001 & MVP & Die Web-App ist die erste reale Auftragsschnittstelle. \\
-REQ-UI-002 & MVP reduziert & Status, betrieblicher Stopp und Rueckkehr zur Ladestation werden als Grundbefehle betrachtet. \\
+REQ-UI-002 & MVP reduziert & Status, betrieblicher Stopp mit manueller Fortsetzung und Rueckkehr zur Ladestation werden als Grundbefehle betrachtet. \\
 REQ-NAV-004 & MVP & Mehrere Raeume und Flur bilden den Demonstrationskern. \\
 REQ-NAV-005 & MVP & Offene Tueren sind zentrale Randbedingung der Umgebung. \\
 REQ-PERF-001 & MVP & Niedrige Geschwindigkeit reduziert Risiko und erleichtert Unterricht und Tests. \\

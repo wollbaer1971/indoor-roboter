@@ -35,8 +35,9 @@ PerceptionSystem & Sensoranbindung, Hinderniserkennung, lokale Umgebungskarte & 
 MotionSystem & Bewegungsregelung, Motoransteuerung, Odometriedaten & MVP \\
 EnergySystem & Batterieueberwachung, Energiezustand, spaeter Laden/Docking & Minimal \\
 SafetySystem & Ueberwachung sicherheitsrelevanter Zustaende, sicherer Stopp & MVP reduziert \\
-CommunicationSystem & Status, Diagnose, Auftrags- und Datenschnittstellen & Minimal \\
-UserInterface & Bedien- und Statusschnittstelle fuer Mensch oder externes System & Minimal \\
+CommunicationSystem & Netzwerkkommunikation, Befehls- und Statusaustausch, Logs & Minimal \\
+UserInterfaceSystem & Roboterseitiger Anschluss fuer die externe Web-App: Auftraege, Bedienbefehle, Status. Die Web-App selbst liegt ausserhalb der Systemgrenze. & Minimal \\
+DiagnosticsSystem & Diagnoseinformationen fuer Test, Wartung und Fehleranalyse & Minimal \\
 \bottomrule
 \end{longtable}
 
@@ -70,6 +71,6 @@ IF-MOT-NAV-001 & MotionSystem & NavigationSystem & Odometriedaten, Bewegungsstat
 IF-PER-NAV-001 & PerceptionSystem & NavigationSystem & Hindernisse, lokale Karte, freie Flaechen \\
 IF-SAFE-MOT-001 & SafetySystem & MotionSystem & sicherheitsrelevanter Stopp oder Freigabe \\
 IF-ENG-MIS-001 & EnergySystem & MissionSystem & Energiezustand, Warnung niedriger Ladezustand \\
-IF-MIS-UI-001 & MissionSystem & UserInterface & Missionsstatus, Fehler, Zielerreichung \\
+IF-MIS-UI-001 & MissionSystem & UserInterfaceSystem & Missionsstatus, Fehler, Zielerreichung \\
 \bottomrule
 \end{longtable}

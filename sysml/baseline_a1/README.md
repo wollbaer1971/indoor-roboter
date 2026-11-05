@@ -75,6 +75,13 @@ Raumzahl, Flur, offene Tuer, autonome Fahrt und fehlende Nachweise sowie
 manuelle Freigabe, Auftragserhalt und Bewegungsstopp in der Pausenphase.
 Drei Negativtests entfernen in temporaeren Kopien ein Importziel bzw.
 veraendern Feature und Subject-Typ. Sie muessen vom Validator erkannt werden.
+
+Der Dokumentationsabgleich vergleicht die LaTeX-Kapitel 5, 10 und 12 sowie
+Anhang C mit dem Modell: Requirement-IDs (A.1 und B.1), Testfaelle mit ihren
+verifizierten Requirements, Testspalte der Traceability und abgeleitete
+Requirements der B.1-Use-Cases. Jede Abweichung laesst den Check scheitern.
+Ein vierter Negativtest entfernt dazu eine Requirement-Zeile aus einer Kopie.
+Das Modell ist die fuehrende Quelle; LaTeX wird nachgezogen.
 Keine synthetische Eingabe ist ein beobachteter Simulatorlauf.
 
 ## Diagramme
