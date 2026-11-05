@@ -16,7 +16,8 @@ package MobileMaterialRobot_Requirements_A1 {
   doc /*
   Systemanforderungen der Baseline A.1. Die Doc-Felder (ID, Typ, Gruppe,
   Quelle, Text, Akzeptanz, MVP, MVP-Begruendung, Schnittstelle, Status,
-  Entscheidung, Hinweis) sind Quelle der LaTeX-Tabellen; siehe
+  Hinweis) sind Quelle der LaTeX-Tabellen; Entscheidungen verweisen per
+  'about' aus 09_decisions.sysml auf Requirements; siehe
   tables/README.md. Formale Kriterien stehen in den constraint defs.
   */
 
@@ -325,10 +326,6 @@ package MobileMaterialRobot_Requirements_A1 {
       Rueckkehr zur Ladestation werden als Grundbefehle betrachtet.
     Schnittstelle: WebInterfaceNode
     Status: Geplant; kein Ausfuehrungsnachweis
-    Entscheidung: DEC-013 (28.10.2026): Ein betrieblicher Stopp pausiert den
-      laufenden Auftrag. Auftrags-ID, Start und Ziel bleiben erhalten.
-      Fortsetzung nur nach ausdruecklicher manueller Freigabe; Sicherheits- und
-      Routenpruefungen werden nicht umgangen.
     */
   }
 

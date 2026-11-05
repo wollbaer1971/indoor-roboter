@@ -125,3 +125,16 @@ Overleaf passt nur ihr Aussehen an.
 - Neuer CI-Lauf `latex.yml` baut das PDF. Dabei wurden zwei Fehler gefunden,
   die schon auf main das Kompilieren verhinderten (TikZ-Stil `step`,
   fehlendes `align` in der Kontextgrafik); beide behoben.
+
+# Entscheidungsprotokoll im Modell, 05.11.2026
+
+- `sysml/baseline_a1/09_decisions.sysml` enthaelt DEC-001 bis DEC-014 und
+  ADR-0001 bis ADR-0008 als benannte Kommentare. `about` verbindet jede
+  Entscheidung mit den betroffenen Requirements, Tests oder Teilsystemen;
+  die Referenzimplementierung meldet falsche Verweise als Fehler.
+- Die englische Liste `BaselineA1_Decisions` in `00_overview.sysml` und die
+  Entscheidungsfelder in REQ-UI-002 und REQ-B-SAFE-003 sind entfallen.
+- Erzeugt werden die DEC-Tabelle in Kapitel 3, beide Tabellen in Anhang A und
+  das ADR-0001-Blatt in Kapitel 8. Kapitel 3 zeigt jetzt auch DEC-013 und
+  DEC-014 und denselben Status wie Anhang A ("Angenommen" statt "Entschieden").
+- Jede DEC-/ADR-Nennung im Repository muss eine Entscheidung im Modell haben.

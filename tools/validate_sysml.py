@@ -127,10 +127,10 @@ def documentation_checks(docs: Path) -> None:
            for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
     for path, text in tex.items():
         for number, line in enumerate(text.splitlines(), 1):
-            if re.match(r"\s*(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+\s*&", line):
-                problems.append(f"{path.relative_to(docs)}:{number}: hand-written requirement/test row; "
+            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4})\s*&", line):
+                problems.append(f"{path.relative_to(docs)}:{number}: hand-written requirement/test/decision row; "
                                 "maintain it in the model")
-    used = set(re.findall(r"\\modeltable\{(\w+)\}", "".join(tex.values())))
+    used = set(re.findall(r"\\model(?:table|text)\{(\w+)\}", "".join(tex.values())))
     generated = {p.stem for p in (docs / generate_docs.GENERATED).glob("*.tex")}
     if used != generated:
         problems.append(f"\\modeltable includes: not used={sorted(generated - used)}, unknown={sorted(used - generated)}")
@@ -174,13 +174,15 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
 
 
 def negative_documentation_check() -> None:
-    """Edit a generated table and paste a hand-written row in temporary copies; both must fail."""
+    """Mutate temporary copies: edited table, hand-written row, unknown decision ID. All must fail."""
     mutations = {
         "generated_table_edited": ("tables/generated/requirements_a1_initial.tex",
                                    lambda text: text.replace("annehmen koennen.", "annehmen.", 1)),
         "hand_written_row": ("chapters/05_requirements.tex",
                              lambda text: text.replace("\\modeltable{requirements_a1_initial}",
                                                        "\\modeltable{requirements_a1_initial}\nREQ-XYZ-001 & a & b & c \\\\", 1)),
+        "unknown_decision_reference": ("chapters/10_verifikation_traceability.tex",
+                                       lambda text: text.replace("Gemaess DEC-014", "Gemaess DEC-099", 1)),
     }
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:

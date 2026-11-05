@@ -11,6 +11,7 @@ package MobileMaterialRobot_BaselineA1 {
   public import MobileMaterialRobot_ROS2Mapping_A1::*;
   public import MobileMaterialRobot_Views_A1::*;
   public import MobileMaterialRobot_Traceability_A1::*;
+  public import MobileMaterialRobot_Decisions_A1::*;
   doc /*
   Model: Mobile Material Robot - System Definition Baseline A.1
   Purpose:
@@ -24,27 +25,6 @@ package MobileMaterialRobot_BaselineA1 {
     ROS2 mapping traceable. Concrete technologies remain open unless they
     were explicitly decided in Baseline A.1.
   */
-
-  item def BaselineA1_Decisions {
-    doc /*
-    DEC-001: Indoor demonstrator.
-    DEC-002: Production-like school environment.
-    DEC-003: Workpiece carrier of a transfer system as payload.
-    DEC-004: External loading by human or external transfer system.
-    DEC-005: Operating area includes multiple rooms and a corridor.
-    DEC-006: Open doors must be passable.
-    DEC-007: MVP nominal speed approximately 0.5 m/s.
-    DEC-008: First-version operating time approximately 2 h.
-    DEC-009: Transport orders initially via web app.
-    DEC-010: Simple UI for status, operational stop and return to charging station.
-    DEC-011: Return to charging station belongs to the target system.
-    DEC-012: Higher speed is a later extension.
-    DEC-013 (2026-10-28): Operational stop pauses the current order; order ID,
-      start and target are retained; resume only after explicit manual release.
-    DEC-014 (2026-10-28): Verification initially in simulation only, without
-      real hardware; simulator not yet selected.
-    */
-  }
 
   item def BaselineA1_Assumptions {
     doc /*

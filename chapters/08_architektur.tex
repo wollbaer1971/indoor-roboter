@@ -43,19 +43,15 @@ DiagnosticsSystem & Diagnoseinformationen fuer Test, Wartung und Fehleranalyse &
 
 \section{Architekturentscheidung ADR-0001}
 
-\begin{decisionbox}{Entscheidung}
-Das Gesamtmodell wird von Beginn an mit allen zentralen Zielsystem-Teilsystemen aufgebaut. Der MVP implementiert nur einen markierten Teil davon.
+\begin{decisionbox}{Entscheidung}%
+\modeltext{adr_0001_decision}
 \end{decisionbox}
 
 \begin{longtable}{L{0.20\textwidth} L{0.64\textwidth}}
 \toprule
 Aspekt & Inhalt \\
 \midrule
-Status & Angenommen fuer Version 0.1 \\
-Alternativen & Separates MVP-Modell; direkte Implementierung ohne Zielarchitektur; vollstaendige Zielarchitektur vor erstem Prototyp \\
-Begruendung & Ein separates MVP-Modell wuerde spaeter Doppelarbeit erzeugen. Eine direkte Implementierung wuerde Traceability verlieren. Eine vollstaendige Zielarchitektur vor dem ersten Prototyp waere zu schwerfaellig. \\
-Auswirkung & Alle Artefakte benoetigen Status- und Prioritaetsattribute. MVP-Elemente bleiben auf Zielsystem-Elemente rueckfuehrbar. \\
-Risiko & Noch nicht implementierte Zielsystembereiche koennen zu grob bleiben. Dieses Risiko wird durch offene Punkte und spaetere Iterationen kontrolliert. \\
+\modeltable{adr_0001_details}
 \bottomrule
 \end{longtable}
 

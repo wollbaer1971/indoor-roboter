@@ -7,14 +7,14 @@ REQ-MAP-002 & Funktional & Das System muss relevante Veraenderungen der befahrba
 REQ-LOC-001 & Funktional & Das System muss seine Pose innerhalb des definierten Betriebsbereichs bestimmen koennen. & Die Posenabweichung liegt innerhalb einer noch festzulegenden Toleranz. \\
 REQ-NAV-001 & Funktional & Das System muss einen vorgegebenen Zielstandort autonom anfahren koennen. & Ziel wird ohne manuelle Steuerung erreicht. \\
 REQ-NAV-002 & Funktional & Das System muss erkannte Hindernisse bei der Bewegungs- oder Pfadplanung beruecksichtigen. & Roboter stoppt oder plant lokale Umfahrung. \\
-REQ-NAV-004 & Funktional & Das System muss im definierten Fahrbereich mehrere Raeume und einen verbindenden Flur erreichen koennen. & Testfahrt fuehrt ueber mindestens zwei Raeume und einen Flur. \\
-REQ-NAV-005 & Funktional & Das System muss offene Tueren im definierten Fahrbereich durchfahren koennen. & Testfahrt passiert eine offene Tuer ohne manuelle Fahrzeugsteuerung. \\
+REQ-NAV-004 & Funktional & Das System muss im definierten Fahrbereich mehrere Raeume und einen verbindenden Flur erreichen koennen. Siehe DEC-005. & Testfahrt fuehrt ueber mindestens zwei Raeume und einen Flur. \\
+REQ-NAV-005 & Funktional & Das System muss offene Tueren im definierten Fahrbereich durchfahren koennen. Siehe DEC-006. & Testfahrt passiert eine offene Tuer ohne manuelle Fahrzeugsteuerung. \\
 REQ-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. & Kein Kontakt mit Hindernis; Statusmeldung Blockade. \\
-REQ-UI-001 & Funktional & Das System muss Transportauftraege in der ersten Version ueber eine Web-App entgegennehmen koennen. & Benutzer kann Start und Ziel auswaehlen und Auftrag starten. \\
-REQ-UI-002 & Funktional & Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen Stopp, ausdrueckliche manuelle Fortsetzung des Auftrags und Rueckkehr zur Ladestation bereitstellen. Siehe DEC-013. & Die Befehle sind ausloesbar und erzeugen nachvollziehbare Systemreaktionen. Ohne manuelle Freigabe wird nicht automatisch fortgesetzt. \\
+REQ-UI-001 & Funktional & Das System muss Transportauftraege in der ersten Version ueber eine Web-App entgegennehmen koennen. Siehe DEC-009. & Benutzer kann Start und Ziel auswaehlen und Auftrag starten. \\
+REQ-UI-002 & Funktional & Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen Stopp, ausdrueckliche manuelle Fortsetzung des Auftrags und Rueckkehr zur Ladestation bereitstellen. Siehe DEC-010, DEC-013. & Die Befehle sind ausloesbar und erzeugen nachvollziehbare Systemreaktionen. Ohne manuelle Freigabe wird nicht automatisch fortgesetzt. \\
 REQ-PWR-001 & Nichtfunktional & Das System muss seinen Energiezustand ueberwachen. & Niedriger Ladezustand wird erkannt und gemeldet. \\
-REQ-PWR-002 & Nichtfunktional & Die erste Version soll eine Betriebsdauer von ca. 2 h fuer einen Unterrichtsblock abdecken. & Testprofil fuer Unterrichtsbetrieb wird definiert und erreicht. \\
-REQ-PERF-001 & Leistung & Die Nominalgeschwindigkeit des MVP soll ca. $0{,}5\,\mathrm{m/s}$ betragen. & Fahrprofil wird mit definierter Toleranz gemessen. \\
+REQ-PWR-002 & Nichtfunktional & Die erste Version soll eine Betriebsdauer von ca. 2 h fuer einen Unterrichtsblock abdecken. Siehe DEC-008. & Testprofil fuer Unterrichtsbetrieb wird definiert und erreicht. \\
+REQ-PERF-001 & Leistung & Die Nominalgeschwindigkeit des MVP soll ca. $0{,}5\,\mathrm{m/s}$ betragen. Siehe DEC-007. & Fahrprofil wird mit definierter Toleranz gemessen. \\
 REQ-STA-001 & Funktional & Das System muss seinen Missions- und Betriebsstatus melden koennen. & Status ist fuer Bediener/Betreiber abrufbar. \\
 REQ-ARCH-001 & Constraint & Jede wesentliche Funktion muss auf mindestens ein logisches Systemelement und eine Verifikationsidee abbildbar sein. & Die Traceability-Matrix enthaelt fuer MVP-Elemente keine leeren Kernspalten. \\
 REQ-DIAG-001 & Operational & Das System muss Diagnoseinformationen fuer Fehlersuche bereitstellen. & Fehlermeldungen enthalten Ursache, betroffene Funktion und Zeitstempel. \\

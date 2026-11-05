@@ -3,7 +3,7 @@
 
 Das Modell unter sysml/ ist die fuehrende Quelle. Dieses Skript schreibt:
 
-- tables/generated/*.tex: nur Tabellenzeilen. Kopf, Spaltenbreiten und
+- tables/generated/*.tex: nur Tabellenzeilen (bzw. ein Absatz fuer ADR-Texte). Kopf, Spaltenbreiten und
   Layout stehen im jeweiligen Kapitel und duerfen in Overleaf angepasst werden.
 - den markierten Tabellenblock in sysml/baseline_a1/traceability_matrix.md.
 
@@ -35,17 +35,24 @@ def blocks(source: str, keyword: str, prefix: str) -> list[tuple[str, str]]:
 
 
 def fields(body: str, name: str) -> dict[str, str]:
-    """Parse 'Key: value' lines of the first doc block; indented lines continue a value."""
+    """Parse the 'Key: value' lines of the first doc block of an element."""
     doc = re.search(r"doc /\*(.*?)\*/", body, flags=re.S)
     if not doc:
         raise ValueError(f"{name}: doc block missing")
+    return parse_fields(doc[1])
+
+
+def parse_fields(text: str) -> dict[str, str]:
+    """'Key: value' lines indented by 4 spaces; lines indented by 6 continue a value."""
     result: dict[str, str] = {}
     key = None
-    for line in doc[1].splitlines():
+    for line in text.splitlines():
         if m := re.match(r"^ {4}([A-Za-z][\w-]*): (.*)$", line):
             key = m[1]
             result[key] = m[2].strip()
         elif key and (m := re.match(r"^ {6}(\S.*)$", line)):
+            if re.search(r"[A-Za-z]-$", result[key]) and m[1][0].isupper():
+                raise ValueError(f"line break inside a hyphenated word: '{result[key][-30:]}' / '{m[1][:20]}'")
             result[key] += " " + m[1].strip()
     return result
 
@@ -73,13 +80,49 @@ def tex(text: str) -> str:
     return text
 
 
-def requirement_text(data: dict[str, str]) -> str:
-    """Requirement text plus a short pointer to a recorded decision, if any."""
+def requirement_text(model: dict, rid: str, data: dict[str, str]) -> str:
+    """Requirement text plus a pointer to the decisions recorded 'about' it."""
     text = tex(data["Text"])
-    decisions = re.findall(r"DEC-\d+", data.get("Entscheidung", ""))
+    decisions = model["decided_by"].get(rid, [])
     if decisions:
-        text += " Siehe " + ", ".join(dict.fromkeys(decisions)) + "."
+        text += " Siehe " + ", ".join(decisions) + "."
     return text
+
+
+DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4})\b")
+REFERENCE_SOURCES = ("sysml/**/*.sysml", "chapters/*.tex", "appendices/*.tex", "docs/*.md", "*.md")
+
+
+def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[str, list[str]]]:
+    source = (root / "sysml/baseline_a1/09_decisions.sysml").read_text(encoding="utf-8")
+    decisions = []
+    decided_by: dict[str, list[str]] = {}
+    for name, about, body in re.findall(
+            r"^  comment ((?:DEC|ADR)_\d+)(?: about ([^/]*?))? /\*(.*?)\*/", source, flags=re.M | re.S):
+        data = parse_fields(body)
+        require(data, name, "ID", "Art", "Status", "Begruendung")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        require(data, name, "Entscheidung" if data["Art"] == "Baseline" else "Titel")
+        if data["Art"] not in ("Baseline", "Architektur"):
+            raise ValueError(f"{name}: Art must be Baseline or Architektur")
+        decisions.append((data["ID"], data))
+        for target in filter(None, (a.strip() for a in about.split(","))):
+            decided_by.setdefault(dashed(target.split("::")[-1]), []).append(data["ID"])
+    known = {did for did, _ in decisions}
+    unknown = set()
+    for pattern in REFERENCE_SOURCES:
+        for path in root.glob(pattern):
+            if "generated" not in path.parts:
+                unknown |= {f"{ref} in {path.relative_to(root)}"
+                            for ref in DECISION_REF.findall(path.read_text(encoding="utf-8")) if ref not in known}
+    if unknown:
+        raise ValueError("decision reference(s) without record in 09_decisions.sysml: " + ", ".join(sorted(unknown)))
+    return decisions, decided_by
+
+
+def decision_status(data: dict[str, str]) -> str:
+    return data["Status"] + (f" ({data['Datum']})" if data.get("Datum") else "")
 
 
 def row(*cells: str) -> str:
@@ -135,8 +178,9 @@ def load(root: Path) -> dict:
             raise ValueError(f"{rid}: no traceability dependency and no Systemelement field")
         if not tests_of.get(rid):
             raise ValueError(f"{rid}: not verified by any test definition")
+    decisions, decided_by = load_decisions(root)
     return {"requirements": requirements, "elements": elements, "tests": tests,
-            "tests_of": tests_of, "b1": b1}
+            "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by}
 
 
 def element_list(model: dict, rid: str, data: dict[str, str]) -> list[str]:
@@ -153,7 +197,7 @@ def render(root: Path) -> dict[Path, str]:
     for group, suffix in GROUPS.items():
         selected = [(rid, d) for rid, d in model["requirements"] if d["Gruppe"] == group]
         table(f"requirements_a1_{suffix}",
-              [row(rid, tex(d["Typ"]), requirement_text(d), tex(d["Akzeptanz"])) for rid, d in selected])
+              [row(rid, tex(d["Typ"]), requirement_text(model, rid, d), tex(d["Akzeptanz"])) for rid, d in selected])
         table(f"traceability_a1_{suffix}",
               [row(rid, tex(d["Quelle"]), tex(", ".join(element_list(model, rid, d))),
                    tex(d["Schnittstelle"]), ", ".join(model["tests_of"][rid])) for rid, d in selected])
@@ -161,9 +205,29 @@ def render(root: Path) -> dict[Path, str]:
                      for rid, d in model["requirements"] if "MVP" in d])
     table("tests_a1", [row(tc, tex(d["Name"]), ", ".join(verified), tex(d["Erwartet"]))
                        for tc, d, verified in model["tests"]])
-    table("requirements_b1", [row(rid, tex(d["Typ"]), requirement_text(d), tex(d["Akzeptanz"]))
+    table("requirements_b1", [row(rid, tex(d["Typ"]), requirement_text(model, rid, d), tex(d["Akzeptanz"]))
                               for rid, d in model["b1"]])
     table("mvp_b1", [row(rid, tex(d["MVP"]), tex(d["MVP-Begruendung"])) for rid, d in model["b1"] if "MVP" in d])
+
+    baseline = [(did, d) for did, d in model["decisions"] if d["Art"] == "Baseline"]
+    architecture = [(did, d) for did, d in model["decisions"] if d["Art"] == "Architektur"]
+    table("decisions_baseline_summary", [row(did, tex(d["Entscheidung"]), tex(decision_status(d))) for did, d in baseline])
+    table("decisions_baseline", [row(did, tex(d["Entscheidung"]), tex(decision_status(d)), tex(d["Begruendung"]))
+                                 for did, d in baseline])
+    table("decisions_architecture", [row(did, tex(d["Titel"]), tex(decision_status(d)), tex(d["Begruendung"]))
+                                     for did, d in architecture])
+    # Full decision sheet for ADRs that record alternatives (chapter 8).
+    for did, d in architecture:
+        if "Alternativen" in d:
+            require(d, did, "Entscheidung", "Auswirkung", "Risiko")
+            key = did.lower().replace("-", "_")
+            status = d["Status"] + (f" fuer Version {d['Version']}" if d.get("Version") else "")
+            out[GENERATED / f"{key}_decision.tex"] = TEX_HEADER + tex(d["Entscheidung"]) + "\n"
+            table(f"{key}_details", [row("Status", tex(status)),
+                                     row("Alternativen", tex(d["Alternativen"])),
+                                     row("Begruendung", tex(d.get("Begruendung-Detail", d["Begruendung"]))),
+                                     row("Auswirkung", tex(d["Auswirkung"])),
+                                     row("Risiko", tex(d["Risiko"]))])
 
     md_rows = ["| Requirement | Quelle | Systemelement | Schnittstelle / ROS2 | Test | Status |",
                "| --- | --- | --- | --- | --- | --- |"]

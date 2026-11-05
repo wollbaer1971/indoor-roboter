@@ -20,6 +20,7 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | `06_tests.sysml` | 20 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
+| `09_decisions.sysml` | Entscheidungsprotokoll (DEC, ADR) als benannte Kommentare mit `about`-Bezug |
 | `90_simulation_testbench.sysml` | Pruefstand mit kanonischem Roboter, Welt, Adapter und Beobachter |
 | `91_simulation_verification.sysml` | Bindung von TC_NAV_002 an den Pruefstandsroboter |
 | `92_model_checks.sysml` | Ausschliesslich synthetische Testdaten fuer die Modell-Auswertung |

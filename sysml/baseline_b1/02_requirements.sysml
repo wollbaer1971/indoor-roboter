@@ -207,9 +207,6 @@ package MobileMaterialRobot_Requirements_B1 {
       begrifflich und funktional trennen.
     Akzeptanz: Review, Pause-/Fortsetzungstests und spaeterer Safety-Test;
       EmergencyStop bleibt Open Issue.
-    Entscheidung: DEC-013 (28.10.2026): Ein betrieblicher Stopp pausiert den
-      Auftrag; Fortsetzung nur nach ausdruecklicher manueller Freigabe.
-      Sicherheitsstopps werden dadurch nicht zurueckgesetzt.
     */
   }
 
