@@ -29,9 +29,42 @@ GROUPS = {"Initial": "initial", "Iteration A": "iteration_a"}
 
 
 def blocks(source: str, keyword: str, prefix: str) -> list[tuple[str, str]]:
-    """Top-level blocks such as 'requirement REQ_X {' in file order."""
-    pattern = rf"^  {keyword} ({prefix}\w+) \{{\n(.*?)^  \}}"
+    """Top-level blocks such as 'requirement REQ_X {' or 'part def X :> Y {' in file order."""
+    pattern = rf"^  {keyword} ({prefix}\w+)(?:\s*:>\s*[\w:]+)? \{{\n(.*?)^  \}}"
     return re.findall(pattern, source, flags=re.M | re.S)
+
+
+def part_defs(source: str) -> dict[str, tuple[str | None, str]]:
+    """part def name -> (specialized base or None, body)."""
+    pattern = r"^  part def (\w+)(?:\s*:>\s*(?:\w+::)*(\w+))? \{\n(.*?)^  \}"
+    return {name: (base or None, body) for name, base, body in re.findall(pattern, source, flags=re.M | re.S)}
+
+
+def composed_parts(defs: dict[str, tuple[str | None, str]], name: str) -> list[tuple[str, str]]:
+    """(usage, type) of all parts of a part def, inherited ones first; 'redefines' replaces in place."""
+    chain, current = [], name
+    while current:
+        if current in chain:
+            raise ValueError(f"specialization cycle: {' -> '.join(chain + [current])}")
+        if current not in defs:
+            raise ValueError(f"part def {current} not found (specialization of {chain[-1] if chain else name})")
+        chain.append(current)
+        current = defs[current][0]
+    parts: list[tuple[str, str]] = []
+    for definition in reversed(chain):
+        body = defs[definition][1]
+        for redefines, usage, part_type in re.findall(
+                r"^    part (redefines )?(\w+) : (\w+)\s*[;{]", body, flags=re.M):
+            names = [u for u, _ in parts]
+            if redefines:
+                if usage not in names:
+                    raise ValueError(f"{definition}: redefines unknown part {usage}")
+                parts[names.index(usage)] = (usage, part_type)
+            elif usage in names:
+                raise ValueError(f"{definition}: part {usage} hides an inherited part; use 'redefines'")
+            else:
+                parts.append((usage, part_type))
+    return parts
 
 
 def fields(body: str, name: str) -> dict[str, str]:
@@ -135,11 +168,10 @@ def load_architecture(root: Path, requirement_ids: set[str]) -> dict:
     """Subsystems of the canonical robot, ROS2 node candidates and their topics."""
     a1 = root / "sysml/baseline_a1"
     structure = (a1 / "03_structure.sysml").read_text(encoding="utf-8")
-    robot = dict(blocks(structure, "part def", ""))["MobileMaterialRobot"]
-    defs = dict(blocks(structure, "part def", ""))
+    defs = part_defs(structure)
     subsystems = []
-    for part_type in re.findall(r"^    part \w+ : (\w+);", robot, flags=re.M):
-        data = fields(defs[part_type], part_type)
+    for _, part_type in composed_parts(defs, "MobileMaterialRobot"):
+        data = fields(defs[part_type][1], part_type)
         require(data, part_type, "Verantwortung", "MVP-Status")
         subsystems.append((part_type, data))
 
@@ -317,6 +349,13 @@ def load(root: Path) -> dict:
             raise ValueError(f"{fid}: unknown requirement(s) {sorted(unknown)}")
         for rid in supported:
             functions_of.setdefault(rid, []).append(fid)
+    # Chain closure: requirement -> function -> subsystem must meet requirement -> subsystem.
+    for fid, _, performers, supported in functions:
+        for rid in supported:
+            allocated = elements.get(rid, [])
+            if not set(performers) & set(allocated):
+                raise ValueError(f"{fid} supports {rid}, but none of its performers {performers} "
+                                 f"is allocated to {rid} {allocated}: chain not closed")
     return {"requirements": requirements, "elements": elements, "tests": tests,
             "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by,
             "functions": functions, "functions_of": functions_of,

@@ -23,7 +23,7 @@ Aenderungen gehoeren in `02_requirements.sysml`, `06_tests.sysml` und `08_tracea
 | REQ-SAFE-002 | SN-SAFE-001, R-04 | SafetySystem, PerceptionSystem | IF-006, SafetySupervisorNode | TC-SAFE-002 | Geplant; Safety-Konzept offen |
 | REQ-UI-001 | SN-UI-001, UC-001 | UserInterfaceSystem, MissionSystem | IF-001, IF-002, WebInterfaceNode | TC-UI-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-UI-002 | SN-UI-002, UC-009, UC-010 | UserInterfaceSystem, MissionSystem, EnergySystem | WebInterfaceNode | TC-UI-002, TC-UI-004, TC-UI-003 | Geplant; kein Ausfuehrungsnachweis |
-| REQ-PWR-001 | Bedarf Energieueberwachung, FUN-STA-001 | EnergySystem | EnergyMonitorNode, /battery_state | TC-PWR-001 | Geplant; kein Ausfuehrungsnachweis |
+| REQ-PWR-001 | Bedarf Energieueberwachung, FUN-ENE-001 | EnergySystem | EnergyMonitorNode, /battery_state | TC-PWR-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PWR-002 | SN-ENE-001, DEC-008 | EnergySystem | EnergyMonitorNode | TC-PWR-002 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PERF-001 | DEC-007, FUN-MOT-001 | MotionSystem, SafetySystem | NavigationNode Parameter nominal_speed | TC-PERF-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-STA-001 | SN-OPS-001, SN-003, FUN-STA-001 | MissionSystem, UserInterfaceSystem | /mission_state | TC-OBS-002, TC-STA-001 | Geplant; kein Ausfuehrungsnachweis |

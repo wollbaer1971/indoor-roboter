@@ -7,6 +7,9 @@ package MobileMaterialRobot_Functions_A1 {
   03_structure.sysml per 'perform' aus. Die Abhaengigkeiten am Dateiende
   nennen die Requirements, zu denen eine Funktion beitraegt; sie sind
   geplante Zuordnungen, kein Erfuellungsnachweis.
+  Regel (vom Generator geprueft): Traegt eine Funktion zu einem Requirement
+  bei, muss mindestens ein ausfuehrendes Teilsystem diesem Requirement
+  zugeordnet sein (08_traceability.sysml). Sonst schliesst sich die Kette nicht.
   Die Felder sind Quelle der Funktionstabelle (Kapitel 8) und der
   HW/SW-Allokation (Kapitel 9). Ohne HW-Anteil/SW-Anteil ist eine Funktion
   noch nicht alloziert und fehlt in der Allokationstabelle.
@@ -98,6 +101,15 @@ package MobileMaterialRobot_Functions_A1 {
     */
   }
 
+  action def FUN_ENE_001 {
+    doc /*
+    ID: FUN-ENE-001
+    Name: Energiezustand ueberwachen
+    Zweck: Ladezustand erfassen, niedrigen Ladezustand erkennen und an die
+      Missionssteuerung melden
+    */
+  }
+
   action def FUN_TRN_001 {
     doc /*
     ID: FUN-TRN-001
@@ -120,7 +132,7 @@ package MobileMaterialRobot_Functions_A1 {
   dependency from FUN_MOT_001 to REQ_PERF_001;
   dependency from FUN_SAFE_001 to REQ_SAFE_001;
   dependency from FUN_STA_001 to REQ_STA_001;
-  dependency from FUN_STA_001 to REQ_PWR_001;
+  dependency from FUN_ENE_001 to REQ_PWR_001;
   dependency from FUN_STA_001 to REQ_DIAG_001;
   dependency from FUN_TRN_001 to REQ_TRN_001;
 }

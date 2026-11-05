@@ -253,7 +253,18 @@ Overleaf passt nur ihr Aussehen an.
 - Inhaltliche Aenderungen: FUN-TRN-001 "Werkstuecktraeger handhaben" (vorher
   Materialkiste), FUN-LOC-001 "Pose bestimmen"; FUN-MOT-001 traegt neu zu
   REQ-NAV-001 und REQ-PERF-001 bei (vorher von keinem Requirement genannt).
-- Offen: FUN-STA-001 traegt zu REQ-PWR-001 bei, wird aber von MissionSystem
-  und DiagnosticsSystem ausgefuehrt, waehrend REQ-PWR-001 nur dem
-  EnergySystem zugeordnet ist. Die Kette schliesst sich dort nicht.
-- FUN-MIS-001 und FUN-STA-001 sind noch nicht alloziert (keine HW/SW-Anteile).
+- FUN-MIS-001, FUN-STA-001 und FUN-ENE-001 sind noch nicht alloziert (keine
+  HW/SW-Anteile).
+
+# Energiefunktion, Kettenregel und Vererbung, 05.11.2026
+
+- Neue Funktion FUN-ENE-001 "Energiezustand ueberwachen", ausgefuehrt vom
+  EnergySystem; sie traegt zu REQ-PWR-001 bei. Die bisherige Zuordnung
+  FUN-STA-001 -> REQ-PWR-001 entfaellt, die Kette schliesst sich jetzt.
+- Der Generator verlangt: Traegt eine Funktion zu einem Requirement bei, ist
+  mindestens ein ausfuehrendes Teilsystem diesem Requirement zugeordnet.
+  Negativtest open_function_chain.
+- Der Generator loest Spezialisierungen (part def X :> Y) auf: geerbte Parts
+  zuerst, 'redefines' ersetzt an derselben Stelle, Zyklen sind ein Fehler.
+  Die Probe inheritance_check baut die Struktur in einer Kopie wie in PR #2
+  um (Basistyp mit fuenf Teilsystemen) und verlangt dieselbe Tabelle.

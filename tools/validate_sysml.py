@@ -93,7 +93,7 @@ def architecture_checks(model: Path) -> None:
     clean = {p: re.sub(r"/\*.*?\*/|//[^\n]*", "", text, flags=re.S)
              for p, text in sources.items()}
     canonical = [p for p, text in clean.items()
-                 if re.search(r"\bpart def MobileMaterialRobot\s*\{", text)]
+                 if re.search(r"\bpart def MobileMaterialRobot(?:\s*:>\s*\w+)?\s*\{", text)]
     if canonical != [model / "baseline_a1/03_structure.sysml"]:
         raise RuntimeError(f"Expected exactly one canonical robot type, found {canonical}")
     requirements = sources[model / "baseline_a1/02_requirements.sysml"]
@@ -266,6 +266,33 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
             print(f"NEGATIVE {name}: detected ({summary[1]} errors, {summary[2]} warnings)")
 
 
+def inheritance_check() -> None:
+    """Move five subsystems into a base type, as a variant core would; the subsystem table must stay the same."""
+    shared = ("navigation : NavigationSystem", "perception : PerceptionSystem", "motion : MotionSystem",
+              "safety : SafetySystem", "diagnostics : DiagnosticsSystem")
+    with tempfile.TemporaryDirectory(prefix="inheritance-") as temporary:
+        copy = Path(temporary)
+        for folder in ("chapters", "appendices", "tables", "sysml"):
+            shutil.copytree(REPO / folder, copy / folder)
+        structure = copy / "sysml/baseline_a1/03_structure.sysml"
+        text = structure.read_text(encoding="utf-8")
+        for part in shared:
+            text = text.replace(f"    part {part};\n", "", 1)
+        base = "".join(f"    part {part};\n" for part in shared)
+        text = text.replace("  part def MobileMaterialRobot {\n",
+                            "  part def MobileRobotBase {\n" + base + "  }\n\n"
+                            "  part def MobileMaterialRobot :> MobileRobotBase {\n"
+                            "    part redefines navigation : NavigationSystem;\n", 1)
+        structure.write_text(text, encoding="utf-8")
+        key = generate_docs.GENERATED / "subsystems_a1.tex"
+        rows = lambda content: sorted(line for line in content.splitlines() if "&" in line)
+        expected = rows((REPO / key).read_text(encoding="utf-8"))
+        actual = rows(generate_docs.render(copy)[key])
+        if actual != expected:
+            raise RuntimeError("Subsystem table changes when subsystems are inherited from a base type")
+        print(f"INHERITANCE subsystems_via_base={len(shared)} redefines=1 table_unchanged=true")
+
+
 def negative_documentation_check() -> None:
     """Mutate temporary copies of docs and model; every mutation must fail the documentation check."""
     mutations = {
@@ -284,6 +311,10 @@ def negative_documentation_check() -> None:
         "hand_written_non_goal": ("chapters/03_systemdefinition.tex",
                                   lambda text: text.replace("\\modeltext{non_goals_a1}",
                                                             "\\modeltext{non_goals_a1}\n  \\item Raumfahrt.", 1)),
+        "open_function_chain": ("sysml/baseline_a1/08_traceability.sysml",
+                                lambda text: text.replace(
+                                    "  dependency from MobileMaterialRobot_Structure_A1::EnergySystem to "
+                                    "MobileMaterialRobot_Requirements_A1::REQ_PWR_001;\n", "", 1)),
         "function_without_performer": ("sysml/baseline_a1/03_structure.sysml",
                                        lambda text: text.replace("    perform action executeMotion : FUN_MOT_001;\n", "", 1)),
         "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
@@ -331,6 +362,8 @@ def main() -> int:
     if args.negative_tests:
         negative_checks(java, home, model)
         negative_state_machine_check(model)
+        if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
+            inheritance_check()
         if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
             negative_documentation_check()
     return 0

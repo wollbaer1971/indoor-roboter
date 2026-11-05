@@ -104,6 +104,7 @@ package MobileMaterialRobot_Structure_A1 {
     Hinweis: Automatisches Laden ist offen.
     */
     perform action returnToCharger : ReturnToChargingStation;
+    perform action monitorEnergy : FUN_ENE_001;
   }
 
   part def CommunicationSystem {
