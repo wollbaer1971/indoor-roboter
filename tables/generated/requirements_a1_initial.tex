@@ -1,0 +1,20 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+REQ-MIS-001 & Funktional & Das System muss einen Transportauftrag mit Start- und Zielstandort annehmen koennen. & Auftrag wird angenommen, validiert und mit Status versehen. \\
+REQ-TRN-001 & Funktional & Das System muss einen Werkstuecktraeger zwischen zwei definierten Transportorten transportieren koennen. & Der Werkstuecktraeger erreicht den Zielort im definierten Testaufbau. \\
+REQ-MAP-001 & Funktional & Das System muss eine vorhandene Grundkarte des Betriebsbereichs laden koennen. & Karte wird geladen und fuer Lokalisierung genutzt. \\
+REQ-MAP-002 & Funktional & Das System muss relevante Veraenderungen der befahrbaren Umgebung waehrend des Betriebs erkennen. & Hindernis erscheint in lokaler Umgebungsdarstellung. \\
+REQ-LOC-001 & Funktional & Das System muss seine Pose innerhalb des definierten Betriebsbereichs bestimmen koennen. & Die Posenabweichung liegt innerhalb einer noch festzulegenden Toleranz. \\
+REQ-NAV-001 & Funktional & Das System muss einen vorgegebenen Zielstandort autonom anfahren koennen. & Ziel wird ohne manuelle Steuerung erreicht. \\
+REQ-NAV-002 & Funktional & Das System muss erkannte Hindernisse bei der Bewegungs- oder Pfadplanung beruecksichtigen. & Roboter stoppt oder plant lokale Umfahrung. \\
+REQ-NAV-004 & Funktional & Das System muss im definierten Fahrbereich mehrere Raeume und einen verbindenden Flur erreichen koennen. & Testfahrt fuehrt ueber mindestens zwei Raeume und einen Flur. \\
+REQ-NAV-005 & Funktional & Das System muss offene Tueren im definierten Fahrbereich durchfahren koennen. & Testfahrt passiert eine offene Tuer ohne manuelle Fahrzeugsteuerung. \\
+REQ-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. & Kein Kontakt mit Hindernis; Statusmeldung Blockade. \\
+REQ-UI-001 & Funktional & Das System muss Transportauftraege in der ersten Version ueber eine Web-App entgegennehmen koennen. & Benutzer kann Start und Ziel auswaehlen und Auftrag starten. \\
+REQ-UI-002 & Funktional & Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen Stopp, ausdrueckliche manuelle Fortsetzung des Auftrags und Rueckkehr zur Ladestation bereitstellen. Siehe DEC-013. & Die Befehle sind ausloesbar und erzeugen nachvollziehbare Systemreaktionen. Ohne manuelle Freigabe wird nicht automatisch fortgesetzt. \\
+REQ-PWR-001 & Nichtfunktional & Das System muss seinen Energiezustand ueberwachen. & Niedriger Ladezustand wird erkannt und gemeldet. \\
+REQ-PWR-002 & Nichtfunktional & Die erste Version soll eine Betriebsdauer von ca. 2 h fuer einen Unterrichtsblock abdecken. & Testprofil fuer Unterrichtsbetrieb wird definiert und erreicht. \\
+REQ-PERF-001 & Leistung & Die Nominalgeschwindigkeit des MVP soll ca. $0{,}5\,\mathrm{m/s}$ betragen. & Fahrprofil wird mit definierter Toleranz gemessen. \\
+REQ-STA-001 & Funktional & Das System muss seinen Missions- und Betriebsstatus melden koennen. & Status ist fuer Bediener/Betreiber abrufbar. \\
+REQ-ARCH-001 & Constraint & Jede wesentliche Funktion muss auf mindestens ein logisches Systemelement und eine Verifikationsidee abbildbar sein. & Die Traceability-Matrix enthaelt fuer MVP-Elemente keine leeren Kernspalten. \\
+REQ-DIAG-001 & Operational & Das System muss Diagnoseinformationen fuer Fehlersuche bereitstellen. & Fehlermeldungen enthalten Ursache, betroffene Funktion und Zeitstempel. \\

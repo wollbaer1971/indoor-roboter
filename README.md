@@ -18,8 +18,14 @@ In Overleaf kann der gesamte Ordner als ZIP hochgeladen werden. Hauptdatei:
 - `decisions/`: spaetere Einzel-ADRs
 - `figures/`: Abbildungen
 - `figures/tikz/`: TikZ-Quellen fuer Entwicklungsablauf, Systemkontext, Navigationslogik, Betriebsfaelle und Traceability
-- `tables/`: ausgelagerte Tabellen
+- `tables/generated/`: aus dem Modell erzeugte Tabellenzeilen (nicht von Hand aendern)
 - `sysml/baseline_a1/`: zugehoerige SysML-v2-Starterdateien zur System Definition Baseline A.1
+
+## Modell fuehrt
+
+Requirement-, Test-, MVP- und Traceability-Tabellen werden aus dem SysML-Modell
+erzeugt (`python tools/generate_docs.py`). In Overleaf wird nur ihr Aussehen
+angepasst. Ablauf und Regeln: [tables/README.md](tables/README.md).
 
 ## Pflegeprinzip
 

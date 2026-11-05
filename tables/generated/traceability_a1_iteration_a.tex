@@ -1,0 +1,9 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+REQ-MIS-002 & SN-USER-002, SN-USER-003 & MissionSystem, UserInterfaceSystem & \texttt{/mission\_state} & TC-STA-001, TC-UI-003 \\
+REQ-TRN-002 & SN-TRN-002, SN-SAFE-003 & TransportSystem, SafetySystem & IF-003 & TC-TRN-002 \\
+REQ-MAP-003 & ADR-0007, SN-NAV-002, R-09 & NavigationSystem & MapManagementNode & TC-MAP-002 \\
+REQ-NAV-003 & UC-008, SN-NAV-004 & NavigationSystem, MissionSystem & \texttt{/navigation\_result}, \texttt{/mission\_state} & TC-OBS-002 \\
+REQ-SAFE-002 & SN-SAFE-001, R-04 & SafetySystem, PerceptionSystem & IF-006, SafetySupervisorNode & TC-SAFE-002 \\
+REQ-MNT-001 & SN-MNT-002 & MobileMaterialRobot & offen & TC-MNT-001 \\
+REQ-ARCH-002 & SN-DEV-001, SN-DEV-002 & Gesamtmodell & MVP-Markierung (noch nicht modelliert) & TC-TRC-001 \\

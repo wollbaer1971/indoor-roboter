@@ -104,3 +104,24 @@ umgekehrt das Modell ergaenzt, wo es Zuordnungen aus dem Kapitel verloren hatte.
 Bewusst nicht abgeglichen: Die internen Schnittstellen aus Kapitel 8
 (IF-MIS-NAV-001 usw.) sind im Modell nicht modelliert. Das ist
 Architekturarbeit (Ports und Inhalte der Teilsysteme), kein Abgleich.
+
+# Doku aus dem Modell, 05.11.2026
+
+Entscheidung: Das Modell fuehrt. Die Requirement-, Test-, MVP- und
+Traceability-Tabellen der LaTeX-Doku werden aus dem Modell erzeugt;
+Overleaf passt nur ihr Aussehen an.
+
+- Requirement- und Testtexte im Modell sind jetzt deutsch. Bezeichner bleiben
+  englisch. Neue Doc-Felder: Gruppe, Quelle, MVP, MVP-Begruendung,
+  Schnittstelle, Status (Requirements) sowie Name und Erwartet (Tests).
+- Wo das Modell neuer war, gilt sein Inhalt: Werkstuecktraeger statt
+  Materialkiste (REQ-TRN-001/002), Pose statt Position (REQ-LOC-001),
+  Typ Leistung (REQ-PERF-001).
+- `tools/generate_docs.py` schreibt `tables/generated/*.tex` (nur Zeilen) und
+  den markierten Block in `sysml/baseline_a1/traceability_matrix.md`.
+- `validate_sysml.py` ersetzt den bisherigen ID-Abgleich: Er prueft, dass die
+  erzeugten Dateien aktuell sind und kein Kapitel handgeschriebene
+  Requirement- oder Testzeilen enthaelt. Zwei Negativtests.
+- Neuer CI-Lauf `latex.yml` baut das PDF. Dabei wurden zwei Fehler gefunden,
+  die schon auf main das Kompilieren verhinderten (TikZ-Stil `step`,
+  fehlendes `align` in der Kontextgrafik); beide behoben.

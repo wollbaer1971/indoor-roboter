@@ -14,17 +14,24 @@ package MobileMaterialRobot_Requirements_A1 {
   }
 
   doc /*
-  Initial system requirements derived from Baseline A.1.
-  Requirements keep project IDs in doc blocks for stable traceability.
+  Systemanforderungen der Baseline A.1. Die Doc-Felder (ID, Typ, Gruppe,
+  Quelle, Text, Akzeptanz, MVP, MVP-Begruendung, Schnittstelle, Status,
+  Entscheidung, Hinweis) sind Quelle der LaTeX-Tabellen; siehe
+  tables/README.md. Formale Kriterien stehen in den constraint defs.
   */
 
   requirement REQ_MIS_001 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MIS-001
-    Type: functional
-    Text: The system shall accept a transport order with start and target location.
-    Acceptance: Order is accepted, validated and assigned a mission status.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-UI-001, UC-001, SN-001, FUN-MIS-001
+    Text: Das System muss einen Transportauftrag mit Start- und Zielstandort
+      annehmen koennen.
+    Akzeptanz: Auftrag wird angenommen, validiert und mit Status versehen.
+    Schnittstelle: IF-002, MissionManagerNode
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -32,10 +39,14 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MIS-002
-    Type: functional
-    Text: The system shall report whether a transport order is accepted,
-      rejected, paused, blocked or completed.
-    Acceptance: Status transitions are visible for operation and testing.
+    Typ: Funktional
+    Gruppe: Iteration A
+    Quelle: SN-USER-002, SN-USER-003
+    Text: Das System muss melden, ob ein Transportauftrag angenommen, abgelehnt,
+      pausiert, blockiert oder abgeschlossen wurde.
+    Akzeptanz: Statuswechsel sind fuer Bedienung und Test nachvollziehbar.
+    Schnittstelle: /mission_state
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -43,10 +54,18 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-TRN-001
-    Type: functional
-    Text: The system shall transport a workpiece carrier between two defined
-      transport locations.
-    Acceptance: The carrier reaches the target location in the defined test setup.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-TRN-001, SN-002, FUN-TRN-001
+    Text: Das System muss einen Werkstuecktraeger zwischen zwei definierten
+      Transportorten transportieren koennen.
+    Akzeptanz: Der Werkstuecktraeger erreicht den Zielort im definierten
+      Testaufbau.
+    MVP: Nicht MVP
+    MVP-Begruendung: Materialumschlag wird im Zielsystem modelliert, aber im
+      ersten MVP noch nicht voll implementiert.
+    Schnittstelle: IF-003
+    Status: Geplant; Nutzlastdaten und -grenzen offen
     */
   }
 
@@ -54,11 +73,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-TRN-002
-    Type: safety/functional
-    Text: The system shall hold or secure the carried workpiece carrier so that
-      it does not create an additional hazard during transport.
-    Acceptance: The carrier remains within allowed pose limits in the specified
-      driving profile.
+    Typ: Safety/Funktional
+    Gruppe: Iteration A
+    Quelle: SN-TRN-002, SN-SAFE-003
+    Text: Das System muss den transportierten Werkstuecktraeger waehrend des
+      Transports so halten oder sichern, dass er keine zusaetzliche Gefaehrdung
+      verursacht.
+    Akzeptanz: Der Werkstuecktraeger bleibt im spezifizierten Fahrprofil
+      innerhalb der zulaessigen Lage.
+    Schnittstelle: IF-003
+    Status: Geplant; Nutzlastdaten und -grenzen offen
     */
   }
 
@@ -66,9 +90,17 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MAP-001
-    Type: functional
-    Text: The system shall load an existing base map of the operating area.
-    Acceptance: The map is loaded and can be used for localization.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: Kartenkonzept Baseline A.1, FUN-MAP-001
+    Text: Das System muss eine vorhandene Grundkarte des Betriebsbereichs laden
+      koennen.
+    Akzeptanz: Karte wird geladen und fuer Lokalisierung genutzt.
+    MVP: MVP
+    MVP-Begruendung: Ohne Grundkarte ist der geplante Navigationskern nicht
+      nachweisbar.
+    Schnittstelle: MapManagementNode, /map
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -76,10 +108,17 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MAP-002
-    Type: functional
-    Text: The system shall detect relevant changes in the drivable environment
-      during operation.
-    Acceptance: An obstacle appears in the local environment representation.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-NAV-002, SN-006, FUN-PER-001
+    Text: Das System muss relevante Veraenderungen der befahrbaren Umgebung
+      waehrend des Betriebs erkennen.
+    Akzeptanz: Hindernis erscheint in lokaler Umgebungsdarstellung.
+    MVP: MVP
+    MVP-Begruendung: Laufzeitaktualisierung der Umgebung ist Kern der
+      Projektidee.
+    Schnittstelle: PerceptionNode, /local_obstacles
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -87,10 +126,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MAP-003
-    Type: constraint
-    Text: The system shall distinguish base information, current environment
-      information and possible long-term map updates.
-    Acceptance: A temporary obstacle does not automatically change the long-term map.
+    Typ: Constraint
+    Gruppe: Iteration A
+    Quelle: ADR-0007, SN-NAV-002, R-09
+    Text: Das System muss zwischen Basisinformationen, aktuellen
+      Umgebungsinformationen und moeglichen dauerhaften Kartenupdates
+      unterscheiden koennen.
+    Akzeptanz: Temporaeres Hindernis veraendert die Langzeitkarte nicht
+      automatisch.
+    Schnittstelle: MapManagementNode
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -98,9 +143,18 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-LOC-001
-    Type: functional
-    Text: The system shall determine its pose inside the defined operating area.
-    Acceptance: Pose error remains within a tolerance to be defined in Iteration B.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: UC-006, FUN-LOC-001
+    Text: Das System muss seine Pose innerhalb des definierten Betriebsbereichs
+      bestimmen koennen.
+    Akzeptanz: Die Posenabweichung liegt innerhalb einer noch festzulegenden
+      Toleranz.
+    MVP: MVP
+    MVP-Begruendung: Lokalisierung ist Voraussetzung fuer zielgerichtete
+      Navigation.
+    Schnittstelle: LocalizationNode, /robot_pose
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -108,9 +162,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-NAV-001
-    Type: functional
-    Text: The system shall autonomously drive to a selected target location.
-    Acceptance: The target is reached without manual vehicle control.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: UC-003, FUN-NAV-001
+    Text: Das System muss einen vorgegebenen Zielstandort autonom anfahren
+      koennen.
+    Akzeptanz: Ziel wird ohne manuelle Steuerung erreicht.
+    MVP: MVP
+    MVP-Begruendung: Autonomes Zielanfahren ist zentraler Funktionsnachweis.
+    Schnittstelle: NavigationNode, /cmd_vel
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -118,9 +179,17 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-NAV-002
-    Type: functional
-    Text: The system shall consider detected obstacles in path or motion planning.
-    Acceptance: The robot stops or locally replans around the obstacle.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: UC-007, FUN-NAV-001
+    Text: Das System muss erkannte Hindernisse bei der Bewegungs- oder
+      Pfadplanung beruecksichtigen.
+    Akzeptanz: Roboter stoppt oder plant lokale Umfahrung.
+    MVP: MVP
+    MVP-Begruendung: Hindernisbehandlung prueft die Kopplung von Wahrnehmung und
+      Navigation.
+    Schnittstelle: NavigationNode, PerceptionNode
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -128,9 +197,15 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-NAV-003
-    Type: functional
-    Text: The system shall detect when a target or route is not reachable.
-    Acceptance: The system reports blockage or non-reachability with a clear status.
+    Typ: Funktional
+    Gruppe: Iteration A
+    Quelle: UC-008, SN-NAV-004
+    Text: Das System muss erkennen koennen, wenn ein Ziel oder Fahrweg nicht
+      erreichbar ist.
+    Akzeptanz: System meldet Blockade oder Nichterreichbarkeit mit
+      nachvollziehbarem Status.
+    Schnittstelle: /navigation_result, /mission_state
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -144,9 +219,16 @@ package MobileMaterialRobot_Requirements_A1 {
     }
     doc /*
     ID: REQ-NAV-004
-    Type: functional
-    Text: The system shall reach multiple rooms through a connecting corridor.
-    Acceptance: Test route includes at least two rooms and one corridor section.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-NAV-005, UC-004
+    Text: Das System muss im definierten Fahrbereich mehrere Raeume und einen
+      verbindenden Flur erreichen koennen.
+    Akzeptanz: Testfahrt fuehrt ueber mindestens zwei Raeume und einen Flur.
+    MVP: MVP
+    MVP-Begruendung: Mehrere Raeume und Flur bilden den Demonstrationskern.
+    Schnittstelle: IF-005
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -160,9 +242,17 @@ package MobileMaterialRobot_Requirements_A1 {
     }
     doc /*
     ID: REQ-NAV-005
-    Type: functional
-    Text: The system shall pass open doors in the defined operating area.
-    Acceptance: The robot passes an open door without manual vehicle control.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-NAV-006, UC-004
+    Text: Das System muss offene Tueren im definierten Fahrbereich durchfahren
+      koennen.
+    Akzeptanz: Testfahrt passiert eine offene Tuer ohne manuelle
+      Fahrzeugsteuerung.
+    MVP: MVP
+    MVP-Begruendung: Offene Tueren sind zentrale Randbedingung der Umgebung.
+    Schnittstelle: IF-005
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -170,10 +260,17 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-SAFE-001
-    Type: safety
-    Text: The system shall transition to a safe state for obstacles that cannot
-      be handled safely.
-    Acceptance: No contact with the obstacle and blockage status is reported.
+    Typ: Safety
+    Gruppe: Initial
+    Quelle: SN-SAFE-002, SN-004, FUN-SAFE-001
+    Text: Das System muss bei nicht sicher behandelbaren Hindernissen in einen
+      sicheren Zustand uebergehen.
+    Akzeptanz: Kein Kontakt mit Hindernis; Statusmeldung Blockade.
+    MVP: MVP reduziert
+    MVP-Begruendung: Fuer MVP mindestens sicheres Stoppen; spaetere
+      Safety-Auslegung bleibt offen.
+    Schnittstelle: SafetySupervisorNode, /safety_state
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -181,11 +278,15 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-SAFE-002
-    Type: safety
-    Text: The system shall consider persons in the operating area as
-      safety-relevant for motion decisions.
-    Acceptance: Robot slows, stops or selects an alternative according to a later
-      safety concept.
+    Typ: Safety
+    Gruppe: Iteration A
+    Quelle: SN-SAFE-001, R-04
+    Text: Das System muss Personen im Fahrbereich bei der Bewegungsentscheidung
+      sicherheitsrelevant beruecksichtigen.
+    Akzeptanz: Roboter reduziert Bewegung, stoppt oder waehlt Alternative
+      gemaess spaeterem Safety-Konzept.
+    Schnittstelle: IF-006, SafetySupervisorNode
+    Status: Geplant; Safety-Konzept offen
     */
   }
 
@@ -193,9 +294,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-UI-001
-    Type: functional
-    Text: The first version shall accept transport orders through a web app.
-    Acceptance: User selects start and target and starts the order.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-UI-001, UC-001
+    Text: Das System muss Transportauftraege in der ersten Version ueber eine
+      Web-App entgegennehmen koennen.
+    Akzeptanz: Benutzer kann Start und Ziel auswaehlen und Auftrag starten.
+    MVP: MVP
+    MVP-Begruendung: Die Web-App ist die erste reale Auftragsschnittstelle.
+    Schnittstelle: IF-001, IF-002, WebInterfaceNode
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -203,14 +311,24 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-UI-002
-    Type: functional
-    Text: The system shall provide basic commands for status, operational stop,
-      explicit manual mission resume and return to charging station.
-    Decision 2026-10-28: OperationalStop pauses the current transport order.
-      Order ID, start and target are retained. Continuation requires explicit
-      manual release; safety and route checks are not bypassed.
-    Acceptance: Commands can be triggered and produce observable system responses.
-      No automatic resume is permitted while manual release is absent.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-UI-002, UC-009, UC-010
+    Text: Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen
+      Stopp, ausdrueckliche manuelle Fortsetzung des Auftrags und Rueckkehr zur
+      Ladestation bereitstellen.
+    Akzeptanz: Die Befehle sind ausloesbar und erzeugen nachvollziehbare
+      Systemreaktionen. Ohne manuelle Freigabe wird nicht automatisch
+      fortgesetzt.
+    MVP: MVP reduziert
+    MVP-Begruendung: Status, betrieblicher Stopp mit manueller Fortsetzung und
+      Rueckkehr zur Ladestation werden als Grundbefehle betrachtet.
+    Schnittstelle: WebInterfaceNode
+    Status: Geplant; kein Ausfuehrungsnachweis
+    Entscheidung: DEC-013 (28.10.2026): Ein betrieblicher Stopp pausiert den
+      laufenden Auftrag. Auftrags-ID, Start und Ziel bleiben erhalten.
+      Fortsetzung nur nach ausdruecklicher manueller Freigabe; Sicherheits- und
+      Routenpruefungen werden nicht umgangen.
     */
   }
 
@@ -218,9 +336,13 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-PWR-001
-    Type: non-functional
-    Text: The system shall monitor its energy state.
-    Acceptance: Low state of charge is detected and reported.
+    Typ: Nichtfunktional
+    Gruppe: Initial
+    Quelle: Bedarf Energieueberwachung, FUN-STA-001
+    Text: Das System muss seinen Energiezustand ueberwachen.
+    Akzeptanz: Niedriger Ladezustand wird erkannt und gemeldet.
+    Schnittstelle: EnergyMonitorNode, /battery_state
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -228,9 +350,17 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-PWR-002
-    Type: non-functional
-    Text: The first version shall cover approximately 2 h of operating time.
-    Acceptance: A teaching-block operating profile is defined and achieved.
+    Typ: Nichtfunktional
+    Gruppe: Initial
+    Quelle: SN-ENE-001, DEC-008
+    Text: Die erste Version soll eine Betriebsdauer von ca. 2 h fuer einen
+      Unterrichtsblock abdecken.
+    Akzeptanz: Testprofil fuer Unterrichtsbetrieb wird definiert und erreicht.
+    MVP: MVP
+    MVP-Begruendung: 2 h Betriebsdauer decken einen 90-min-Unterrichtsblock mit
+      Reserve ab.
+    Schnittstelle: EnergyMonitorNode
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -238,9 +368,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-PERF-001
-    Type: performance
-    Text: The MVP nominal speed shall be approximately 0.5 m/s.
-    Acceptance: Driving profile is measured within a tolerance to be defined.
+    Typ: Leistung
+    Gruppe: Initial
+    Quelle: DEC-007
+    Text: Die Nominalgeschwindigkeit des MVP soll ca. 0,5 m/s betragen.
+    Akzeptanz: Fahrprofil wird mit definierter Toleranz gemessen.
+    MVP: MVP
+    MVP-Begruendung: Niedrige Geschwindigkeit reduziert Risiko und erleichtert
+      Unterricht und Tests.
+    Schnittstelle: NavigationNode Parameter nominal_speed
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -248,9 +385,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-STA-001
-    Type: functional
-    Text: The system shall report mission and operating status.
-    Acceptance: Status is available to operator or tester.
+    Typ: Funktional
+    Gruppe: Initial
+    Quelle: SN-OPS-001, SN-003, FUN-STA-001
+    Text: Das System muss seinen Missions- und Betriebsstatus melden koennen.
+    Akzeptanz: Status ist fuer Bediener/Betreiber abrufbar.
+    MVP: MVP
+    MVP-Begruendung: Statusmeldung ist fuer Testbarkeit und Bedienbarkeit
+      erforderlich.
+    Schnittstelle: /mission_state
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -258,10 +402,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-ARCH-001
-    Type: constraint
-    Text: Each essential function shall be traceable to at least one logical
-      system element and verification idea.
-    Acceptance: Traceability matrix has no empty core columns for MVP items.
+    Typ: Constraint
+    Gruppe: Initial
+    Quelle: SN-DEV-003, SN-008
+    Text: Jede wesentliche Funktion muss auf mindestens ein logisches
+      Systemelement und eine Verifikationsidee abbildbar sein.
+    Akzeptanz: Die Traceability-Matrix enthaelt fuer MVP-Elemente keine leeren
+      Kernspalten.
+    Systemelement: Gesamtmodell
+    Schnittstelle: Traceability-Artefakte
+    Status: Geplant; kein Ausfuehrungsnachweis
     */
   }
 
@@ -269,12 +419,16 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-DIAG-001
-    Type: operational
-    Source: SN-005, SN-MNT-001
-    Text: The system shall provide diagnostic information for fault analysis.
-    Acceptance: Fault messages contain cause, affected function and timestamp.
-    Note: DiagnosticMessage currently carries only free text; the three
-      acceptance fields are not yet modeled as attributes.
+    Typ: Operational
+    Gruppe: Initial
+    Quelle: SN-005, SN-MNT-001, FUN-STA-001
+    Text: Das System muss Diagnoseinformationen fuer Fehlersuche bereitstellen.
+    Akzeptanz: Fehlermeldungen enthalten Ursache, betroffene Funktion und
+      Zeitstempel.
+    Schnittstelle: DiagnosticsNode, /diagnostics
+    Status: Geplant; Meldungsfelder noch nicht modelliert
+    Hinweis: DiagnosticMessage enthaelt bisher nur Freitext; die drei
+      Abnahmefelder sind noch nicht als Attribute modelliert.
     */
   }
 
@@ -282,12 +436,17 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-MNT-001
-    Type: operational
-    Source: SN-MNT-002
-    Text: Central components and wear parts shall be accessible for maintenance.
-    Acceptance: Maintenance review confirms access without disproportionate
-      disassembly. Review criteria and component list remain open; not
-      verifiable before a physical design exists.
+    Typ: Operational
+    Gruppe: Iteration A
+    Quelle: SN-MNT-002
+    Text: Zentrale Komponenten und Verschleissteile muessen fuer Wartung
+      zugaenglich sein.
+    Akzeptanz: Wartungsreview bestaetigt Zugang ohne unverhaeltnismaessige
+      Demontage.
+    Schnittstelle: offen
+    Status: Geplant; erfordert mechanischen Entwurf
+    Hinweis: Pruefkriterien und Komponentenliste sind offen; vor einem
+      mechanischen Entwurf nicht pruefbar.
     */
   }
 
@@ -295,12 +454,19 @@ package MobileMaterialRobot_Requirements_A1 {
     subject robot : MobileMaterialRobot;
     doc /*
     ID: REQ-ARCH-002
-    Type: constraint
-    Source: SN-DEV-001, SN-DEV-002
-    Text: The system shall be structured so that an MVP can be marked as a
-      subset of the target system.
-    Acceptance: MVP elements reference target-system elements instead of
-      forming a separate throwaway model. No MVP marker is modeled yet.
+    Typ: Constraint
+    Gruppe: Iteration A
+    Quelle: SN-DEV-001, SN-DEV-002
+    Text: Das System muss so strukturiert werden, dass ein MVP als Teilmenge des
+      Zielsystems markiert werden kann.
+    Akzeptanz: MVP-Elemente referenzieren Zielsystem-Elemente statt ein
+      separates Wegwerfmodell zu bilden.
+    Systemelement: Gesamtmodell
+    Schnittstelle: MVP-Markierung (noch nicht modelliert)
+    Status: Geplant; MVP-Status nur als Dokumentationsfeld, noch keine
+      SysML-Metadaten
+    Hinweis: Der MVP-Status steht bisher nur als Dokumentationsfeld im
+      Requirement, noch nicht als SysML-Metadaten.
     */
   }
 }

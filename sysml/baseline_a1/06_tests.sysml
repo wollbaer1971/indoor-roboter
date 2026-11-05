@@ -3,19 +3,21 @@ package MobileMaterialRobot_Verification_A1 {
   private import VerificationCases::*;
   private import MobileMaterialRobot_Structure_A1::MobileMaterialRobot;
   doc /*
-  Verification cases for Baseline A.1. Test definitions are starter artifacts
-  and need concrete preconditions, measurement tolerances and test environment
-  details in Iteration B.
+  Verifikationsfaelle der Baseline A.1. Alle sind geplant; keiner wurde an
+  einem realen Roboter oder in einem dokumentierten Simulationslauf
+  ausgefuehrt. Es werden weder Ergebnisse noch Nachweise behauptet.
+  Die Doc-Felder (Name, Erwartet, ...) sind Quelle der LaTeX-Testtabelle.
   */
 
   verification def TC_MAP_001 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-MAP-001
-    Verifies: REQ-MAP-001
-    Precondition: Base map file exists.
-    Action: Load base map.
-    Expected: Map is available and referenced by localization/navigation.
+    Name: Grundkarte laden
+    Vorbedingung: Grundkartendatei ist vorhanden.
+    Ablauf: Grundkarte laden.
+    Erwartet: Karte ist verfuegbar und wird von Lokalisierung und Navigation
+      referenziert.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_MAP_001;
@@ -26,9 +28,10 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-MAP-002
-    Verifies: REQ-MAP-003
-    Action: Add a temporary obstacle to the local environment.
-    Expected: Long-term map is not automatically changed.
+    Name: Karteninformation trennen
+    Ablauf: Temporaeres Hindernis in die lokale Umgebung einbringen.
+    Erwartet: Temporaere Hindernisse werden lokal beruecksichtigt, ohne die
+      Langzeitkarte automatisch zu veraendern.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_MAP_003;
@@ -39,9 +42,10 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-LOC-001
-    Verifies: REQ-LOC-001
-    Action: Estimate robot pose in known map.
-    Expected: Pose estimate stays within a tolerance to be defined.
+    Name: Lokalisierung in Karte
+    Ablauf: Roboterpose in bekannter Karte schaetzen.
+    Erwartet: Roboterpose wird innerhalb einer noch festzulegenden Toleranz
+      geschaetzt.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_LOC_001;
@@ -52,9 +56,9 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-NAV-001
-    Verifies: REQ-NAV-001
-    Action: Start mission to a known target.
-    Expected: Robot reaches target without manual vehicle control.
+    Name: Autonomes Zielanfahren
+    Ablauf: Mission zu einem bekannten Ziel starten.
+    Erwartet: Roboter erreicht das Ziel ohne manuelle Fahrzeugsteuerung.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_NAV_001;
@@ -79,13 +83,17 @@ package MobileMaterialRobot_Verification_A1 {
       else VerdictKind::inconclusive;
     doc /*
     ID: TC-NAV-002
-    Verifies: REQ-NAV-004, REQ-NAV-005
-    Method: Initially simulation only; no physical robot is required.
-    Precondition: Documented world, robot configuration and open-door route.
-    Action: Drive route through at least two rooms, a corridor and one open door.
-    Expected: Route is completed autonomously in the simulation.
-    Evidence: Run ID, configuration versions, simulation time and trajectory.
-    No verdict is asserted before a documented run has been evaluated.
+    Name: Raeume-Flur-Tuer-Test
+    Methode: Zunaechst nur Simulation; kein physischer Roboter erforderlich.
+    Vorbedingung: Dokumentierte Welt, Roboterkonfiguration und Route mit offener
+      Tuer.
+    Ablauf: Route durch mindestens zwei Raeume, einen Flur und eine offene Tuer
+      fahren.
+    Erwartet: Roboter durchfaehrt mindestens zwei Raeume, einen Flurabschnitt
+      und eine offene Tuer autonom.
+    Nachweis: Lauf-ID, Konfigurationsversionen, Simulationszeit und Trajektorie.
+    Hinweis: Vor der Auswertung eines dokumentierten Laufs wird kein Ergebnis
+      behauptet.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_NAV_004 {
@@ -105,9 +113,10 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-OBS-001
-    Verifies: REQ-MAP-002, REQ-NAV-002, REQ-SAFE-001
-    Action: Place obstacle in front of planned route.
-    Expected: Obstacle is detected and robot stops or safely replans.
+    Name: Hindernis frontal
+    Ablauf: Hindernis vor die geplante Route stellen.
+    Erwartet: Hindernis wird erkannt; Roboter stoppt oder faehrt sicher
+      ausweichend.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_MAP_002;
@@ -120,9 +129,9 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-OBS-002
-    Verifies: REQ-NAV-003, REQ-SAFE-001, REQ-STA-001
-    Action: Block route so no safe alternative is available.
-    Expected: Robot stops and reports blocked route.
+    Name: Blockierter Fahrweg
+    Ablauf: Route so blockieren, dass keine sichere Alternative besteht.
+    Erwartet: Roboter stoppt und meldet Blockade.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_NAV_003;
@@ -135,9 +144,10 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-UI-001
-    Verifies: REQ-UI-001
-    Action: User creates transport order in web app.
-    Expected: Robot accepts or rejects order with clear status.
+    Name: Web-App-Auftrag
+    Ablauf: Benutzer erstellt einen Transportauftrag in der Web-App.
+    Erwartet: Start und Ziel werden ueber die Web-App gewaehlt; der Roboter
+      nimmt den Auftrag an oder lehnt ihn mit nachvollziehbarem Status ab.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_UI_001;
@@ -149,9 +159,10 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-UI-002
-    Verifies: REQ-UI-002
-    Action: Trigger status, operational stop and return-to-charging command.
-    Expected: Each command creates the expected observable system response.
+    Name: Grundbefehle
+    Ablauf: Status, betrieblichen Stopp und Rueckkehr zur Ladestation ausloesen.
+    Erwartet: Status, betrieblicher Stopp und Rueckkehr zur Ladestation erzeugen
+      nachvollziehbare Systemreaktionen.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
@@ -162,9 +173,10 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-PWR-002
-    Verifies: REQ-PWR-002
-    Action: Run defined teaching-block operating profile.
-    Expected: System covers approximately 2 h without intermediate charging.
+    Name: Unterrichtsprofil 2 h
+    Ablauf: Definiertes Unterrichtsprofil ausfuehren.
+    Erwartet: Roboter erreicht ein definiertes Demonstrationsprofil von ca. 2 h
+      ohne Zwischenladen.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_PWR_002;
@@ -175,25 +187,38 @@ package MobileMaterialRobot_Verification_A1 {
     subject testRobot : MobileMaterialRobot;
     doc /*
     ID: TC-PERF-001
-    Verifies: REQ-PERF-001
-    Action: Measure driving profile during nominal movement.
-    Expected: Nominal speed is approximately 0.5 m/s within defined tolerance.
+    Name: Nominalgeschwindigkeit
+    Ablauf: Fahrprofil bei nominaler Bewegung messen.
+    Erwartet: Fahrprofil wird mit ca. 0,5 m/s innerhalb definierter Toleranz
+      ausgefuehrt.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_PERF_001;
     }
   }
 
-  // Planned verification definitions; no pass verdict or fabricated evidence.
   verification def TC_PWR_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Observe simulated energy state and check low-energy reporting. Battery model and thresholds remain open. */
+    doc /*
+    ID: TC-PWR-001
+    Name: Niedriger Energiezustand
+    Ablauf: Simulierten Energiezustand beobachten.
+    Erwartet: Warnung bei niedrigem Ladezustand wird erzeugt und gemeldet.
+    Hinweis: Batteriemodell und Schwellwerte sind offen.
+    */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_PWR_001; }
   }
 
   verification def TC_STA_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Observe mission/operating status on the defined digital interface; no successful execution is asserted. */
+    doc /*
+    ID: TC-STA-001
+    Name: Missionsstatus melden
+    Ablauf: Missions- und Betriebsstatus an der definierten digitalen
+      Schnittstelle beobachten.
+    Erwartet: Statuswechsel werden korrekt ausgegeben.
+    Hinweis: Es wird keine erfolgreiche Ausfuehrung behauptet.
+    */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_STA_001;
       verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
@@ -202,7 +227,14 @@ package MobileMaterialRobot_Verification_A1 {
 
   verification def TC_TRC_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Inspect requirement, responsible system element, interface and test references; unresolved links must be reported. Also inspect that MVP elements reference target-system elements (REQ-ARCH-002). */
+    doc /*
+    ID: TC-TRC-001
+    Name: Traceability-Review
+    Ablauf: Requirement-, Systemelement-, Schnittstellen- und Testverweise
+      pruefen; ungeloeste Verweise melden.
+    Erwartet: Jede MVP-Anforderung ist mit Funktion, Element, Schnittstelle und
+      Test verknuepft; MVP-Elemente verweisen auf Zielsystem-Elemente.
+    */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_001;
       verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_002;
@@ -211,31 +243,64 @@ package MobileMaterialRobot_Verification_A1 {
 
   verification def TC_DIAG_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Inject a simulated fault and inspect the diagnostic message for cause, affected function and timestamp. Fault sources remain open. */
+    doc /*
+    ID: TC-DIAG-001
+    Name: Diagnosemeldung
+    Ablauf: Simulierten Fehler einspeisen und Diagnosemeldung pruefen.
+    Erwartet: Bei simuliertem Fehler enthaelt die Meldung Ursache, betroffene
+      Funktion und Zeitstempel.
+    Hinweis: Fehlerquellen sind offen.
+    */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_DIAG_001; }
   }
 
   verification def TC_MNT_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Maintenance review of component accessibility. Requires a physical design; cannot be executed in the simulation-only phase. */
+    doc /*
+    ID: TC-MNT-001
+    Name: Wartungsreview
+    Ablauf: Zugaenglichkeit zentraler Komponenten im Wartungsreview pruefen.
+    Erwartet: Zugang zu zentralen Komponenten ohne unverhaeltnismaessige
+      Demontage; erst mit mechanischem Entwurf ausfuehrbar.
+    Hinweis: In der reinen Simulationsphase nicht ausfuehrbar.
+    */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_MNT_001; }
   }
 
   verification def TC_TRN_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Simulate transport of a manually placed carrier. Payload data and goal tolerance must be fixed before execution. */
+    doc /*
+    ID: TC-TRN-001
+    Name: Kistentransport
+    Ablauf: Transport eines manuell aufgesetzten Werkstuecktraegers simulieren.
+    Erwartet: Manuell aufgesetzter Werkstuecktraeger erreicht das Ziel;
+      Nutzlastdaten und Zieltoleranz vor Ausfuehrung festlegen.
+    */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_TRN_001; }
   }
 
   verification def TC_TRN_002 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Inspect simulated carrier pose during the agreed driving profile. Allowed pose/load limits remain open. */
+    doc /*
+    ID: TC-TRN-002
+    Name: Lage der Kiste
+    Ablauf: Simulierte Lage des Werkstuecktraegers im vereinbarten Fahrprofil
+      pruefen.
+    Erwartet: Werkstuecktraeger bleibt im vereinbarten Fahrprofil innerhalb der
+      zulaessigen Lage; Grenzwerte offen.
+    */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_TRN_002; }
   }
 
   verification def TC_SAFE_002 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Inspect the simulated response to a person in the route. Pass criteria require the still-open safety concept. */
+    doc /*
+    ID: TC-SAFE-002
+    Name: Person im Fahrweg
+    Ablauf: Simulierte Reaktion auf eine Person im Fahrweg pruefen.
+    Erwartet: Reaktion auf eine Person im Fahrweg; Bewertungskriterium erst mit
+      Safety-Konzept.
+    */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_SAFE_002; }
   }
 
@@ -256,10 +321,16 @@ package MobileMaterialRobot_Verification_A1 {
         safeToMove = safeToMove, resumeAccepted = resumeAccepted))
       else VerdictKind::inconclusive;
     doc /*
-    Operational-stop decision: retain and pause the active order, stop motion,
-    and accept resume only on explicit manual release and valid prerequisites.
-    motionStopped refers to the pause phase before evaluating the resume.
-    These are observation inputs; no physical stopping performance is asserted.
+    ID: TC-UI-003
+    Name: Pause und manuelle Fortsetzung
+    Ablauf: Betrieblichen Stopp waehrend eines Auftrags ausloesen, dann
+      Fortsetzung mit und ohne manuelle Freigabe anfordern.
+    Erwartet: Betrieblicher Stopp pausiert den Auftrag, Bewegung ist gestoppt,
+      Auftrag bleibt erhalten; Fortsetzung nur bei manueller Freigabe und
+      erfuellten Voraussetzungen (DEC-013).
+    Hinweis: motionStopped bezieht sich auf die Pausenphase vor der Auswertung
+      der Fortsetzung. Die Attribute sind Beobachtungseingaben; es wird keine
+      physikalische Stoppleistung behauptet.
     */
     objective {
       verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;

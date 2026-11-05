@@ -45,3 +45,9 @@
 \newenvironment{decisionbox}[1]
   {\par\medskip\noindent\textbf{#1}\par\smallskip\noindent}
   {\par\medskip}
+
+% Modellgebundene Tabellenzeilen aus tables/generated/ (erzeugt mit tools/generate_docs.py).
+% Das primitive \@@input funktioniert auch innerhalb von longtable.
+\makeatletter
+\newcommand{\modeltable}[1]{\@@input tables/generated/#1.tex }
+\makeatother

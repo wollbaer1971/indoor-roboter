@@ -18,6 +18,8 @@ import tempfile
 import urllib.request
 import zipfile
 
+import generate_docs  # same directory; the model leads the generated documentation
+
 RELEASE = "2025-10"
 VERSION = "0.53.0"
 SHA256 = "bbd51b1827d9d4a586644d4a1d16e6f17c01a7ffa80ab49e3f8774fa1f46ce5e"
@@ -112,73 +114,44 @@ def _ids(text: str) -> set[str]:
     return set(re.findall(r"(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+", text))
 
 
-def _table_rows(text: str, prefix: str) -> dict[str, list[str]]:
-    """LaTeX table rows starting with an ID such as 'REQ-NAV-001 & ...'."""
-    rows = {}
-    for line in text.splitlines():
-        if re.match(rf"{prefix}-[A-Z]+(?:-[A-Z]+)?-\d+ &", line):
-            cells = [c.strip() for c in line.rstrip().removesuffix("\\\\").split("&")]
-            rows[cells[0]] = cells
-    return rows
-
-
-def documentation_checks(model: Path, docs: Path) -> None:
-    """Fail when the LaTeX documentation drifts from the SysML model."""
-    def read(rel: str) -> str:
-        return (docs / rel).read_text(encoding="utf-8")
-    def dashed(name: str) -> str:
-        return name.replace("_", "-")
+def documentation_checks(docs: Path) -> None:
+    """The model leads: generated tables must be current and nothing model-bound is hand-written."""
     problems = []
+    try:
+        problems += [f"{rel}: stale or hand-edited; run python tools/generate_docs.py"
+                     for rel in generate_docs.stale(docs)]
+    except ValueError as error:
+        raise RuntimeError(f"Model documentation fields: {error}") from error
 
-    # A.1 requirement IDs: requirements chapter and appendix vs. model.
-    model_reqs = {dashed(n) for n in re.findall(
-        r"\brequirement (REQ_\w+)\s*\{", (model / "baseline_a1/02_requirements.sysml").read_text(encoding="utf-8"))}
-    chapter_reqs = set(_table_rows(read("chapters/05_requirements.tex"), "REQ"))
-    if chapter_reqs != model_reqs:
-        problems.append(f"chapters/05 requirements: only LaTeX={sorted(chapter_reqs-model_reqs)}, only model={sorted(model_reqs-chapter_reqs)}")
+    tex = {p: p.read_text(encoding="utf-8")
+           for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
+    for path, text in tex.items():
+        for number, line in enumerate(text.splitlines(), 1):
+            if re.match(r"\s*(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+\s*&", line):
+                problems.append(f"{path.relative_to(docs)}:{number}: hand-written requirement/test row; "
+                                "maintain it in the model")
+    used = set(re.findall(r"\\modeltable\{(\w+)\}", "".join(tex.values())))
+    generated = {p.stem for p in (docs / generate_docs.GENERATED).glob("*.tex")}
+    if used != generated:
+        problems.append(f"\\modeltable includes: not used={sorted(generated - used)}, unknown={sorted(used - generated)}")
 
-    # Test definitions and their verified requirements: chapter 10 vs. model.
-    tests = (model / "baseline_a1/06_tests.sysml").read_text(encoding="utf-8")
-    model_tests = {}
-    for block in re.split(r"(?=\bverification def TC_)", tests)[1:]:
-        name = dashed(re.match(r"verification def (TC_\w+)", block)[1])
-        model_tests[name] = {dashed(r) for r in re.findall(r"verify MobileMaterialRobot_Requirements_A1::(REQ_\w+)", block)}
-    chapter_tests = {tc: _ids(cells[2]) for tc, cells in _table_rows(read("chapters/10_verifikation_traceability.tex"), "TC").items()}
-    for tc in sorted(set(model_tests) | set(chapter_tests)):
-        if model_tests.get(tc) != chapter_tests.get(tc):
-            problems.append(f"chapters/10 {tc}: LaTeX={sorted(chapter_tests.get(tc, []))}, model={sorted(model_tests.get(tc, []))}")
-
-    # Appendix traceability: requirement set and test column vs. review matrix.
-    matrix = {}
-    for line in (model / "baseline_a1/traceability_matrix.md").read_text(encoding="utf-8").splitlines():
-        cells = [c.strip() for c in line.strip().strip("|").split("|")]
-        if re.fullmatch(r"REQ-[A-Z]+-\d+", cells[0]):
-            matrix[cells[0]] = _ids(cells[4])
-    appendix = {req: _ids(cells[4]) for req, cells in _table_rows(read("appendices/c_traceability_matrix.tex"), "REQ").items()}
-    if set(matrix) != model_reqs:
-        problems.append(f"traceability_matrix.md requirements differ from model: {sorted(set(matrix) ^ model_reqs)}")
-    for req in sorted(set(matrix) | set(appendix)):
-        if matrix.get(req) != appendix.get(req):
-            problems.append(f"appendix C {req}: LaTeX tests={sorted(appendix.get(req, []))}, matrix={sorted(matrix.get(req, []))}")
-
-    # B.1 requirement IDs and use-case derivations: chapter 12 vs. model.
-    b1 = (model / "baseline_b1/02_requirements.sysml").read_text(encoding="utf-8")
-    b1_reqs = {dashed(n) for n in re.findall(r"\brequirement (REQ_B_\w+)\s*\{", b1)}
-    chapter12 = read("chapters/12_iteration_b_usecases_requirements.tex")
-    chapter_b1 = set(_table_rows(chapter12, "REQ"))
-    if chapter_b1 != b1_reqs:
-        problems.append(f"chapters/12 requirements: only LaTeX={sorted(chapter_b1-b1_reqs)}, only model={sorted(b1_reqs-chapter_b1)}")
-    model_uc = {}
+    # B.1 use-case derivations are still prose in chapter 12 and in the B.1 review matrix.
+    b1 = (docs / "sysml/baseline_b1/02_requirements.sysml").read_text(encoding="utf-8")
+    model_uc: dict[str, set[str]] = {}
     for req, uc in re.findall(r"dependency from (REQ_B_\w+) to UC_B_(\d+)_", b1):
-        model_uc.setdefault(f"UC-B-{uc}", set()).add(dashed(req))
+        model_uc.setdefault(f"UC-B-{uc}", set()).add(req.replace("_", "-"))
+    chapter12 = (docs / "chapters/12_iteration_b_usecases_requirements.tex").read_text(encoding="utf-8")
     for uc, derived in re.findall(r"subsection\{(UC-B-\d+).*?Abgeleitete Requirements & (.*?)\\\\", chapter12, re.S):
         if _ids(derived) != model_uc.get(uc, set()):
             problems.append(f"chapters/12 {uc}: LaTeX={sorted(_ids(derived))}, model={sorted(model_uc.get(uc, []))}")
+    b1_matrix = (docs / "sysml/baseline_b1/traceability_matrix.md").read_text(encoding="utf-8")
+    for uc, cell in re.findall(r"^\| (UC-B-\d+) \| (.*?) \|", b1_matrix, re.M):
+        if _ids(cell) != model_uc.get(uc, set()):
+            problems.append(f"baseline_b1/traceability_matrix.md {uc}: matrix={sorted(_ids(cell))}, model={sorted(model_uc.get(uc, []))}")
 
     if problems:
         raise RuntimeError("Documentation drifts from model:\n  " + "\n  ".join(problems))
-    print(f"DOCUMENTATION requirements_a1={len(model_reqs)} tests={len(model_tests)} "
-          f"requirements_b1={len(b1_reqs)} latex_matches_model=true")
+    print(f"DOCUMENTATION generated_tables={len(generated)} up_to_date=true hand_written_rows=0 b1_use_cases_match=true")
 
 
 def negative_checks(java: str, home: Path, model: Path) -> None:
@@ -200,22 +173,32 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
             print(f"NEGATIVE {name}: detected ({summary[1]} errors, {summary[2]} warnings)")
 
 
-def negative_documentation_check(model: Path) -> None:
-    """Drop a requirement row from a temporary LaTeX copy; the drift check must fail."""
-    with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
-        copy = Path(temporary)
-        for folder in ("chapters", "appendices"):
-            shutil.copytree(REPO / folder, copy / folder)
-        shutil.copytree(model, copy / "sysml")
-        chapter = copy / "chapters/05_requirements.tex"
-        text = chapter.read_text(encoding="utf-8")
-        chapter.write_text(re.sub(r"(?m)^REQ-NAV-001 &.*\n", "", text), encoding="utf-8")
-        try:
-            documentation_checks(copy / "sysml", copy)
-        except RuntimeError:
-            print("NEGATIVE documentation_drift: detected")
-            return
-        raise RuntimeError("Negative documentation test did not detect a removed requirement row")
+def negative_documentation_check() -> None:
+    """Edit a generated table and paste a hand-written row in temporary copies; both must fail."""
+    mutations = {
+        "generated_table_edited": ("tables/generated/requirements_a1_initial.tex",
+                                   lambda text: text.replace("annehmen koennen.", "annehmen.", 1)),
+        "hand_written_row": ("chapters/05_requirements.tex",
+                             lambda text: text.replace("\\modeltable{requirements_a1_initial}",
+                                                       "\\modeltable{requirements_a1_initial}\nREQ-XYZ-001 & a & b & c \\\\", 1)),
+    }
+    for name, (rel, mutate) in mutations.items():
+        with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
+            copy = Path(temporary)
+            for folder in ("chapters", "appendices", "tables", "sysml"):
+                shutil.copytree(REPO / folder, copy / folder)
+            target = copy / rel
+            original = target.read_text(encoding="utf-8")
+            changed = mutate(original)
+            if changed == original:
+                raise RuntimeError(f"Negative documentation test {name} did not change {rel}")
+            target.write_text(changed, encoding="utf-8")
+            try:
+                documentation_checks(copy)
+            except RuntimeError:
+                print(f"NEGATIVE {name}: detected")
+                continue
+            raise RuntimeError(f"Negative documentation test did not detect {name}")
 
 
 def main() -> int:
@@ -231,7 +214,7 @@ def main() -> int:
     model = args.model.resolve()
     architecture_checks(model)
     if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
-        documentation_checks(model, REPO)
+        documentation_checks(REPO)
     result = invoke(java, home, model, args.self_test)
     print(result.stdout, end="")
     print(result.stderr, end="", file=sys.stderr)
@@ -240,7 +223,7 @@ def main() -> int:
     if args.negative_tests:
         negative_checks(java, home, model)
         if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
-            negative_documentation_check(model)
+            negative_documentation_check()
     return 0
 
 
