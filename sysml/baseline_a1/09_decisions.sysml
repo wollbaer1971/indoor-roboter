@@ -165,15 +165,16 @@ package MobileMaterialRobot_Decisions_A1 {
     ID: DEC-016
     Art: Baseline
     Entscheidung: Unsichere Situationen fuehren in den sicheren Zustand,
-      technische Fehler in den Fehlerzustand, und zwar in allen aktiven
-      Betriebszustaenden: bereit, Auftrag angenommen, Fahrt, Ausweichen,
-      pausiert, blockiert und Rueckkehr zur Ladestation. Das gilt auch im
-      Stillstand.
+      technische Fehler in den Fehlerzustand, und zwar in jedem
+      Betriebszustand ausser ausgeschaltet, Fehlerzustand und sicherem
+      Zustand. Das gilt auch im Stillstand, beim Hochfahren und an der
+      Ladestation; neue Zustaende sind automatisch eingeschlossen.
     Status: Angenommen
     Datum: 05.11.2026
     Begruendung: Ein Fehler im Stillstand, z. B. am Akku, ist genauso
-      relevant wie waehrend der Fahrt. Ein pausierter oder blockierter
-      Auftrag darf nach einem Fehler nicht einfach fortgesetzt werden.
+      relevant wie waehrend der Fahrt, beim Laden sogar wahrscheinlicher.
+      Eine Ausnahmeliste ist kuerzer und sicherer als eine Positivliste,
+      die bei jedem neuen Zustand gepflegt werden muesste.
   */
 
   // Architektur- und Prozessentscheidungen

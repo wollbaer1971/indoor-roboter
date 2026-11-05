@@ -189,3 +189,13 @@ Overleaf passt nur ihr Aussehen an.
   mit REQ-SAFE-001, REQ-B-SAFE-001, REQ-DIAG-001 und SafetySystem verknuepft.
 - Nicht als aktiv gelten weiterhin: off, initializing, completed, rejected,
   stopped, chargingInterfaceReached, fault, safeState.
+
+# Sicherheitsregel als Ausnahmeliste, 05.11.2026
+
+- DEC-016 gilt jetzt fuer jeden Zustand ausser off, fault und safeState.
+  Neu abgedeckt: initializing, completed, rejected, stopped,
+  chargingInterfaceReached. Ein kuenftig neuer Zustand ist automatisch
+  eingeschlossen und braucht beide Uebergaenge.
+- Der Doc-Block nennt nur noch die Ausnahmen ("Ohne Sicherheitsuebergaenge").
+- Die Sackgassen-Regel verlangt einen regulaeren Ausgang; Sicherheits- und
+  Fehleruebergaenge allein zaehlen nicht.

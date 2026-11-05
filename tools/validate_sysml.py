@@ -126,29 +126,32 @@ def _doc_list(doc: str, key: str) -> list[str]:
 
 
 def state_machine_checks(model: Path) -> None:
-    """Safety and fault exits in every active state; every state reachable unless declared open."""
+    """Safety and fault exits in every state not declared unmonitored; reachability; no dead ends."""
     source = (model / "baseline_a1/05_behavior.sysml").read_text(encoding="utf-8")
     block = re.search(r"state def RobotOperationState \{(.*?)\n  \}", source, re.S)
     if not block:
         raise RuntimeError("state def RobotOperationState not found")
     body = block[1]
     doc = re.search(r"doc /\*(.*?)\*/", body, re.S)[1]
-    active, exempt = _doc_list(doc, "Aktive Zustaende"), _doc_list(doc, "Noch ohne Zugang")
+    unmonitored, exempt = _doc_list(doc, "Ohne Sicherheitsuebergaenge"), _doc_list(doc, "Noch ohne Zugang")
     final = _doc_list(doc, "Endzustaende")
     states = re.findall(r"^\s+state (\w+);", body, re.M)
     start = re.search(r"entry; then (\w+);", body)[1]
     transitions = re.findall(r"transition first (\w+)\s+accept\s+(?:\w+\s*:\s*)?(\w+)[^;]*?then (\w+);", body, re.S)
-    problems = [f"declared state {s} does not exist" for s in active + exempt + final if s not in states]
-    exits = {source_state for source_state, _, _ in transitions}
+    problems = [f"declared state {s} does not exist" for s in unmonitored + exempt + final if s not in states]
+    active = [s for s in states if s not in unmonitored]
+    # A regular exit is any transition other than the safety/fault exits.
+    exits = {source_state for source_state, event, _ in transitions
+             if event not in ("UnsafeCondition", "TechnicalFault")}
     for state in states:
         if state not in exits and state not in final:
-            problems.append(f"state {state} has no outgoing transition (dead end)")
+            problems.append(f"state {state} has no regular outgoing transition (dead end)")
         if state in exits and state in final:
             problems.append(f"state {state} has an exit now; remove it from 'Endzustaende'")
     for state in active:
         for event, target in (("UnsafeCondition", "safeState"), ("TechnicalFault", "fault")):
             if (state, event, target) not in transitions:
-                problems.append(f"active state {state} lacks '{event} -> {target}'")
+                problems.append(f"state {state} lacks '{event} -> {target}'")
     reachable, frontier = {start}, [start]
     while frontier:
         current = frontier.pop()
@@ -163,7 +166,8 @@ def state_machine_checks(model: Path) -> None:
             problems.append(f"state {state} is reachable now; remove it from 'Noch ohne Zugang'")
     if problems:
         raise RuntimeError("State machine rules violated:\n  " + "\n  ".join(problems))
-    print(f"STATE_MACHINE states={len(states)} reachable={len(reachable)} active={len(active)} "
+    print(f"STATE_MACHINE states={len(states)} reachable={len(reachable)} monitored={len(active)} "
+          f"unmonitored={','.join(unmonitored)} "
           f"safety_exits=complete open_without_entry={','.join(exempt) or 'none'} "
           f"dead_ends={','.join(final) or 'none'}")
 

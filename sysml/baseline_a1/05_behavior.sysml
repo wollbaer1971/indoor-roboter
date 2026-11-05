@@ -172,15 +172,16 @@ package MobileMaterialRobot_Behavior_A1 {
     zurueck (OI-SAFE-001).
 
     Regeln, die tools/validate_sysml.py prueft:
-    Aktive Zustaende: ready, orderAccepted, driving, avoidingObstacle,
-      paused, blocked, returningToChargingStation
-    In jedem aktiven Zustand fuehrt UnsafeCondition nach safeState und
-    TechnicalFault nach fault (DEC-016), auch im Stillstand (ready, blocked).
-    Ein pausierter Auftrag kann so nicht manuell fortgesetzt werden, wenn
-    inzwischen ein Fehler aufgetreten ist.
+    In jedem Zustand fuehrt UnsafeCondition nach safeState und
+    TechnicalFault nach fault (DEC-016), auch im Stillstand und beim
+    Hochfahren. Ausgenommen sind nur:
+    Ohne Sicherheitsuebergaenge: off, fault, safeState
+    (ausgeschaltet bzw. bereits im Fehler- oder sicheren Zustand). Ein neuer
+    Zustand ist damit automatisch eingeschlossen.
     Jeder Zustand muss vom Startzustand aus erreichbar sein, ausser:
     Noch ohne Zugang: keine
-    Jeder Zustand muss mindestens einen Ausgang haben, ausser:
+    Jeder Zustand muss mindestens einen regulaeren Ausgang haben (nicht nur
+    UnsafeCondition oder TechnicalFault), ausser:
     Endzustaende: keine
     */
     entry; then off;
@@ -233,20 +234,30 @@ package MobileMaterialRobot_Behavior_A1 {
     transition first safeState accept ack : AcknowledgeRequested
       if ack.safeToMove then ready;
 
-    // Safety and fault handling in every active state.
+    // Safety and fault handling in every state except off, fault and safeState (DEC-016).
+    transition first initializing accept UnsafeCondition then safeState;
     transition first ready accept UnsafeCondition then safeState;
-    transition first blocked accept UnsafeCondition then safeState;
     transition first orderAccepted accept UnsafeCondition then safeState;
     transition first driving accept UnsafeCondition then safeState;
     transition first avoidingObstacle accept UnsafeCondition then safeState;
     transition first paused accept UnsafeCondition then safeState;
+    transition first blocked accept UnsafeCondition then safeState;
+    transition first completed accept UnsafeCondition then safeState;
+    transition first rejected accept UnsafeCondition then safeState;
+    transition first stopped accept UnsafeCondition then safeState;
     transition first returningToChargingStation accept UnsafeCondition then safeState;
+    transition first chargingInterfaceReached accept UnsafeCondition then safeState;
+    transition first initializing accept TechnicalFault then fault;
     transition first ready accept TechnicalFault then fault;
-    transition first blocked accept TechnicalFault then fault;
     transition first orderAccepted accept TechnicalFault then fault;
     transition first driving accept TechnicalFault then fault;
     transition first avoidingObstacle accept TechnicalFault then fault;
     transition first paused accept TechnicalFault then fault;
+    transition first blocked accept TechnicalFault then fault;
+    transition first completed accept TechnicalFault then fault;
+    transition first rejected accept TechnicalFault then fault;
+    transition first stopped accept TechnicalFault then fault;
     transition first returningToChargingStation accept TechnicalFault then fault;
+    transition first chargingInterfaceReached accept TechnicalFault then fault;
   }
 }
