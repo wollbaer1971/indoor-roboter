@@ -23,6 +23,8 @@ package MobileMaterialRobot_Interfaces_A1 {
     attribute robotId : String;
     attribute orderId : String;
     attribute statusKind : MissionStatusKind;
+    doc /* Warnung bei niedrigem Ladezustand; aendert den Betriebszustand nicht (DEC-017). */
+    attribute lowEnergyWarning : Boolean;
   }
   enum def OperatorCommandKind {
     requestStatus; operationalStop; resumeMission; cancelMission;

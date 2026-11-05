@@ -281,3 +281,12 @@ Overleaf passt nur ihr Aussehen an.
   reicht fuer den Weg vom entferntesten Punkt zur Ladestation bei
   Nominalgeschwindigkeit. Verknuepft mit FUN-ENE-001,
   ReturnToChargingStation, REQ-PWR-001, REQ-PWR-002 und REQ-PERF-001.
+
+# Niedriger Ladezustand waehrend eines Auftrags, DEC-017, 05.11.2026
+
+- Variante "nur melden": Ereignis LowEnergyDetected, Attribut
+  MissionStatus.lowEnergyWarning. Kein Zustandswechsel; der Bediener
+  entscheidet. FUN-ENE-001 und TC-PWR-001 sind angepasst.
+- Bedienweg zur Ladestation mit vorhandenen Befehlen: operationalStop
+  (paused), cancelMission (stopped), acknowledge (ready),
+  returnToChargingStation.

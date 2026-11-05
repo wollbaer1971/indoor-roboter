@@ -27,6 +27,13 @@ package MobileMaterialRobot_Behavior_A1 {
     attribute safeToMove : Boolean;
     attribute faultCleared : Boolean;
   }
+  item def LowEnergyDetected {
+    doc /*
+    Ladezustand unter dem Schwellwert (FUN-ENE-001, A-011). Loest bewusst
+    keinen Zustandswechsel aus, sondern setzt die Warnung im MissionStatus;
+    der Bediener entscheidet ueber Unterbrechung und Rueckkehr (DEC-017).
+    */
+  }
   item def ReturnRequested;
   item def ChargingAreaReached;
   item def TechnicalFault;

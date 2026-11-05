@@ -4,6 +4,9 @@ package MobileMaterialRobot_Decisions_A1 {
   private import MobileMaterialRobot_Verification_A1::*;
   private import MobileMaterialRobot_Simulation_A1::SimulationTestBench;
   private import MobileMaterialRobot_Structure_A1::*;
+  private import MobileMaterialRobot_Functions_A1::FUN_ENE_001;
+  private import MobileMaterialRobot_Interfaces_A1::MissionStatus;
+  private import MobileMaterialRobot_Behavior_A1::LowEnergyDetected;
 
   doc /*
   Entscheidungsprotokoll. Jede Entscheidung ist ein benannter Kommentar.
@@ -175,6 +178,22 @@ package MobileMaterialRobot_Decisions_A1 {
       relevant wie waehrend der Fahrt, beim Laden sogar wahrscheinlicher.
       Eine Ausnahmeliste ist kuerzer und sicherer als eine Positivliste,
       die bei jedem neuen Zustand gepflegt werden muesste.
+  */
+
+  comment DEC_017 about REQ_PWR_001, FUN_ENE_001, MissionStatus, LowEnergyDetected, TC_PWR_001 /*
+    ID: DEC-017
+    Art: Baseline
+    Entscheidung: Erreicht der Ladezustand waehrend eines Auftrags den
+      Schwellwert, meldet der Roboter eine Warnung im Missionsstatus und
+      faehrt weiter. Er unterbricht den Auftrag nicht selbst und faehrt nicht
+      selbst zur Ladestation; der Bediener entscheidet.
+    Status: Angenommen
+    Datum: 05.11.2026
+    Begruendung: Braucht im MVP keine neue Steuerlogik und folgt dem Muster
+      bewusster Bedienhandlungen aus DEC-013 und DEC-015. Der Bediener kommt
+      mit vorhandenen Befehlen zur Ladestation: Stopp (pausiert), Abbruch,
+      Quittierung, Rueckkehr. Die Annahme A-011 muss dafuer genug Reserve
+      fuer diese Bedienzeit einschliessen.
   */
 
   // Architektur- und Prozessentscheidungen

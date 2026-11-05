@@ -203,8 +203,10 @@ package MobileMaterialRobot_Verification_A1 {
     ID: TC-PWR-001
     Name: Niedriger Energiezustand
     Ablauf: Simulierten Energiezustand beobachten.
-    Erwartet: Warnung bei niedrigem Ladezustand wird erzeugt und gemeldet.
-    Hinweis: Batteriemodell und Schwellwerte sind offen.
+    Erwartet: Warnung bei niedrigem Ladezustand wird erzeugt und im
+      Missionsstatus gemeldet; ein laufender Auftrag wird dadurch nicht
+      unterbrochen (DEC-017).
+    Hinweis: Batteriemodell und Schwellwerte sind offen (A-011).
     */
     objective { verify MobileMaterialRobot_Requirements_A1::REQ_PWR_001; }
   }
