@@ -44,7 +44,8 @@ Acht ausschliesslich synthetische Fixtures ergaenzen die bisherigen sieben:
 | Pausennachweise fehlen | inconclusive |
 
 Kein Fall belegt einen physikalischen Stopp oder eine Simulatorfahrt.
-Blockade-, Fehler- und Sicherheits-Wiederanlauf bleiben gesondert offen.
+Abbruch und Rueckkehr nach Blockade, Fehler und sicherem Zustand regelt
+DEC-015 (manuelle Quittierung); der Not-Halt bleibt offen (OI-SAFE-001).
 
 Pruefbefehl im Repository:
 `python tools/validate_sysml.py --self-test --negative-tests`

@@ -7,7 +7,7 @@ Aenderungen gehoeren in `02_requirements.sysml`, `06_tests.sysml` und `08_tracea
 | Requirement | Quelle | Systemelement | Schnittstelle / ROS2 | Test | Status |
 | --- | --- | --- | --- | --- | --- |
 | REQ-MIS-001 | SN-UI-001, UC-001, SN-001, FUN-MIS-001 | MissionSystem | IF-002, MissionManagerNode | TC-UI-001 | Geplant; kein Ausfuehrungsnachweis |
-| REQ-MIS-002 | SN-USER-002, SN-USER-003 | MissionSystem, UserInterfaceSystem | /mission_state | TC-STA-001, TC-UI-003 | Geplant; kein Ausfuehrungsnachweis |
+| REQ-MIS-002 | SN-USER-002, SN-USER-003 | MissionSystem, UserInterfaceSystem | /mission_state | TC-STA-001, TC-UI-004, TC-UI-003 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-TRN-001 | SN-TRN-001, SN-002, FUN-TRN-001 | TransportSystem | IF-003 | TC-TRN-001 | Geplant; Nutzlastdaten und -grenzen offen |
 | REQ-TRN-002 | SN-TRN-002, SN-SAFE-003 | TransportSystem, SafetySystem | IF-003 | TC-TRN-002 | Geplant; Nutzlastdaten und -grenzen offen |
 | REQ-MAP-001 | Kartenkonzept Baseline A.1, FUN-MAP-001 | NavigationSystem | MapManagementNode, /map | TC-MAP-001 | Geplant; kein Ausfuehrungsnachweis |
@@ -22,7 +22,7 @@ Aenderungen gehoeren in `02_requirements.sysml`, `06_tests.sysml` und `08_tracea
 | REQ-SAFE-001 | SN-SAFE-002, SN-004, FUN-SAFE-001 | SafetySystem, MotionSystem | SafetySupervisorNode, /safety_state | TC-OBS-001, TC-OBS-002 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-SAFE-002 | SN-SAFE-001, R-04 | SafetySystem, PerceptionSystem | IF-006, SafetySupervisorNode | TC-SAFE-002 | Geplant; Safety-Konzept offen |
 | REQ-UI-001 | SN-UI-001, UC-001 | UserInterfaceSystem, MissionSystem | IF-001, IF-002, WebInterfaceNode | TC-UI-001 | Geplant; kein Ausfuehrungsnachweis |
-| REQ-UI-002 | SN-UI-002, UC-009, UC-010 | UserInterfaceSystem, MissionSystem, EnergySystem | WebInterfaceNode | TC-UI-002, TC-UI-003 | Geplant; kein Ausfuehrungsnachweis |
+| REQ-UI-002 | SN-UI-002, UC-009, UC-010 | UserInterfaceSystem, MissionSystem, EnergySystem | WebInterfaceNode | TC-UI-002, TC-UI-004, TC-UI-003 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PWR-001 | Bedarf Energieueberwachung, FUN-STA-001 | EnergySystem | EnergyMonitorNode, /battery_state | TC-PWR-001 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PWR-002 | SN-ENE-001, DEC-008 | EnergySystem | EnergyMonitorNode | TC-PWR-002 | Geplant; kein Ausfuehrungsnachweis |
 | REQ-PERF-001 | DEC-007 | MotionSystem, SafetySystem | NavigationNode Parameter nominal_speed | TC-PERF-001 | Geplant; kein Ausfuehrungsnachweis |

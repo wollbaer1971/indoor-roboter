@@ -45,6 +45,9 @@ package MobileMaterialRobot_Structure_A1 {
     perform action resumeMission : ResumeMission {
       in item redefines pausedOrder = MissionSystem::activeOrder;
     }
+    perform action cancelMission : CancelMission {
+      in item redefines pausedOrder = MissionSystem::activeOrder;
+    }
   }
 
   part def NavigationSystem {

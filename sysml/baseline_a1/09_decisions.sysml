@@ -127,8 +127,8 @@ package MobileMaterialRobot_Decisions_A1 {
     Status: Angenommen
     Datum: 28.10.2026
     Begruendung: Kein unbeabsichtigter Wiederanlauf; der Auftrag geht nicht
-      verloren. Wiederanlauf nach Blockade, Fehler und Sicherheitsstopp
-      bleibt offen.
+      verloren. Rueckkehr nach Blockade, Fehler und Sicherheitsstopp regelt
+      DEC-015.
   */
 
   comment DEC_014 about TC_NAV_002, SimulationTestBench /*
@@ -141,6 +141,24 @@ package MobileMaterialRobot_Decisions_A1 {
     Datum: 28.10.2026
     Begruendung: Navigationstests werden moeglich, bevor Fahrwerk, Sensorik
       und Nutzlast festgelegt sind.
+  */
+
+  comment DEC_015 about REQ_UI_002, REQ_MIS_002, REQ_B_STA_001, REQ_B_SAFE_003, TC_UI_004 /*
+    ID: DEC-015
+    Art: Baseline
+    Entscheidung: Ein pausierter Auftrag kann vom Bediener abgebrochen werden;
+      er wird verworfen, der Roboter meldet gestoppt. Aus gestoppt,
+      abgeschlossen, abgelehnt, blockiert, Ladebereich erreicht, Fehler und
+      sicherem Zustand fuehrt nur eine manuelle Quittierung zurueck in den
+      Bereitschaftszustand. Aus Fehler nur bei behobenem Fehler, aus sicherem
+      Zustand nur wenn die Bewegung wieder sicher ist. Die Quittierung setzt
+      keinen Not-Halt zurueck.
+    Status: Angenommen
+    Datum: 05.11.2026
+    Begruendung: Kein Zustand ist mehr eine Sackgasse; der Roboter nimmt nach
+      jedem Ende wieder Auftraege an. Die Rueckkehr bleibt eine bewusste
+      Bedienhandlung, wie die Fortsetzung nach DEC-013. Der Status gestoppt
+      aus REQ-B-STA-001 erhaelt eine Bedeutung.
   */
 
   // Architektur- und Prozessentscheidungen

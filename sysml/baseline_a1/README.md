@@ -17,7 +17,7 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | `03_structure.sysml` | Kanonischer Robotertyp mit Subsystemen, Ports und ausgefuehrten Funktionen |
 | `04_interfaces.sysml` | Gemeinsame Datentypen, digitale Portinhalte und physische Vertragshalter |
 | `05_behavior.sysml` | Nominaler Missionsablauf, Ereignisse und Betriebszustandsgeruest |
-| `06_tests.sysml` | 20 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
+| `06_tests.sysml` | 21 geplante Testdefinitionen; TC_NAV_002 mit auswertbarer Kriterienlogik |
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
 | `09_decisions.sysml` | Entscheidungsprotokoll (DEC, ADR) als benannte Kommentare mit `about`-Bezug |
@@ -108,8 +108,15 @@ Bestaetigte Stoppregel: Ein betrieblicher Stopp pausiert den laufenden Auftrag.
 ID, Start und Ziel bleiben erhalten. Der neue Befehl resumeMission verlangt
 eine ausdrueckliche manuelle Freigabe. Ohne Freigabe bleibt der Auftrag pausiert.
 Freigabe umgeht weder Sicherheit noch Navigation: erst orderAccepted, dann
-nach RouteReady wieder driving. Recovery nach Blockade, technischem Fehler
-und Sicherheitsstopp sowie die vollstaendige Sicherheitsbehandlung bleiben offen.
+nach RouteReady wieder driving.
+
+Abbruch und Quittierung (DEC-015): Ein pausierter Auftrag kann mit
+cancelMission abgebrochen werden (stopped). Aus stopped, completed, rejected,
+blocked, chargingInterfaceReached, fault und safeState fuehrt nur die manuelle
+Quittierung acknowledge zurueck nach ready; aus fault nur bei behobenem Fehler,
+aus safeState nur bei safeToMove. Kein Zustand ist eine Sackgasse; der
+Validator prueft das. Offen bleibt die vollstaendige Sicherheitsbehandlung,
+insbesondere der Not-Halt (OI-SAFE-001).
 Siehe [Pausenregel](../../docs/operational-pause.md).
 
 Es gibt keinen erfolgreichen Fahr-, Nutzlast-, Sicherheits- oder Dauertest.

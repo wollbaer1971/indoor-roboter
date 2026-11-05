@@ -167,3 +167,17 @@ Overleaf passt nur ihr Aussehen an.
   Zustaende. Einzige erklaerte Ausnahme: `stopped` (Abbruch eines pausierten
   Auftrags ist nicht entschieden). Negativtest `missing_safety_exit`.
 - Weiter offen: Wiederanlauf aus `safeState`, `fault` und `blocked`.
+
+# Abbruch und Quittierung, DEC-015, 05.11.2026
+
+- Neue Bedienbefehle `cancelMission` und `acknowledge`; Ereignisse
+  `CancelRequested` und `AcknowledgeRequested` (mit safeToMove, faultCleared);
+  Aktion `CancelMission` im MissionSystem.
+- paused --CancelRequested--> stopped. Aus stopped, completed, rejected,
+  blocked, chargingInterfaceReached --Acknowledge--> ready; aus fault nur mit
+  faultCleared, aus safeState nur mit safeToMove.
+- REQ-UI-002 nennt Abbruch und Quittierung; geplanter Test TC-UI-004.
+- Validator: alle 15 Zustaende erreichbar, keiner ohne Ausgang (neue Regel,
+  Negativtest dead_end_state). Die Ausnahme fuer stopped ist entfallen.
+- Offen: Not-Halt (OI-SAFE-001); ob ready und blocked als aktive Zustaende
+  gelten (Fehler im Stillstand).

@@ -16,6 +16,17 @@ package MobileMaterialRobot_Behavior_A1 {
     attribute safeToMove : Boolean;
     attribute retainedOrderAvailable : Boolean;
   }
+  item def CancelRequested {
+    doc /* Ausdruecklicher Abbruch eines pausierten Auftrags durch den Bediener (DEC-015). */
+  }
+  item def AcknowledgeRequested {
+    doc /*
+    Manuelle Quittierung durch den Bediener (DEC-015). Die Attribute sind die
+    zum Zeitpunkt der Quittierung vorliegenden Voraussetzungen.
+    */
+    attribute safeToMove : Boolean;
+    attribute faultCleared : Boolean;
+  }
   item def ReturnRequested;
   item def ChargingAreaReached;
   item def TechnicalFault;
@@ -131,6 +142,15 @@ package MobileMaterialRobot_Behavior_A1 {
     */
   }
 
+  action def CancelMission {
+    in item pausedOrder : TransportOrder[0..1];
+    doc /*
+    Ausdruecklicher Abbruch eines pausierten Auftrags (DEC-015). Der Auftrag
+    wird verworfen und kann danach nicht fortgesetzt werden. Der Abbruch
+    fuehrt nach stopped; eine neue Fahrt braucht einen neuen Auftrag.
+    */
+  }
+
   action def SafetyStop {
     doc /*
     Safety stop is a safety-related response to an unsafe or not safely
@@ -144,7 +164,12 @@ package MobileMaterialRobot_Behavior_A1 {
     Events are abstract inputs, not a scheduler or a simulator implementation.
     Operational stop pauses the retained mission. Only explicit manual release
     can resume it, subject to the existing safety and route checks.
-    Recovery after blocked route, fault or unsafe condition remains open.
+    Abbruch und Quittierung (DEC-015): Ein pausierter Auftrag kann abgebrochen
+    werden (stopped). Aus stopped, completed, rejected, blocked,
+    chargingInterfaceReached, fault und safeState fuehrt nur eine manuelle
+    Quittierung zurueck nach ready; aus fault nur bei behobenem Fehler, aus
+    safeState nur bei safeToMove. Quittierung setzt keinen EmergencyStop
+    zurueck (OI-SAFE-001).
 
     Regeln, die tools/validate_sysml.py prueft:
     Aktive Zustaende: orderAccepted, driving, avoidingObstacle, paused,
@@ -153,8 +178,9 @@ package MobileMaterialRobot_Behavior_A1 {
     TechnicalFault nach fault. Ein pausierter Auftrag kann so nicht
     manuell fortgesetzt werden, wenn inzwischen ein Fehler aufgetreten ist.
     Jeder Zustand muss vom Startzustand aus erreichbar sein, ausser:
-    Noch ohne Zugang: stopped
-    (Abbruch eines pausierten Auftrags ist fachlich nicht entschieden.)
+    Noch ohne Zugang: keine
+    Jeder Zustand muss mindestens einen Ausgang haben, ausser:
+    Endzustaende: keine
     */
     entry; then off;
     state off;
@@ -193,6 +219,18 @@ package MobileMaterialRobot_Behavior_A1 {
     transition first driving accept ObstacleDetected then avoidingObstacle;
     transition first avoidingObstacle accept ObstacleCleared then driving;
     transition first avoidingObstacle accept RouteBlocked then blocked;
+
+    // Abort and acknowledgement (DEC-015). No automatic return to ready.
+    transition first paused accept CancelRequested then stopped;
+    transition first stopped accept AcknowledgeRequested then ready;
+    transition first completed accept AcknowledgeRequested then ready;
+    transition first rejected accept AcknowledgeRequested then ready;
+    transition first blocked accept AcknowledgeRequested then ready;
+    transition first chargingInterfaceReached accept AcknowledgeRequested then ready;
+    transition first fault accept ack : AcknowledgeRequested
+      if ack.faultCleared then ready;
+    transition first safeState accept ack : AcknowledgeRequested
+      if ack.safeToMove then ready;
 
     // Safety and fault handling in every active state.
     transition first orderAccepted accept UnsafeCondition then safeState;

@@ -316,8 +316,8 @@ package MobileMaterialRobot_Requirements_A1 {
     Gruppe: Initial
     Quelle: SN-UI-002, UC-009, UC-010
     Text: Das System muss grundlegende Bedienbefehle fuer Status, betrieblichen
-      Stopp, ausdrueckliche manuelle Fortsetzung des Auftrags und Rueckkehr zur
-      Ladestation bereitstellen.
+      Stopp, ausdrueckliche manuelle Fortsetzung oder Abbruch des Auftrags,
+      Quittierung und Rueckkehr zur Ladestation bereitstellen.
     Akzeptanz: Die Befehle sind ausloesbar und erzeugen nachvollziehbare
       Systemreaktionen. Ohne manuelle Freigabe wird nicht automatisch
       fortgesetzt.

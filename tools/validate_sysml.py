@@ -120,7 +120,8 @@ def _doc_list(doc: str, key: str) -> list[str]:
                 if not follow.startswith(" " * 6):
                     break
                 value += " " + follow.strip()
-            return [v.strip() for v in value.split(",") if v.strip()]
+            items = [v.strip() for v in value.split(",") if v.strip()]
+            return [] if items == ["keine"] else items
     raise RuntimeError(f"RobotOperationState doc: '{key}:' missing")
 
 
@@ -133,10 +134,17 @@ def state_machine_checks(model: Path) -> None:
     body = block[1]
     doc = re.search(r"doc /\*(.*?)\*/", body, re.S)[1]
     active, exempt = _doc_list(doc, "Aktive Zustaende"), _doc_list(doc, "Noch ohne Zugang")
+    final = _doc_list(doc, "Endzustaende")
     states = re.findall(r"^\s+state (\w+);", body, re.M)
     start = re.search(r"entry; then (\w+);", body)[1]
     transitions = re.findall(r"transition first (\w+)\s+accept\s+(?:\w+\s*:\s*)?(\w+)[^;]*?then (\w+);", body, re.S)
-    problems = [f"declared state {s} does not exist" for s in active + exempt if s not in states]
+    problems = [f"declared state {s} does not exist" for s in active + exempt + final if s not in states]
+    exits = {source_state for source_state, _, _ in transitions}
+    for state in states:
+        if state not in exits and state not in final:
+            problems.append(f"state {state} has no outgoing transition (dead end)")
+        if state in exits and state in final:
+            problems.append(f"state {state} has an exit now; remove it from 'Endzustaende'")
     for state in active:
         for event, target in (("UnsafeCondition", "safeState"), ("TechnicalFault", "fault")):
             if (state, event, target) not in transitions:
@@ -156,11 +164,12 @@ def state_machine_checks(model: Path) -> None:
     if problems:
         raise RuntimeError("State machine rules violated:\n  " + "\n  ".join(problems))
     print(f"STATE_MACHINE states={len(states)} reachable={len(reachable)} active={len(active)} "
-          f"safety_exits=complete open_without_entry={','.join(exempt) or 'none'}")
+          f"safety_exits=complete open_without_entry={','.join(exempt) or 'none'} "
+          f"dead_ends={','.join(final) or 'none'}")
 
 
 def negative_state_machine_check(model: Path) -> None:
-    """Remove the unsafe-condition exit of 'paused' in a temporary copy; the check must fail."""
+    """Remove a safety exit and an acknowledgement in temporary copies; the check must fail."""
     with tempfile.TemporaryDirectory(prefix="states-negative-") as temporary:
         copy = Path(temporary) / "sysml"
         shutil.copytree(model, copy)
@@ -174,8 +183,16 @@ def negative_state_machine_check(model: Path) -> None:
             state_machine_checks(copy)
         except RuntimeError:
             print("NEGATIVE missing_safety_exit: detected")
+        else:
+            raise RuntimeError("Negative state machine test did not detect a missing safety exit")
+        behavior.write_text(text.replace("    transition first completed accept AcknowledgeRequested then ready;\n", "", 1),
+                            encoding="utf-8")
+        try:
+            state_machine_checks(copy)
+        except RuntimeError:
+            print("NEGATIVE dead_end_state: detected")
             return
-        raise RuntimeError("Negative state machine test did not detect a missing safety exit")
+        raise RuntimeError("Negative state machine test did not detect a dead-end state")
 
 
 def _ids(text: str) -> set[str]:

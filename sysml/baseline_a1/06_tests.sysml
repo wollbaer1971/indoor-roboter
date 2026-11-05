@@ -241,6 +241,25 @@ package MobileMaterialRobot_Verification_A1 {
     }
   }
 
+  verification def TC_UI_004 {
+    subject testRobot : MobileMaterialRobot;
+    doc /*
+    ID: TC-UI-004
+    Name: Abbruch und Quittierung
+    Ablauf: Pausierten Auftrag abbrechen und quittieren; Quittierung aus
+      Fehler und sicherem Zustand mit und ohne erfuellte Voraussetzungen
+      anfordern.
+    Erwartet: Abbruch fuehrt nach gestoppt, der Auftrag ist verworfen; erst
+      die Quittierung fuehrt nach bereit, aus Fehler und sicherem Zustand nur
+      bei erfuellten Voraussetzungen (DEC-015).
+    Hinweis: Geplant; keine Auswertungslogik und kein Nachweis.
+    */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_UI_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_MIS_002;
+    }
+  }
+
   verification def TC_DIAG_001 {
     subject testRobot : MobileMaterialRobot;
     doc /*

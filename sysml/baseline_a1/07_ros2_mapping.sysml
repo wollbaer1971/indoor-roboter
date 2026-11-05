@@ -216,7 +216,7 @@ package MobileMaterialRobot_ROS2Mapping_A1 {
     doc /*
     Name: /operator_command
     Typ: Topic
-    Zweck: Status, Stopp, Fortsetzung, Rueckkehr
+    Zweck: Status, Stopp, Fortsetzung, Abbruch, Quittierung, Rueckkehr
     */
   }
 
