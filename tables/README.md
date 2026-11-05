@@ -96,6 +96,19 @@ und das Entscheidungsblatt in Kapitel 8.
 Jede Nennung von `DEC-nnn` oder `ADR-nnnn` im Repository muss eine Entscheidung
 im Modell haben, sonst schlägt die Prüfung fehl.
 
+## Teilsysteme und ROS2
+
+- Teilsystem: Felder `Verantwortung` und `MVP-Status` im `part def` in
+  `03_structure.sysml`. In der Tabelle erscheint jedes Teilsystem, das
+  `MobileMaterialRobot` als Part enthält, in dieser Reihenfolge.
+- ROS2-Node: `part def ...Node` in `07_ros2_mapping.sysml` mit `Node`,
+  `Kurzname`, `Schnittstellenidee`, `Publiziert`, `Abonniert`,
+  `Anforderungen`, optional `Rolle` und `Ergaenzung`. Das SysML-Element
+  kommt aus den `dependency`-Zeilen am Dateiende.
+- Topic: `item def ...Topic` mit `Name`, `Typ`, `Zweck`. Die Richtung wird
+  aus `Publiziert`/`Abonniert` der Nodes berechnet, nicht eingetragen.
+  Ein Topic ohne Definition oder ohne publizierenden Node lehnt die Prüfung ab.
+
 ## Das Aussehen in Overleaf ändern
 
 Jede modellgebundene Tabelle sieht im Kapitel so aus:
@@ -113,7 +126,8 @@ ID & Typ & Requirement & Akzeptanzidee \\
 Alles außer der Zeile `\modeltable{...}` ist Layout und darf frei geändert
 werden: Spaltenbreiten, Kopfzeile, `\small`, `\caption`, Umgebung.
 Nur die Spaltenzahl muss bleiben: Requirements 4, MVP 3, Tests 4,
-Traceability 5, Entscheidungen Kapitel 3: 3, Anhang A: 4, ADR-Blatt: 2. Eine Spalte weglassen oder umsortieren geht nur im Generator.
+Traceability 5, Entscheidungen Kapitel 3: 3, Anhang A: 4, ADR-Blatt: 2,
+Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4. Eine Spalte weglassen oder umsortieren geht nur im Generator.
 
 ## Was die Prüfung ablehnt
 
@@ -127,5 +141,5 @@ Traceability 5, Entscheidungen Kapitel 3: 3, Anhang A: 4, ADR-Blatt: 2. Eine Spa
 
 ## Noch nicht aus dem Modell erzeugt
 
-Teilsystemtabelle (Kapitel 8), ROS2-Tabellen (Kapitel 9), Annahmen und
-die Use-Case-Beschreibungen sind noch Handarbeit.
+Interne Schnittstellen und Funktionen (Kapitel 8), HW/SW-Allokation
+(Kapitel 9), Annahmen und die Use-Case-Beschreibungen sind noch Handarbeit.

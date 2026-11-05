@@ -75,9 +75,12 @@ def tex(text: str) -> str:
         text = text.replace(char, repl)
     text = text.replace(r"\textbackslash\{\}", r"\textbackslash{}")
     text = re.sub(r"(\d+),(\d+) m/s", r"$\1{,}\2\\,\\mathrm{m/s}$", text)
+    for abbreviation in ("z. B.", "d. h.", "u. a."):
+        text = text.replace(abbreviation, abbreviation.replace(" ", r"\,"))
     # ROS2 topics and identifiers with underscores in typewriter font.
     text = re.sub(r"(?<![\w\\])(/[a-z][a-z\\_]*|[A-Za-z]+(?:\\_[A-Za-z]+)+)", r"\\texttt{\1}", text)
-    return text
+    # Typewriter names may break after underscores; Overleaf cannot change that inside generated text.
+    return re.sub(r"\\texttt\{[^}]*\}", lambda m: m[0].replace(r"\_", r"\_\allowbreak{}"), text)
 
 
 def requirement_text(model: dict, rid: str, data: dict[str, str]) -> str:
@@ -119,6 +122,66 @@ def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[s
     if unknown:
         raise ValueError("decision reference(s) without record in 09_decisions.sysml: " + ", ".join(sorted(unknown)))
     return decisions, decided_by
+
+
+def split_list(value: str) -> list[str]:
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+def load_architecture(root: Path, requirement_ids: set[str]) -> dict:
+    """Subsystems of the canonical robot, ROS2 node candidates and their topics."""
+    a1 = root / "sysml/baseline_a1"
+    structure = (a1 / "03_structure.sysml").read_text(encoding="utf-8")
+    robot = dict(blocks(structure, "part def", ""))["MobileMaterialRobot"]
+    defs = dict(blocks(structure, "part def", ""))
+    subsystems = []
+    for part_type in re.findall(r"^    part \w+ : (\w+);", robot, flags=re.M):
+        data = fields(defs[part_type], part_type)
+        require(data, part_type, "Verantwortung", "MVP-Status")
+        subsystems.append((part_type, data))
+
+    mapping = (a1 / "07_ros2_mapping.sysml").read_text(encoding="utf-8")
+    targets: dict[str, list[str]] = {}
+    for node, element in re.findall(
+            r"dependency from (\w+) to MobileMaterialRobot_Structure_A1::(\w+);", mapping):
+        targets.setdefault(node, []).append(element)
+    nodes = []
+    for name, body in blocks(mapping, "part def", ""):
+        data = fields(body, name)
+        require(data, name, "Node", "Kurzname", "Schnittstellenidee", "Publiziert", "Anforderungen")
+        if not targets.get(name):
+            raise ValueError(f"{name}: no dependency to a subsystem")
+        unknown = set(split_list(data["Anforderungen"])) - requirement_ids
+        if unknown:
+            raise ValueError(f"{name}: unknown requirement(s) {sorted(unknown)}")
+        nodes.append((name, data, targets[name]))
+
+    topics = []
+    for name, body in blocks(mapping, "item def", ""):
+        data = fields(body, name)
+        require(data, name, "Name", "Typ", "Zweck")
+        topic = data["Name"]
+        publishers = [d["Kurzname"] for _, d, _ in nodes if topic in split_list(d["Publiziert"])]
+        subscribers = [d["Kurzname"] for _, d, _ in nodes if topic in split_list(d.get("Abonniert", ""))]
+        if not publishers:
+            raise ValueError(f"{name}: topic {topic} has no publishing node")
+        topics.append((topic, data, publishers, subscribers))
+    declared = {topic for topic, *_ in topics}
+    used = {item for _, d, _ in nodes for key in ("Publiziert", "Abonniert")
+            for item in split_list(d.get(key, "")) if item.startswith("/")}
+    if used - declared:
+        raise ValueError(f"topics used by nodes without item def: {sorted(used - declared)}")
+    return {"subsystems": subsystems, "nodes": nodes, "topics": topics}
+
+
+def typewriter(name: str) -> str:
+    text = tex(name)
+    return text if text.startswith(r"\texttt{") else r"\texttt{" + text + "}"
+
+
+def direction(publishers: list[str], subscribers: list[str]) -> str:
+    source = ", ".join(publishers)
+    return f"{source} zu {', '.join(subscribers)}" if subscribers else f"{source} (noch kein Abnehmer)"
 
 
 def decision_status(data: dict[str, str]) -> str:
@@ -179,8 +242,10 @@ def load(root: Path) -> dict:
         if not tests_of.get(rid):
             raise ValueError(f"{rid}: not verified by any test definition")
     decisions, decided_by = load_decisions(root)
+    architecture = load_architecture(root, {rid for rid, _ in requirements})
     return {"requirements": requirements, "elements": elements, "tests": tests,
-            "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by}
+            "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by,
+            **architecture}
 
 
 def element_list(model: dict, rid: str, data: dict[str, str]) -> list[str]:
@@ -228,6 +293,16 @@ def render(root: Path) -> dict[Path, str]:
                                      row("Begruendung", tex(d.get("Begruendung-Detail", d["Begruendung"]))),
                                      row("Auswirkung", tex(d["Auswirkung"])),
                                      row("Risiko", tex(d["Risiko"]))])
+
+    table("subsystems_a1", [row(name, tex(d["Verantwortung"]), tex(d["MVP-Status"]))
+                            for name, d in model["subsystems"]])
+    table("ros2_mapping_a1", [
+        row(tex(", ".join(elements) + (f" ({d['Rolle']})" if d.get("Rolle") else "")),
+            typewriter(d["Node"]) + (", " + tex(d["Ergaenzung"]) if d.get("Ergaenzung") else ""),
+            tex(d["Schnittstellenidee"]), ", ".join(split_list(d["Anforderungen"])))
+        for _, d, elements in model["nodes"]])
+    table("ros2_topics_a1", [row(tex(topic), tex(d["Typ"]), tex(direction(pub, sub)), tex(d["Zweck"]))
+                             for topic, d, pub, sub in model["topics"]])
 
     md_rows = ["| Requirement | Quelle | Systemelement | Schnittstelle / ROS2 | Test | Status |",
                "| --- | --- | --- | --- | --- | --- |"]

@@ -138,3 +138,15 @@ Overleaf passt nur ihr Aussehen an.
   das ADR-0001-Blatt in Kapitel 8. Kapitel 3 zeigt jetzt auch DEC-013 und
   DEC-014 und denselben Status wie Anhang A ("Angenommen" statt "Entschieden").
 - Jede DEC-/ADR-Nennung im Repository muss eine Entscheidung im Modell haben.
+
+# Teilsysteme und ROS2 aus dem Modell, 05.11.2026
+
+- Die Teilsystemtabelle (Kapitel 8) kommt aus den `part def` in
+  `03_structure.sysml`, in der Part-Reihenfolge von `MobileMaterialRobot`.
+- ROS2-Mapping und ROS2-Topics (Kapitel 9) kommen aus
+  `07_ros2_mapping.sysml`. Neu sind 14 Topic-Definitionen (`item def`).
+  Die Richtung eines Topics wird aus Publiziert/Abonniert berechnet.
+- Dabei sichtbar gewordene Abweichungen, offen zur fachlichen Klaerung:
+  `/safety_state` hatte im Kapitel auch Mission als Abnehmer,
+  `/battery_state` auch UI, `/mission_state` auch Logging. Im Modell
+  abonniert keiner dieser Nodes das Topic; die Tabelle zeigt den Modellstand.

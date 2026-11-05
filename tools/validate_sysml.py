@@ -127,8 +127,8 @@ def documentation_checks(docs: Path) -> None:
            for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
     for path, text in tex.items():
         for number, line in enumerate(text.splitlines(), 1):
-            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4})\s*&", line):
-                problems.append(f"{path.relative_to(docs)}:{number}: hand-written requirement/test/decision row; "
+            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
+                problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, decision, subsystem or topic); "
                                 "maintain it in the model")
     used = set(re.findall(r"\\model(?:table|text)\{(\w+)\}", "".join(tex.values())))
     generated = {p.stem for p in (docs / generate_docs.GENERATED).glob("*.tex")}
@@ -174,7 +174,7 @@ def negative_checks(java: str, home: Path, model: Path) -> None:
 
 
 def negative_documentation_check() -> None:
-    """Mutate temporary copies: edited table, hand-written row, unknown decision ID. All must fail."""
+    """Mutate temporary copies of docs and model; every mutation must fail the documentation check."""
     mutations = {
         "generated_table_edited": ("tables/generated/requirements_a1_initial.tex",
                                    lambda text: text.replace("annehmen koennen.", "annehmen.", 1)),
@@ -183,6 +183,11 @@ def negative_documentation_check() -> None:
                                                        "\\modeltable{requirements_a1_initial}\nREQ-XYZ-001 & a & b & c \\\\", 1)),
         "unknown_decision_reference": ("chapters/10_verifikation_traceability.tex",
                                        lambda text: text.replace("Gemaess DEC-014", "Gemaess DEC-099", 1)),
+        "undeclared_ros2_topic": ("sysml/baseline_a1/07_ros2_mapping.sysml",
+                                  lambda text: text.replace("Publiziert: /odom", "Publiziert: /odom, /undeclared", 1)),
+        "hand_written_subsystem_row": ("chapters/08_architektur.tex",
+                                       lambda text: text.replace("\\modeltable{subsystems_a1}",
+                                                                 "\\modeltable{subsystems_a1}\nExtraSystem & x & y \\\\", 1)),
     }
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:

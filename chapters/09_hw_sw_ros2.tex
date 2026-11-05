@@ -28,16 +28,7 @@ Das Lehrbuch beschreibt das Mapping von \sysml-Elementen auf \ros-Elemente als A
 \toprule
 \sysml-Element & \ros-Element & Schnittstellenidee & Verknuepfte Anforderungen \\
 \midrule
-MissionSystem & \texttt{mission\_manager\_node} & Auftrag, Ziel, Mission State & REQ-MIS-001, REQ-MIS-002, REQ-STA-001 \\
-UserInterfaceSystem, CommunicationSystem & \texttt{web\_interface\_node} & Auftraege und Bedienbefehle von der Web-App, Status und Diagnose zur Web-App & REQ-UI-001, REQ-UI-002 \\
-NavigationSystem & \texttt{navigation\_node}, z.\,B. auf Basis Nav2 & Zielaktion, Pfad, Bewegungsbefehl & REQ-NAV-001 bis REQ-NAV-005, REQ-PERF-001 \\
-NavigationSystem (Kartenverwaltung) & \texttt{map\_management\_node} & Karte bereitstellen, Kartenupdate-Kandidaten & REQ-MAP-001, REQ-MAP-003 \\
-NavigationSystem (Lokalisierung) & \texttt{localization\_node} & Pose, Transformationsdaten & REQ-LOC-001 \\
-PerceptionSystem & \texttt{perception\_node}, ggf. aufgeteilt in Sensortreiber und Hindernisverarbeitung & Sensordaten, Hindernisse, lokale Karte & REQ-MAP-002, REQ-SAFE-002 \\
-MotionSystem & \texttt{motion\_controller\_node}, ggf. mit MCU-Firmware & \texttt{cmd\_vel}, Odometrie, Motorstatus & REQ-NAV-001 \\
-SafetySystem & \texttt{safety\_supervisor\_node}, spaeter plus Hardware-Stopp & Safety-Zustand, Stoppgrund & REQ-SAFE-001, REQ-SAFE-002 \\
-EnergySystem & \texttt{energy\_monitor\_node} & Batterie- und Warnstatus & REQ-PWR-001, REQ-PWR-002 \\
-DiagnosticsSystem & \texttt{diagnostics\_node} & Diagnosemeldungen & REQ-DIAG-001 \\
+\modeltable{ros2_mapping_a1}
 \bottomrule
 \end{longtable}
 
@@ -47,20 +38,7 @@ DiagnosticsSystem & \texttt{diagnostics\_node} & Diagnosemeldungen & REQ-DIAG-00
 \toprule
 Name & Typ & Richtung & Zweck \\
 \midrule
-\texttt{/goal\_pose} & Topic/Action offen & Mission zu Navigation & Zielvorgabe fuer Navigation \\
-\texttt{/cmd\_vel} & Topic & Navigation zu Motion & Geschwindigkeitsvorgabe \\
-\texttt{/odom} & Topic & Motion zu Navigation & Odometriedaten \\
-\texttt{/map} & Topic/Service & Kartenverwaltung zu Navigation/Lokalisierung & Grundkarte \\
-\texttt{/local\_obstacles} & Topic & Perception zu Navigation & erkannte Hindernisse \\
-\texttt{/mission\_state} & Topic & Mission zu UI/Logging & Missionsstatus \\
-\texttt{/safety\_state} & Topic & Safety zu Mission/Motion & Safety-Zustand und Stoppgrund \\
-\texttt{/battery\_state} & Topic & Energy zu Mission/UI & Energiezustand \\
-\texttt{/transport\_order} & Topic & Web-Interface zu Mission & Transportauftrag \\
-\texttt{/operator\_command} & Topic & Web-Interface zu Mission & Status, Stopp, Fortsetzung, Rueckkehr \\
-\texttt{/navigation\_result} & Topic & Navigation zu Mission & Ziel erreicht, blockiert, nicht erreichbar \\
-\texttt{/robot\_pose} & Topic & Lokalisierung zu Navigation & geschaetzte Pose \\
-\texttt{/map\_update\_candidate} & Topic & Kartenverwaltung & vorgeschlagene dauerhafte Kartenaenderung \\
-\texttt{/diagnostics} & Topic & Diagnose zu Web-Interface & Diagnosemeldungen \\
+\modeltable{ros2_topics_a1}
 \bottomrule
 \end{longtable}
 

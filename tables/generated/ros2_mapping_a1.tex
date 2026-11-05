@@ -1,0 +1,12 @@
+% AUTOMATISCH ERZEUGT aus dem SysML-Modell mit tools/generate_docs.py.
+% Nicht von Hand aendern: Inhalte im Modell pflegen, Layout im Kapitel.
+MissionSystem & \texttt{mission\_\allowbreak{}manager\_\allowbreak{}node} & Auftrag, Ziel, Missionszustand & REQ-MIS-001, REQ-MIS-002, REQ-STA-001 \\
+UserInterfaceSystem, CommunicationSystem & \texttt{web\_\allowbreak{}interface\_\allowbreak{}node} & Auftraege und Bedienbefehle von der Web-App, Status und Diagnose zur Web-App & REQ-UI-001, REQ-UI-002 \\
+NavigationSystem & \texttt{navigation\_\allowbreak{}node}, z.\,B. auf Basis Nav2 & Zielaktion, Pfad, Bewegungsbefehl & REQ-NAV-001, REQ-NAV-002, REQ-NAV-003, REQ-NAV-004, REQ-NAV-005, REQ-PERF-001 \\
+NavigationSystem (Kartenverwaltung) & \texttt{map\_\allowbreak{}management\_\allowbreak{}node} & Karte bereitstellen, Kartenupdate-Kandidaten & REQ-MAP-001, REQ-MAP-003 \\
+NavigationSystem (Lokalisierung) & \texttt{localization\_\allowbreak{}node} & Pose, Transformationsdaten & REQ-LOC-001 \\
+PerceptionSystem & \texttt{perception\_\allowbreak{}node}, ggf. aufgeteilt in Sensortreiber und Hindernisverarbeitung & Sensordaten, Hindernisse, lokale Karte & REQ-MAP-002, REQ-SAFE-002 \\
+MotionSystem & \texttt{motion\_\allowbreak{}controller\_\allowbreak{}node}, ggf. mit MCU-Firmware & Geschwindigkeitsvorgabe, Odometrie, Motorstatus & REQ-NAV-001 \\
+SafetySystem & \texttt{safety\_\allowbreak{}supervisor\_\allowbreak{}node}, spaeter plus Hardware-Stopp & Safety-Zustand, Stoppgrund & REQ-SAFE-001, REQ-SAFE-002 \\
+EnergySystem & \texttt{energy\_\allowbreak{}monitor\_\allowbreak{}node} & Batterie- und Warnstatus & REQ-PWR-001, REQ-PWR-002 \\
+DiagnosticsSystem & \texttt{diagnostics\_\allowbreak{}node} & Diagnosemeldungen & REQ-DIAG-001 \\
