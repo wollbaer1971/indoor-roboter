@@ -13,6 +13,7 @@ package MobileMaterialRobot_BaselineA1 {
   public import MobileMaterialRobot_Traceability_A1::*;
   public import MobileMaterialRobot_Decisions_A1::*;
   public import MobileMaterialRobot_Assumptions_A1::*;
+  public import MobileMaterialRobot_NonGoals_A1::*;
   doc /*
   Model: Mobile Material Robot - System Definition Baseline A.1
   Purpose:
@@ -26,15 +27,5 @@ package MobileMaterialRobot_BaselineA1 {
     ROS2 mapping traceable. Concrete technologies remain open unless they
     were explicitly decided in Baseline A.1.
   */
-
-  item def NonGoals_FirstDevelopmentStage {
-    doc /*
-    Not primary goals:
-    outdoor operation, stairs, autonomous passenger transport, manipulator arm,
-    humanoid manipulation, fully autonomous loading/unloading of arbitrary
-    objects, multi-floor elevator operation, fleet optimization, public roads
-    and high dynamic driving speeds.
-    */
-  }
 }
 

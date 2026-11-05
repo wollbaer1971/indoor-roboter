@@ -231,3 +231,11 @@ Overleaf passt nur ihr Aussehen an.
   (optional: leer = der einzige Roboter nach A-009).
 - REQ-ARCH-003 ist damit zu einem Drittel erfuellt; offen bleiben der
   ROS2-Namensraum je Roboter und die Freigabe dauerhafter Kartenaenderungen.
+
+# Nicht-Ziele im Modell, 05.11.2026
+
+- `sysml/baseline_a1/11_non_goals.sysml`: NG-001 bis NG-010 als benannte
+  Kommentare; die englische Liste in `00_overview.sysml` ist entfallen.
+- Die Aufzaehlung in Kapitel 3 wird erzeugt; Text und Reihenfolge unveraendert.
+- NG-008 (Flottenoptimierung) grenzt REQ-ARCH-003 ab, NG-010 verweist auf
+  DEC-012. Negativtest hand_written_non_goal.

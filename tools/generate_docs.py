@@ -92,7 +92,7 @@ def requirement_text(model: dict, rid: str, data: dict[str, str]) -> str:
     return text
 
 
-DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3})\b")
+DECISION_REF = re.compile(r"\b(?:DEC-\d{3}|ADR-\d{4}|A-\d{3}|NG-\d{3})\b")
 REFERENCE_SOURCES = ("sysml/**/*.sysml", "chapters/*.tex", "appendices/*.tex", "docs/*.md", "*.md")
 
 
@@ -113,7 +113,8 @@ def load_decisions(root: Path) -> tuple[list[tuple[str, dict[str, str]]], dict[s
         for target in filter(None, (a.strip() for a in about.split(","))):
             decided_by.setdefault(dashed(target.split("::")[-1]), []).append(data["ID"])
     assumptions = load_assumptions(root)
-    known = {did for did, _ in decisions} | {aid for aid, _ in assumptions}
+    known = ({did for did, _ in decisions} | {aid for aid, _ in assumptions}
+             | {nid for nid, _ in load_non_goals(root)})
     unknown = set()
     for pattern in REFERENCE_SOURCES:
         for path in root.glob(pattern):
@@ -199,6 +200,18 @@ def load_assumptions(root: Path) -> list[tuple[str, dict[str, str]]]:
             raise ValueError(f"{name}: 'Ersetzt-durch' is required exactly when Status is Ersetzt")
         assumptions.append((data["ID"], data))
     return assumptions
+
+
+def load_non_goals(root: Path) -> list[tuple[str, dict[str, str]]]:
+    source = (root / "sysml/baseline_a1/11_non_goals.sysml").read_text(encoding="utf-8")
+    non_goals = []
+    for name, body in re.findall(r"^  comment (NG_\d+)(?: about [^/]*?)? /\*(.*?)\*/", source, flags=re.M | re.S):
+        data = parse_fields(body)
+        require(data, name, "ID", "Nicht-Ziel")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        non_goals.append((data["ID"], data))
+    return non_goals
 
 
 ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Ersetzt")
@@ -304,6 +317,10 @@ def render(root: Path) -> dict[Path, str]:
             status = f"Ersetzt durch {d['Ersetzt-durch']}"
         assumption_rows.append(row(aid, tex(d["Annahme"]), tex(status)))
     table("assumptions_a1", assumption_rows)
+    # Itemized list: comma after each entry, full stop after the last.
+    non_goals = [tex(d["Nicht-Ziel"]) for _, d in load_non_goals(root)]
+    out[GENERATED / "non_goals_a1.tex"] = TEX_HEADER + "".join(
+        f"  \\item {text}{'.' if i == len(non_goals) - 1 else ','}\n" for i, text in enumerate(non_goals))
 
     baseline = [(did, d) for did, d in model["decisions"] if d["Art"] == "Baseline"]
     architecture = [(did, d) for did, d in model["decisions"] if d["Art"] == "Architektur"]

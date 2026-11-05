@@ -219,6 +219,10 @@ def documentation_checks(docs: Path) -> None:
             if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|A-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
                 problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, decision, subsystem or topic); "
                                 "maintain it in the model")
+    for path, text in tex.items():
+        for block in re.findall(r"\\begin\{itemize\}(.*?)\\end\{itemize\}", text, re.S):
+            if "\\modeltext{" in block and "\\item" in block:
+                problems.append(f"{path.relative_to(docs)}: hand-written \\item in a generated list")
     used = set(re.findall(r"\\model(?:table|text)\{(\w+)\}", "".join(tex.values())))
     generated = {p.stem for p in (docs / generate_docs.GENERATED).glob("*.tex")}
     if used != generated:
@@ -277,6 +281,9 @@ def negative_documentation_check() -> None:
         "hand_written_subsystem_row": ("chapters/08_architektur.tex",
                                        lambda text: text.replace("\\modeltable{subsystems_a1}",
                                                                  "\\modeltable{subsystems_a1}\nExtraSystem & x & y \\\\", 1)),
+        "hand_written_non_goal": ("chapters/03_systemdefinition.tex",
+                                  lambda text: text.replace("\\modeltext{non_goals_a1}",
+                                                            "\\modeltext{non_goals_a1}\n  \\item Raumfahrt.", 1)),
         "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
                                          lambda text: text.replace("A-001 bis A-010", "A-001 bis A-011", 1)),
     }

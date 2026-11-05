@@ -115,6 +115,15 @@ Forderung an das System herausstellt, wird nicht gelöscht: Sie bekommt
 der Annahme abhängt. Fällt sie, ist das die Liste der zu prüfenden Elemente.
 Jede Nennung von `A-nnn` im Repository muss eine Annahme im Modell haben.
 
+## Nicht-Ziele
+
+`sysml/baseline_a1/11_non_goals.sysml`, je Nicht-Ziel ein Kommentar mit `ID`
+und `Nicht-Ziel`. Daraus entsteht die Aufzählung in Kapitel 3
+(`\modeltext{non_goals_a1}` innerhalb der `itemize`-Umgebung). Die
+Reihenfolge im Modell ist die Reihenfolge im Dokument; Komma und Schlusspunkt
+setzt der Generator. Eine von Hand ergänzte `\item`-Zeile in dieser Liste
+lehnt die Prüfung ab.
+
 ## Teilsysteme und ROS2
 
 - Teilsystem: Felder `Verantwortung` und `MVP-Status` im `part def` in
@@ -161,5 +170,4 @@ Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4, Annahmen 3. Eine Spalte weglassen 
 ## Noch nicht aus dem Modell erzeugt
 
 Interne Schnittstellen und Funktionen (Kapitel 8), HW/SW-Allokation
-(Kapitel 9), Nicht-Ziele (Kapitel 3) und die Use-Case-Beschreibungen sind
-noch Handarbeit.
+(Kapitel 9) und die Use-Case-Beschreibungen sind noch Handarbeit.
