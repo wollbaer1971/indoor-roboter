@@ -272,7 +272,7 @@ def inheritance_check() -> None:
               "safety : SafetySystem", "diagnostics : DiagnosticsSystem")
     with tempfile.TemporaryDirectory(prefix="inheritance-") as temporary:
         copy = Path(temporary)
-        for folder in ("chapters", "appendices", "tables", "sysml"):
+        for folder in ("chapters", "appendices", "tables", "sysml", "figures"):
             shutil.copytree(REPO / folder, copy / folder)
         structure = copy / "sysml/baseline_a1/03_structure.sysml"
         text = structure.read_text(encoding="utf-8")
@@ -315,6 +315,8 @@ def negative_documentation_check() -> None:
                                 lambda text: text.replace(
                                     "  dependency from MobileMaterialRobot_Structure_A1::EnergySystem to "
                                     "MobileMaterialRobot_Requirements_A1::REQ_PWR_001;\n", "", 1)),
+        "missing_state_position": ("figures/tikz/state_machine_layout.tex",
+                                   lambda text: text.replace("\\coordinate (pos-returnPaused)", "% removed", 1)),
         "function_without_performer": ("sysml/baseline_a1/03_structure.sysml",
                                        lambda text: text.replace("    perform action executeMotion : FUN_MOT_001;\n", "", 1)),
         "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
@@ -323,7 +325,7 @@ def negative_documentation_check() -> None:
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
             copy = Path(temporary)
-            for folder in ("chapters", "appendices", "tables", "sysml"):
+            for folder in ("chapters", "appendices", "tables", "sysml", "figures"):
                 shutil.copytree(REPO / folder, copy / folder)
             target = copy / rel
             original = target.read_text(encoding="utf-8")

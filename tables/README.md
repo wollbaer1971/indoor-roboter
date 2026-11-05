@@ -137,6 +137,27 @@ Traceability. FUN-IDs schreibt man deshalb nicht mehr ins `Quelle`-Feld.
 Eine Funktion ohne ausführendes Teilsystem oder ohne Requirement lehnt der
 Generator ab.
 
+## Zustandsdiagramm
+
+Die Abbildung „Betriebszustände“ in Kapitel 8 entsteht aus
+`RobotOperationState` in `sysml/baseline_a1/05_behavior.sysml`
+(`tables/generated/state_machine_a1.tex`). Zustände, Pfeile, Ereignisse und
+Bedingungen kommen aus dem Modell. Die Sicherheitsübergänge aus DEC-016 sind
+in einem Hinweiskasten zusammengefasst; der Generator prüft vorher, dass sie
+vollständig sind.
+
+Das Aussehen steht in `figures/tikz/state_machine_layout.tex` und wird in
+Overleaf gepflegt:
+
+- `\coordinate (pos-<Zustand>) at (x, y);` setzt die Position eines Zustands.
+  Jeder Zustand braucht genau eine; ein neuer Zustand im Modell ohne
+  Koordinate lässt den Generator abbrechen.
+- `e-<von>-<nach>/.style={...}` formt einen einzelnen Pfeil, z. B.
+  `bend left=40` oder `out=60, in=-120` für einen Bogen und
+  `every node/.append style={pos=0.3}` für die Lage der Beschriftung.
+- Stile `state`, `terminal`, `transition`, `event`, `note` für Kästen,
+  Pfeile, Beschriftungen und den Hinweiskasten.
+
 ## Teilsysteme und ROS2
 
 - Teilsystem: Felder `Verantwortung` und `MVP-Status` im `part def` in

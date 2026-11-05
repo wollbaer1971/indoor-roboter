@@ -24,6 +24,17 @@ Teilsystem & Verantwortung & MVP-Status \\
 \bottomrule
 \end{longtable}
 
+\section{Betriebszustaende}
+
+Abbildung~\ref{fig:operation-states} zeigt den Zustandsautomaten \texttt{RobotOperationState} des Modells mit den Ereignissen, die einen Zustandswechsel ausloesen. Eckige Klammern nennen die Bedingung, unter der ein Uebergang erlaubt ist. Inhalt und Uebergaenge werden aus dem Modell erzeugt; die Anordnung steht in \texttt{figures/tikz/state\_machine\_layout.tex}.
+
+\begin{sidewaysfigure}
+  \centering
+  \resizebox{\textwidth}{!}{\modeltext{state_machine_a1}}
+  \caption{Betriebszustaende des Transportroboters (aus dem \sysml-Modell erzeugt)}
+  \label{fig:operation-states}
+\end{sidewaysfigure}
+
 \section{Architekturentscheidung ADR-0001}
 
 \begin{decisionbox}{Entscheidung}%

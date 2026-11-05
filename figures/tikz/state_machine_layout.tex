@@ -1,0 +1,50 @@
+% Layout des Zustandsdiagramms (Betriebszustaende). Von Hand in Overleaf pflegen.
+% Inhalt (Zustaende, Uebergaenge, Ereignisse) kommt aus dem Modell:
+% tables/generated/state_machine_a1.tex, erzeugt mit tools/generate_docs.py.
+% Hier stehen nur:
+%  - Stile,
+%  - je eine Koordinate pos-<Zustand> pro Zustand (fehlt eine, meldet der
+%    Generator einen Fehler),
+%  - optional ein Stil e-<von>-<nach> je Pfeil, z. B. fuer Boegen oder die
+%    Lage der Beschriftung.
+\tikzset{
+  state/.style={draw, rounded corners=3pt, align=center, minimum width=26mm,
+    minimum height=7mm, fill=blue!5, font=\footnotesize\ttfamily},
+  terminal/.style={state, fill=red!8},
+  transition/.style={-{Latex[length=1.8mm]}, semithick},
+  event/.style={font=\scriptsize, fill=white, fill opacity=0.85, text opacity=1,
+    inner sep=1pt},
+  note/.style={draw, dashed, align=left, font=\scriptsize, text width=62mm,
+    fill=yellow!10, inner sep=4pt},
+  % Einzelne Pfeile
+  e-completed-ready/.style={out=110, in=70, looseness=0.6},
+  e-blocked-ready/.style={out=150, in=55, looseness=0.8},
+  e-ready-rejected/.style={bend left=40},
+  e-rejected-ready/.style={bend left=40},
+  e-driving-avoidingObstacle/.style={bend left=40},
+  e-avoidingObstacle-driving/.style={bend left=40},
+  e-paused-orderAccepted/.style={bend left=35},
+  e-orderAccepted-paused/.style={bend left=35},
+  e-chargingInterfaceReached-ready/.style={bend left=45},
+  e-chargingInterfaceReached-orderAccepted/.style={out=40, in=-110,
+    every node/.append style={pos=0.3}},
+  e-fault-ready/.style={out=30, in=-150},
+  e-safeState-ready/.style={out=60, in=-140},
+}
+\coordinate (pos-off) at (0, 0);
+\coordinate (pos-initializing) at (5, 0);
+\coordinate (pos-ready) at (10.5, 0);
+\coordinate (pos-orderAccepted) at (17, 0);
+\coordinate (pos-driving) at (23, 0);
+\coordinate (pos-completed) at (29, 0);
+\coordinate (pos-rejected) at (10.5, 3.6);
+\coordinate (pos-avoidingObstacle) at (23, 3.6);
+\coordinate (pos-blocked) at (29, 3.6);
+\coordinate (pos-stopped) at (10.5, -3.8);
+\coordinate (pos-paused) at (17, -3.8);
+\coordinate (pos-fault) at (3, -3.8);
+\coordinate (pos-safeState) at (3, -7.6);
+\coordinate (pos-chargingInterfaceReached) at (10.5, -7.6);
+\coordinate (pos-returningToChargingStation) at (18.5, -7.6);
+\coordinate (pos-returnPaused) at (25, -11);
+\coordinate (pos-note) at (26.5, -3.8);

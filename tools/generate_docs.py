@@ -282,6 +282,69 @@ def load_non_goals(root: Path) -> list[tuple[str, dict[str, str]]]:
 ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Ersetzt")
 
 
+STATE_LAYOUT = Path("figures/tikz/state_machine_layout.tex")
+SAFETY_EXITS = (("UnsafeCondition", "safeState"), ("TechnicalFault", "fault"))
+
+
+def render_state_machine(root: Path) -> str:
+    """TikZ state diagram of RobotOperationState; positions and styles come from the layout file."""
+    source = (root / "sysml/baseline_a1/05_behavior.sysml").read_text(encoding="utf-8")
+    body = re.search(r"state def RobotOperationState \{(.*?)\n  \}", source, re.S)[1]
+    doc = re.search(r"doc /\*(.*?)\*/", body, re.S)[1]
+    unmonitored = split_list(re.search(r"Ohne Sicherheitsuebergaenge:([^\n]*)", doc)[1])
+    states = re.findall(r"^\s+state (\w+);", body, re.M)
+    start = re.search(r"entry; then (\w+);", body)[1]
+    transitions = []
+    for source_state, event, rest, target in re.findall(
+            r"transition first (\w+)\s+accept\s+(?:\w+\s*:\s*)?(\w+)(.*?)then (\w+);", body, re.S):
+        guard = ""
+        if "ResumePermitted" in rest:
+            guard = "ResumePermitted"
+        elif condition := re.search(r"if\s+\w+\.(\w+)", rest):
+            guard = condition[1]
+        transitions.append((source_state, event, guard, target))
+
+    # Safety exits are summarized in a note, so they must really exist for every monitored state.
+    monitored = [s for s in states if s not in unmonitored]
+    for state in monitored:
+        for event, target in SAFETY_EXITS:
+            if not any(t[0] == state and t[1] == event and t[3] == target for t in transitions):
+                raise ValueError(f"state diagram: {state} lacks {event} -> {target}; the summary note would be wrong")
+    shown = [t for t in transitions if (t[1], t[3]) not in SAFETY_EXITS]
+
+    layout = (root / STATE_LAYOUT).read_text(encoding="utf-8")
+    positions = set(re.findall(r"\\coordinate \(pos-(\w+)\)", layout)) - {"note"}
+    if positions != set(states):
+        raise ValueError(f"{STATE_LAYOUT}: missing positions {sorted(set(states) - positions)}, "
+                         f"unknown {sorted(positions - set(states))}")
+
+    pairs = {(s, d) for s, _, _, d in shown}
+    lines = [r"\begin{tikzpicture}", r"\input{" + STATE_LAYOUT.with_suffix("").as_posix() + "}"]
+    for state in states:
+        style = "terminal" if state in ("fault", "safeState") else "state"
+        lines.append(rf"\node[{style}] (s-{state}) at (pos-{state}) {{{tex(state)}}};")
+    lines.append(rf"\fill (s-{start}.west) ++(-6mm,0) circle (1.2mm) coordinate (start);")
+    lines.append(rf"\draw[transition] (start) -- (s-{start});")
+    grouped: dict[tuple[str, str], list[str]] = {}
+    for source_state, event, guard, target in shown:
+        label = event.removesuffix("Requested") + (f" [{guard}]" if guard else "")
+        grouped.setdefault((source_state, target), []).append(label)
+    for (source_state, target), labels in grouped.items():
+        # Each edge may be styled in the layout file as e-<source>-<target> (bend, label position).
+        bend = ", bend left=14" if (target, source_state) in pairs else ""
+        text = r"\\".join(tex(label) for label in labels)
+        lines.append(rf"\draw[transition{bend}, e-{source_state}-{target}/.try] (s-{source_state}) to "
+                     rf"node[event, align=center] {{{text}}} (s-{target});")
+    note = (r"\textbf{Sicherheit (DEC-016):} Aus jedem Zustand ausser "
+            + ", ".join(rf"\texttt{{{tex(s)}}}" for s in unmonitored)
+            + r" fuehrt \texttt{UnsafeCondition} nach \texttt{safeState} und \texttt{TechnicalFault} nach"
+            r" \texttt{fault}. Diese " + str(2 * len(monitored)) + " Uebergaenge sind nicht einzeln gezeichnet."
+            r" Ereignisnamen ohne die Endung \texttt{Requested}.")
+    lines.append(rf"\node[note] at (pos-note) {{{note}}};")
+    lines.append(r"\end{tikzpicture}")
+    return TEX_HEADER + "\n".join(lines) + "\n"
+
+
 def decision_status(data: dict[str, str]) -> str:
     return data["Status"] + (f" ({data['Datum']})" if data.get("Datum") else "")
 
@@ -441,6 +504,8 @@ def render(root: Path) -> dict[Path, str]:
         for _, d, elements in model["nodes"]])
     table("ros2_topics_a1", [row(tex(topic), tex(d["Typ"]), tex(direction(pub, sub)), tex(d["Zweck"]))
                              for topic, d, pub, sub in model["topics"]])
+
+    out[GENERATED / "state_machine_a1.tex"] = render_state_machine(root)
 
     md_rows = ["| Requirement | Quelle | Systemelement | Schnittstelle / ROS2 | Test | Status |",
                "| --- | --- | --- | --- | --- | --- |"]

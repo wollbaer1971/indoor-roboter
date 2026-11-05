@@ -304,3 +304,14 @@ Overleaf passt nur ihr Aussehen an.
 - Die Sicherheitsregel aus DEC-016 hat den neuen Zustand ohne Pflege einer
   Liste erfasst: Ohne UnsafeCondition- und TechnicalFault-Uebergang meldete
   der Validator ihn sofort.
+
+# Zustandsdiagramm aus dem Modell, 05.11.2026
+
+- Kapitel 8, Abschnitt "Betriebszustaende": TikZ-Diagramm von
+  RobotOperationState, erzeugt nach tables/generated/state_machine_a1.tex.
+  Querformatseite (Paket rotating).
+- Layout (Koordinaten, Pfeilstile) in figures/tikz/state_machine_layout.tex,
+  von Hand gepflegt. Der Generator verlangt fuer jeden Zustand genau eine
+  Koordinate (Negativtest missing_state_position).
+- Die 26 Sicherheitsuebergaenge aus DEC-016 stehen als Hinweiskasten statt
+  als Pfeile; der Generator bricht ab, falls einer davon im Modell fehlt.
