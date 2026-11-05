@@ -21,7 +21,7 @@ Die tatsaechlichen Sichten sind in `93_views.sysml` deklariert.
 | `07_ros2_mapping.sysml` | Kandidaten fuer ROS2-Zuordnung, jetzt mit expliziten Abhaengigkeiten |
 | `08_traceability.sysml` | Aufgeloeste Beziehungen zwischen Verantwortlichkeiten und Anforderungen |
 | `09_decisions.sysml` | Entscheidungsprotokoll (DEC, ADR) als benannte Kommentare mit `about`-Bezug |
-| `10_assumptions.sysml` | Annahmen A-001 bis A-010 als benannte Kommentare mit `about`-Bezug |
+| `10_assumptions.sysml` | Annahmen A-001 bis A-011 als benannte Kommentare mit `about`-Bezug |
 | `11_non_goals.sysml` | Nicht-Ziele NG-001 bis NG-010 der ersten Entwicklungsstufe |
 | `12_functions.sysml` | Funktionen FUN-... als `action def`, Beitrag zu Requirements; Teilsysteme fuehren sie per `perform` aus |
 | `90_simulation_testbench.sysml` | Pruefstand mit kanonischem Roboter, Welt, Adapter und Beobachter |

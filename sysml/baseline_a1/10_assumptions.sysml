@@ -3,6 +3,8 @@ package MobileMaterialRobot_Assumptions_A1 {
   private import MobileMaterialRobot_Structure_A1::*;
   private import MobileMaterialRobot_Context_A1::*;
   private import MobileMaterialRobot_ROS2Mapping_A1::MapManagementNode;
+  private import MobileMaterialRobot_Functions_A1::FUN_ENE_001;
+  private import MobileMaterialRobot_Behavior_A1::ReturnToChargingStation;
 
   doc /*
   Annahmen der Baseline A.1. Jede Annahme ist ein benannter Kommentar;
@@ -81,5 +83,17 @@ package MobileMaterialRobot_Assumptions_A1 {
     Ersetzt-durch: REQ-ARCH-003
     Hinweis: Kein Sachverhalt ueber die Umgebung, sondern eine Forderung an
       das System; deshalb als Requirement gefuehrt (05.11.2026).
+  */
+
+  comment A_011 about FUN_ENE_001, ReturnToChargingStation, REQ_PWR_001,
+      REQ_PWR_002, REQ_PERF_001 /*
+    ID: A-011
+    Annahme: Der Schwellwert fuer niedrigen Ladezustand laesst genug Energie,
+      um vom entferntesten Punkt des Fahrbereichs bei Nominalgeschwindigkeit
+      die Ladestation zu erreichen.
+    Status: Offen
+    Hinweis: Der Schwellwert ist erst festlegbar, wenn Weltgeometrie und
+      Fahrprofil der Simulation stehen (DEC-014). Aendert sich der Fahrbereich
+      oder die Geschwindigkeit, ist der Schwellwert neu zu pruefen.
   */
 }

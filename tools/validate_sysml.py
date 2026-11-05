@@ -318,7 +318,7 @@ def negative_documentation_check() -> None:
         "function_without_performer": ("sysml/baseline_a1/03_structure.sysml",
                                        lambda text: text.replace("    perform action executeMotion : FUN_MOT_001;\n", "", 1)),
         "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
-                                         lambda text: text.replace("A-001 bis A-010", "A-001 bis A-011", 1)),
+                                         lambda text: text.replace("A-001 bis A-011", "A-001 bis A-099", 1)),
     }
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
