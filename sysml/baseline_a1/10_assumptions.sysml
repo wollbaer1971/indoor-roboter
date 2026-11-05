@@ -2,6 +2,7 @@ package MobileMaterialRobot_Assumptions_A1 {
   private import MobileMaterialRobot_Requirements_A1::*;
   private import MobileMaterialRobot_Structure_A1::*;
   private import MobileMaterialRobot_Context_A1::*;
+  private import MobileMaterialRobot_ROS2Mapping_A1::MapManagementNode;
 
   doc /*
   Annahmen der Baseline A.1. Jede Annahme ist ein benannter Kommentar;
@@ -11,7 +12,7 @@ package MobileMaterialRobot_Assumptions_A1 {
   Status: Vorlaeufig, Offen, Sicherheitsrelevant oder Architekturziel.
   */
 
-  comment A_001 about REQ_NAV_004, MotionSystem /*
+  comment A_001 about REQ_NAV_004, MotionSystem, NavigationSystem /*
     ID: A-001
     Annahme: Der Roboter bewegt sich ueberwiegend auf einer Ebene.
     Status: Vorlaeufig
@@ -63,7 +64,8 @@ package MobileMaterialRobot_Assumptions_A1 {
     Status: Vorlaeufig
   */
 
-  comment A_009 about MissionSystem /*
+  comment A_009 about MissionSystem, NavigationSystem, MapManagementNode,
+      CommunicationSystem /*
     ID: A-009
     Annahme: Das System funktioniert zunaechst mit einem einzelnen Roboter.
     Status: Vorlaeufig
