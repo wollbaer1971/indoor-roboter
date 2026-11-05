@@ -161,6 +161,21 @@ package MobileMaterialRobot_Decisions_A1 {
       aus REQ-B-STA-001 erhaelt eine Bedeutung.
   */
 
+  comment DEC_016 about REQ_SAFE_001, REQ_B_SAFE_001, REQ_DIAG_001, SafetySystem /*
+    ID: DEC-016
+    Art: Baseline
+    Entscheidung: Unsichere Situationen fuehren in den sicheren Zustand,
+      technische Fehler in den Fehlerzustand, und zwar in allen aktiven
+      Betriebszustaenden: bereit, Auftrag angenommen, Fahrt, Ausweichen,
+      pausiert, blockiert und Rueckkehr zur Ladestation. Das gilt auch im
+      Stillstand.
+    Status: Angenommen
+    Datum: 05.11.2026
+    Begruendung: Ein Fehler im Stillstand, z. B. am Akku, ist genauso
+      relevant wie waehrend der Fahrt. Ein pausierter oder blockierter
+      Auftrag darf nach einem Fehler nicht einfach fortgesetzt werden.
+  */
+
   // Architektur- und Prozessentscheidungen
 
   comment ADR_0001 about REQ_ARCH_002 /*

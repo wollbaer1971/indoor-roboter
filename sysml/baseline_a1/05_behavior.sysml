@@ -172,11 +172,12 @@ package MobileMaterialRobot_Behavior_A1 {
     zurueck (OI-SAFE-001).
 
     Regeln, die tools/validate_sysml.py prueft:
-    Aktive Zustaende: orderAccepted, driving, avoidingObstacle, paused,
-      returningToChargingStation
+    Aktive Zustaende: ready, orderAccepted, driving, avoidingObstacle,
+      paused, blocked, returningToChargingStation
     In jedem aktiven Zustand fuehrt UnsafeCondition nach safeState und
-    TechnicalFault nach fault. Ein pausierter Auftrag kann so nicht
-    manuell fortgesetzt werden, wenn inzwischen ein Fehler aufgetreten ist.
+    TechnicalFault nach fault (DEC-016), auch im Stillstand (ready, blocked).
+    Ein pausierter Auftrag kann so nicht manuell fortgesetzt werden, wenn
+    inzwischen ein Fehler aufgetreten ist.
     Jeder Zustand muss vom Startzustand aus erreichbar sein, ausser:
     Noch ohne Zugang: keine
     Jeder Zustand muss mindestens einen Ausgang haben, ausser:
@@ -233,11 +234,15 @@ package MobileMaterialRobot_Behavior_A1 {
       if ack.safeToMove then ready;
 
     // Safety and fault handling in every active state.
+    transition first ready accept UnsafeCondition then safeState;
+    transition first blocked accept UnsafeCondition then safeState;
     transition first orderAccepted accept UnsafeCondition then safeState;
     transition first driving accept UnsafeCondition then safeState;
     transition first avoidingObstacle accept UnsafeCondition then safeState;
     transition first paused accept UnsafeCondition then safeState;
     transition first returningToChargingStation accept UnsafeCondition then safeState;
+    transition first ready accept TechnicalFault then fault;
+    transition first blocked accept TechnicalFault then fault;
     transition first orderAccepted accept TechnicalFault then fault;
     transition first driving accept TechnicalFault then fault;
     transition first avoidingObstacle accept TechnicalFault then fault;

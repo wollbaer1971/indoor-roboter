@@ -11,7 +11,7 @@ REQ-B-PER-001 & Funktional & Das System muss Hindernisse im relevanten Fahrberei
 REQ-B-MAP-001 & Funktional & Das System muss eine freigegebene Grundkarte des Betriebsbereichs laden und fuer Navigation verwenden. & Test: Karte laden und Zielroute planen. \\
 REQ-B-MAP-002 & Constraint & Das System muss temporaere Hindernisse von dauerhaften Karteninformationen unterscheiden. Siehe ADR-0007. & Test: Hindernis blockiert Route lokal, veraendert aber die Langzeitkarte nicht automatisch. \\
 REQ-B-NAV-004 & Funktional & Das System muss bei einem temporaeren Hindernis stoppen, lokal umplanen oder eine Blockade melden. & Test: Hindernis in Fahrweg platzieren; erwartete Reaktion pruefen. \\
-REQ-B-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. & Test: keine Kollision; Bewegung endet kontrolliert; Status wird gemeldet. \\
+REQ-B-SAFE-001 & Safety & Das System muss bei nicht sicher behandelbaren Hindernissen in einen sicheren Zustand uebergehen. Siehe DEC-016. & Test: keine Kollision; Bewegung endet kontrolliert; Status wird gemeldet. \\
 REQ-B-SAFE-002 & Safety & Das System muss Personen im Fahrbereich als sicherheitsrelevante Umgebungselemente behandeln. & Safety-Testkonzept offen; zunaechst reduzierte MVP-Reaktion: stoppen und melden. \\
 REQ-B-SAFE-003 & Safety & Das System muss betrieblichen Stopp, SafetyStop und EmergencyStop begrifflich und funktional trennen. Siehe DEC-013, DEC-015. & Review, Pause-/Fortsetzungstests und spaeterer Safety-Test; EmergencyStop bleibt Open Issue. \\
 REQ-B-PERF-001 & Leistung & Die MVP-Nominalgeschwindigkeit soll ca. $0{,}5\,\mathrm{m/s}$ betragen. Siehe DEC-007. & Messfahrt mit noch festzulegender Toleranz. \\

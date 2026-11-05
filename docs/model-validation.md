@@ -179,5 +179,13 @@ Overleaf passt nur ihr Aussehen an.
 - REQ-UI-002 nennt Abbruch und Quittierung; geplanter Test TC-UI-004.
 - Validator: alle 15 Zustaende erreichbar, keiner ohne Ausgang (neue Regel,
   Negativtest dead_end_state). Die Ausnahme fuer stopped ist entfallen.
-- Offen: Not-Halt (OI-SAFE-001); ob ready und blocked als aktive Zustaende
-  gelten (Fehler im Stillstand).
+- Offen: Not-Halt (OI-SAFE-001).
+
+# Fehler im Stillstand, DEC-016, 05.11.2026
+
+- ready und blocked gelten als aktive Zustaende. Auch dort fuehren
+  UnsafeCondition nach safeState und TechnicalFault nach fault.
+- Die Regel ist jetzt als DEC-016 im Entscheidungsprotokoll festgehalten und
+  mit REQ-SAFE-001, REQ-B-SAFE-001, REQ-DIAG-001 und SafetySystem verknuepft.
+- Nicht als aktiv gelten weiterhin: off, initializing, completed, rejected,
+  stopped, chargingInterfaceReached, fault, safeState.
