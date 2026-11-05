@@ -24,6 +24,9 @@
 | REQ-PERF-001 | DEC-007 | MotionSystem, SafetySystem | NavigationNode parameter nominal_speed | TC-PERF-001 | Planned; no execution evidence |
 | REQ-STA-001 | SN-OPS-001 | MissionSystem, UserInterfaceSystem | /mission_state | TC-OBS-002, TC-STA-001 | Planned; no execution evidence |
 | REQ-ARCH-001 | SN-DEV-003 | Complete model | Traceability artifacts | TC-TRC-001 | Planned; no execution evidence |
+| REQ-DIAG-001 | SN-005, SN-MNT-001 | DiagnosticsSystem, CommunicationSystem | DiagnosticsNode, /diagnostics | TC-DIAG-001 | Planned; message fields not yet modeled |
+| REQ-MNT-001 | SN-MNT-002 | MobileMaterialRobot (physical design open) | none | TC-MNT-001 | Planned; needs physical design |
+| REQ-ARCH-002 | SN-DEV-001, SN-DEV-002 | Complete model | MVP marking (not yet modeled) | TC-TRC-001 | Planned; no MVP marker yet |
 
 ## Deferred Open Issues
 

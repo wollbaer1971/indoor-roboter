@@ -264,5 +264,44 @@ package MobileMaterialRobot_Requirements_A1 {
     Acceptance: Traceability matrix has no empty core columns for MVP items.
     */
   }
+
+  requirement REQ_DIAG_001 {
+    subject robot : MobileMaterialRobot;
+    doc /*
+    ID: REQ-DIAG-001
+    Type: operational
+    Source: SN-005, SN-MNT-001
+    Text: The system shall provide diagnostic information for fault analysis.
+    Acceptance: Fault messages contain cause, affected function and timestamp.
+    Note: DiagnosticMessage currently carries only free text; the three
+      acceptance fields are not yet modeled as attributes.
+    */
+  }
+
+  requirement REQ_MNT_001 {
+    subject robot : MobileMaterialRobot;
+    doc /*
+    ID: REQ-MNT-001
+    Type: operational
+    Source: SN-MNT-002
+    Text: Central components and wear parts shall be accessible for maintenance.
+    Acceptance: Maintenance review confirms access without disproportionate
+      disassembly. Review criteria and component list remain open; not
+      verifiable before a physical design exists.
+    */
+  }
+
+  requirement REQ_ARCH_002 {
+    subject robot : MobileMaterialRobot;
+    doc /*
+    ID: REQ-ARCH-002
+    Type: constraint
+    Source: SN-DEV-001, SN-DEV-002
+    Text: The system shall be structured so that an MVP can be marked as a
+      subset of the target system.
+    Acceptance: MVP elements reference target-system elements instead of
+      forming a separate throwaway model. No MVP marker is modeled yet.
+    */
+  }
 }
 

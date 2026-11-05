@@ -13,7 +13,7 @@ REQ-NAV-001 & UC-003, FUN-NAV-001 & NavigationSystem, MotionSystem & \texttt{/go
 REQ-NAV-002 & UC-007, FUN-NAV-001 & NavigationSystem, PerceptionSystem & \texttt{/local\_obstacles} & TC-OBS-001 \\
 REQ-SAFE-001 & SN-004, FUN-SAFE-001 & SafetySystem, MotionSystem & \texttt{/safety\_state} & TC-OBS-001, TC-OBS-002 \\
 REQ-STA-001 & SN-003, FUN-STA-001 & MissionSystem, UserInterface & \texttt{/mission\_state} & TC-STA-001 \\
-REQ-DIAG-001 & SN-005, FUN-STA-001 & CommunicationSystem & Logging/Diagnose offen & spaeter \\
+REQ-DIAG-001 & SN-005, FUN-STA-001 & DiagnosticsSystem, CommunicationSystem & \texttt{/diagnostics} & TC-DIAG-001 \\
 REQ-PWR-001 & FUN-STA-001 & EnergySystem & \texttt{/battery\_state} & TC-PWR-001 \\
 REQ-PWR-002 & SN-ENE-001 & EnergySystem & Batterieprofil offen & TC-PWR-002 \\
 REQ-UI-001 & SN-UI-001, UC-001 & UserInterface, MissionSystem & IF-001, IF-002 & TC-UI-001 \\
@@ -36,7 +36,7 @@ REQ-TRN-002 & SN-TRN-002, SN-SAFE-003 & TransportSystem, SafetySystem & offen & 
 REQ-MAP-003 & SN-NAV-002, R-09 & MapManagement & Kartenfreigabe offen & TC-MAP-002 \\
 REQ-NAV-003 & SN-NAV-004, UC-008 & NavigationSystem, MissionSystem & \texttt{/mission\_state} & TC-OBS-002 \\
 REQ-SAFE-002 & SN-SAFE-001, R-04 & SafetySystem, PerceptionSystem & Safety-Schnittstelle offen & spaeter \\
-REQ-MNT-001 & SN-MNT-002, SN-MNT-003 & Mechanik, Elektronik, Software & Wartungsschnittstellen offen & Review \\
+REQ-MNT-001 & SN-MNT-002 & Gesamtsystem (Mechanik offen) & Wartungsschnittstellen offen & TC-MNT-001 (Review) \\
 REQ-ARCH-002 & SN-DEV-001, SN-DEV-002 & Gesamtmodell & MVP-Markierung & TC-TRC-001 \\
 \bottomrule
 \end{longtable}

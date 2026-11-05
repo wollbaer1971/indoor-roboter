@@ -202,8 +202,23 @@ package MobileMaterialRobot_Verification_A1 {
 
   verification def TC_TRC_001 {
     subject testRobot : MobileMaterialRobot;
-    doc /* Inspect requirement, responsible system element, interface and test references; unresolved links must be reported. */
-    objective { verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_001; }
+    doc /* Inspect requirement, responsible system element, interface and test references; unresolved links must be reported. Also inspect that MVP elements reference target-system elements (REQ-ARCH-002). */
+    objective {
+      verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_001;
+      verify MobileMaterialRobot_Requirements_A1::REQ_ARCH_002;
+    }
+  }
+
+  verification def TC_DIAG_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Inject a simulated fault and inspect the diagnostic message for cause, affected function and timestamp. Fault sources remain open. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_DIAG_001; }
+  }
+
+  verification def TC_MNT_001 {
+    subject testRobot : MobileMaterialRobot;
+    doc /* Maintenance review of component accessibility. Requires a physical design; cannot be executed in the simulation-only phase. */
+    objective { verify MobileMaterialRobot_Requirements_A1::REQ_MNT_001; }
   }
 
   verification def TC_TRN_001 {
