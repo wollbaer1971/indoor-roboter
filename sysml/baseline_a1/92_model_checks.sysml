@@ -1,6 +1,7 @@
 package MobileMaterialRobot_ModelChecks_A1 {
   private import MobileMaterialRobot_Verification_A1::TC_NAV_002;
   private import MobileMaterialRobot_Verification_A1::TC_UI_003;
+  private import MobileMaterialRobot_Verification_A1::TC_PWR_002;
   private import MobileMaterialRobot_Simulation_A1::schoolTransportBench;
 
   doc /*
@@ -147,5 +148,14 @@ package MobileMaterialRobot_ModelChecks_A1 {
 
   verification syntheticPauseMissingEvidence : TC_UI_003 {
     subject redefines testRobot = schoolTransportBench.robot;
+  }
+
+  // Synthetic energy fixture, not measured battery or lesson-profile data.
+  // Pass/fail fixtures for TC_PWR_002 are deliberately absent: the Pilot
+  // evaluator (2025-10) does not reduce comparisons of quantity values such
+  // as 2.5 [h] >= 2 [h]; it returns the unevaluated expression.
+  verification syntheticLessonBlockMissingEvidence : TC_PWR_002 {
+    subject redefines testRobot = schoolTransportBench.robot;
+    // No measured operating time is bound. The completeness flag stays false.
   }
 }

@@ -55,7 +55,8 @@ public class ValidateModel {
                 {"syntheticLostOrder", "fail"},
                 {"syntheticMotionContinues", "fail"},
                 {"syntheticResumeOutsidePause", "pass"},
-                {"syntheticPauseMissingEvidence", "inconclusive"}
+                {"syntheticPauseMissingEvidence", "inconclusive"},
+                {"syntheticLessonBlockMissingEvidence", "inconclusive"}
             };
             for (var fixture : fixtures) {
                 String result = model.eval("MobileMaterialRobot_ModelChecks_A1::"

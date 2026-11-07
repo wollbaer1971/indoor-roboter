@@ -94,6 +94,11 @@ package MobileMaterialRobot_Structure_A1 {
     MVP-Status: Minimal
     Hinweis: Automatisches Laden ist offen.
     */
+    // Bewusst ohne Wert: Akku und Stromprofil sind noch nicht entschieden
+    // bzw. gemessen. Das Modell kann so beantworten, welche Werte offen sind.
+    attribute batteryCapacity : ISQ::ElectricChargeValue;
+    attribute averageCurrent : ISQ::ElectricCurrentValue;
+    attribute operatingTime : ISQ::DurationValue = batteryCapacity / averageCurrent;
     perform action returnToCharger : ReturnToChargingStation;
   }
 
