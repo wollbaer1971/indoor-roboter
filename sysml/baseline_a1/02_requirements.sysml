@@ -13,6 +13,12 @@ package MobileMaterialRobot_Requirements_A1 {
     openDoorPassed and autonomousDriving
   }
 
+  constraint def LessonBlockCriterion {
+    doc /* Betriebsdauer reicht fuer einen Unterrichtsblock (REQ-PWR-002). */
+    in attribute operatingTime : ISQ::DurationValue;
+    operatingTime >= 2 [SI::h]
+  }
+
   doc /*
   Systemanforderungen der Baseline A.1. Die Doc-Felder (ID, Typ, Gruppe,
   Quelle, Text, Akzeptanz, MVP, MVP-Begruendung, Schnittstelle, Status,
@@ -345,6 +351,10 @@ package MobileMaterialRobot_Requirements_A1 {
 
   requirement REQ_PWR_002 {
     subject robot : MobileMaterialRobot;
+    in attribute operatingTime : ISQ::DurationValue;
+    require constraint lessonBlock : LessonBlockCriterion {
+      in attribute :>> operatingTime = REQ_PWR_002::operatingTime;
+    }
     doc /*
     ID: REQ-PWR-002
     Typ: Nichtfunktional

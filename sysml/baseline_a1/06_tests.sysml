@@ -171,6 +171,12 @@ package MobileMaterialRobot_Verification_A1 {
 
   verification def TC_PWR_002 {
     subject testRobot : MobileMaterialRobot;
+    in attribute evidenceComplete : Boolean default = false;
+    in attribute operatingTime : ISQ::DurationValue;
+    return verdict : VerdictKind = if evidenceComplete ?
+      PassIf(MobileMaterialRobot_Requirements_A1::LessonBlockCriterion(
+        operatingTime = operatingTime))
+      else VerdictKind::inconclusive;
     doc /*
     ID: TC-PWR-002
     Name: Unterrichtsprofil 2 h
@@ -179,7 +185,10 @@ package MobileMaterialRobot_Verification_A1 {
       ohne Zwischenladen.
     */
     objective {
-      verify MobileMaterialRobot_Requirements_A1::REQ_PWR_002;
+      verify MobileMaterialRobot_Requirements_A1::REQ_PWR_002 {
+        subject redefines robot = TC_PWR_002::testRobot;
+        in attribute :>> operatingTime = TC_PWR_002::operatingTime;
+      }
     }
   }
 
