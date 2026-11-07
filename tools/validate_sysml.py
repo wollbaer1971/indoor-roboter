@@ -216,8 +216,8 @@ def documentation_checks(docs: Path) -> None:
            for folder in ("chapters", "appendices") for p in sorted((docs / folder).glob("*.tex"))}
     for path, text in tex.items():
         for number, line in enumerate(text.splitlines(), 1):
-            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|DEC-\d{3}|ADR-\d{4}|A-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
-                problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, decision, subsystem or topic); "
+            if re.match(r"\s*(?:(?:REQ|TC)-[A-Z]+(?:-[A-Z]+)?-\d+|(?:STK|SN)-(?:[A-Z]+-)?\d{3}|DEC-\d{3}|ADR-\d{4}|A-\d{3}|[A-Z]\w*System\b[^&]*|\\texttt\{/[^}]*\})\s*&", line):
+                problems.append(f"{path.relative_to(docs)}:{number}: hand-written model row (requirement, test, stakeholder, need, decision, subsystem or topic); "
                                 "maintain it in the model")
     for path, text in tex.items():
         for block in re.findall(r"\\begin\{itemize\}(.*?)\\end\{itemize\}", text, re.S):
@@ -245,6 +245,19 @@ def documentation_checks(docs: Path) -> None:
     if problems:
         raise RuntimeError("Documentation drifts from model:\n  " + "\n  ".join(problems))
     print(f"DOCUMENTATION generated_tables={len(generated)} up_to_date=true hand_written_rows=0 b1_use_cases_match=true")
+
+
+def need_summary(docs: Path) -> None:
+    """Ask the model which needs and stakeholders have no requirement yet. An answer, not a gate."""
+    model = generate_docs.load(docs)
+    open_needs = [nid for nid, _, _ in model["needs"] if not model["requirements_of"][nid]]
+    served = {stk for nid, _, sources in model["needs"] if model["requirements_of"][nid] for stk in sources}
+    unserved = [sid for sid, _ in model["stakeholders"] if sid not in served]
+    print(f"NEEDS stakeholders={len(model['stakeholders'])} needs={len(model['needs'])} "
+          f"with_requirement={len(model['needs']) - len(open_needs)} without_requirement={len(open_needs)} "
+          f"sources_match=true")
+    print(f"NEEDS_OPEN {','.join(open_needs) or 'none'}")
+    print(f"STAKEHOLDERS_WITHOUT_REQUIREMENT {','.join(unserved) or 'none'}")
 
 
 def negative_checks(java: str, home: Path, model: Path) -> None:
@@ -286,6 +299,12 @@ def negative_documentation_check() -> None:
                                                             "\\modeltext{non_goals_a1}\n  \\item Raumfahrt.", 1)),
         "unknown_assumption_reference": ("chapters/11_iteration_a_status.tex",
                                          lambda text: text.replace("A-001 bis A-010", "A-001 bis A-011", 1)),
+        "need_source_mismatch": ("sysml/baseline_a1/02_requirements.sysml",
+                                 lambda text: text.replace("Quelle: SN-USER-002, SN-USER-003",
+                                                           "Quelle: SN-USER-002, SN-USER-001", 1)),
+        "hand_written_need_row": ("chapters/04_stakeholder.tex",
+                                  lambda text: text.replace("\\modeltable{needs_a1_safety}",
+                                                            "\\modeltable{needs_a1_safety}\nSN-SAFE-099 & STK-004 & x \\\\", 1)),
     }
     for name, (rel, mutate) in mutations.items():
         with tempfile.TemporaryDirectory(prefix="docs-negative-") as temporary:
@@ -321,6 +340,7 @@ def main() -> int:
     state_machine_checks(model)
     if (REPO / "chapters").is_dir() and model == (REPO / "sysml").resolve():
         documentation_checks(REPO)
+        need_summary(REPO)
     result = invoke(java, home, model, args.self_test)
     print(result.stdout, end="")
     print(result.stderr, end="", file=sys.stderr)

@@ -14,6 +14,7 @@ die Zeile aus dem Modell.
 | Text, Akzeptanz, Typ, Quelle, MVP-Status eines Requirements | `sysml/baseline_a1/02_requirements.sysml`, `sysml/baseline_b1/02_requirements.sysml` | Modell |
 | Testname, erwartetes Ergebnis, verifizierte Requirements | `sysml/baseline_a1/06_tests.sysml` | Modell |
 | Zuordnung Requirement → Systemelement | `sysml/baseline_a1/08_traceability.sysml` | Modell |
+| Stakeholder, Needs, Herkunft Requirement → Need | `sysml/baseline_a1/12_stakeholders.sysml` | Modell |
 | Spaltenbreiten, Kopfzeilen, Schrift, Position der Tabelle | `chapters/*.tex`, `appendices/*.tex` | Overleaf |
 | Fließtext, Abbildungen, Use-Case-Beschreibungen | `chapters/*.tex` | Overleaf |
 | `tables/generated/*.tex` | nicht von Hand ändern | Generator |
@@ -171,3 +172,31 @@ Teilsysteme 3, ROS2-Mapping 4, ROS2-Topics 4, Annahmen 3. Eine Spalte weglassen 
 
 Interne Schnittstellen und Funktionen (Kapitel 8), HW/SW-Allokation
 (Kapitel 9) und die Use-Case-Beschreibungen sind noch Handarbeit.
+
+## Einen Need ergänzen oder ein Requirement darauf zurückführen
+
+Stakeholder sind Rollen (`part def STK_...`), Needs sind `concern SN_...` mit
+ihren Stakeholdern als `stakeholder`-Features. Die Spalte „Quelle“ der Needs
+entsteht aus diesen Features, nicht aus einem Textfeld.
+
+1. Neuen Need in `sysml/baseline_a1/12_stakeholders.sysml` anlegen:
+
+   ```
+   concern SN_OPS_004 {
+     subject robot : MobileMaterialRobot;
+     stakeholder betreiber : STK_003;
+     doc /*
+     ID: SN-OPS-004
+     Gruppe: Betrieb, Wartung und Entwicklung
+     Need: ...
+     */
+   }
+   ```
+
+2. Wird ein Requirement daraus abgeleitet, zwei Stellen gemeinsam ändern:
+   die ID ins `Quelle`-Feld des Requirements schreiben und unten im
+   Stakeholder-Paket `dependency from ...::REQ_X to SN_OPS_004;` ergänzen.
+   Stimmen beide nicht überein, bricht `generate_docs.py` mit einer Meldung ab.
+
+3. `python tools/generate_docs.py`, dann die Prüfung laufen lassen. Die Zeile
+   `NEEDS_OPEN` nennt die Needs, aus denen noch kein Requirement abgeleitet ist.

@@ -14,6 +14,7 @@ package MobileMaterialRobot_BaselineA1 {
   public import MobileMaterialRobot_Decisions_A1::*;
   public import MobileMaterialRobot_Assumptions_A1::*;
   public import MobileMaterialRobot_NonGoals_A1::*;
+  public import MobileMaterialRobot_Stakeholders_A1::*;
   doc /*
   Model: Mobile Material Robot - System Definition Baseline A.1
   Purpose:
