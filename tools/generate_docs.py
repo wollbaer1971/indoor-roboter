@@ -216,6 +216,58 @@ def load_non_goals(root: Path) -> list[tuple[str, dict[str, str]]]:
 
 ASSUMPTION_STATUS = ("Vorlaeufig", "Offen", "Sicherheitsrelevant", "Ersetzt")
 
+NEED_REF = re.compile(r"\bSN-(?:[A-Z]+-)?\d{3}\b")
+NEED_GROUPS = {"Initial": "initial", "Bedienung und Auftrag": "bedienung", "Transport": "transport",
+               "Navigation und Umgebung": "navigation", "Safety": "safety",
+               "Betrieb, Wartung und Entwicklung": "betrieb", "Unterricht und Demonstration": "unterricht"}
+
+
+def load_stakeholders(root: Path, requirements: list[tuple[str, dict[str, str]]]) -> dict:
+    """Stakeholder roles, their needs (concerns) and which requirements are derived from each need."""
+    source = (root / "sysml/baseline_a1/12_stakeholders.sysml").read_text(encoding="utf-8")
+    stakeholders = []
+    for name, body in blocks(source, "part def", "STK_"):
+        data = fields(body, name)
+        require(data, name, "ID", "Name", "Interesse")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        stakeholders.append((data["ID"], data))
+    known_stakeholders = {sid for sid, _ in stakeholders}
+
+    needs = []
+    for name, body in blocks(source, "concern", "SN_"):
+        data = fields(body, name)
+        require(data, name, "ID", "Gruppe", "Need")
+        if data["ID"] != dashed(name):
+            raise ValueError(f"{name}: ID field {data['ID']} does not match the element name")
+        if data["Gruppe"] not in NEED_GROUPS:
+            raise ValueError(f"{name}: Gruppe must be one of {sorted(NEED_GROUPS)}")
+        if data["Gruppe"] == "Initial":
+            require(data, name, "Prioritaet")
+        sources = [dashed(s) for s in re.findall(r"^    stakeholder \w+ : (STK_\d+);", body, flags=re.M)]
+        if not sources:
+            raise ValueError(f"{name}: no stakeholder")
+        if set(sources) - known_stakeholders:
+            raise ValueError(f"{name}: unknown stakeholder(s) {sorted(set(sources) - known_stakeholders)}")
+        needs.append((data["ID"], data, sources))
+    need_ids = {nid for nid, _, _ in needs}
+
+    derived: dict[str, set[str]] = {}
+    for req, need in re.findall(
+            r"^  dependency from MobileMaterialRobot_Requirements_A1::(REQ_\w+) to (SN_\w+);", source, flags=re.M):
+        derived.setdefault(dashed(req), set()).add(dashed(need))
+    requirement_ids = {rid for rid, _ in requirements}
+    problems = [f"dependency from unknown requirement {rid}" for rid in sorted(set(derived) - requirement_ids)]
+    problems += [f"dependency to unknown need {nid}" for nid in sorted(set().union(*derived.values()) - need_ids)]
+    for rid, data in requirements:
+        cited = set(NEED_REF.findall(data["Quelle"]))
+        if cited != derived.get(rid, set()):
+            problems.append(f"{rid}: Quelle cites {sorted(cited)}, model derives from {sorted(derived.get(rid, set()))}")
+    if problems:
+        raise ValueError("needs and requirement sources disagree: " + "; ".join(problems))
+    requirements_of = {nid: [rid for rid, _ in requirements if nid in derived.get(rid, set())] for nid in need_ids}
+    return {"stakeholders": stakeholders, "needs": needs, "requirements_of": requirements_of}
+
 
 def decision_status(data: dict[str, str]) -> str:
     return data["Status"] + (f" ({data['Datum']})" if data.get("Datum") else "")
@@ -278,7 +330,7 @@ def load(root: Path) -> dict:
     architecture = load_architecture(root, {rid for rid, _ in requirements})
     return {"requirements": requirements, "elements": elements, "tests": tests,
             "tests_of": tests_of, "b1": b1, "decisions": decisions, "decided_by": decided_by,
-            **architecture}
+            **architecture, **load_stakeholders(root, requirements)}
 
 
 def element_list(model: dict, rid: str, data: dict[str, str]) -> list[str]:
@@ -306,6 +358,16 @@ def render(root: Path) -> dict[Path, str]:
     table("requirements_b1", [row(rid, tex(d["Typ"]), requirement_text(model, rid, d), tex(d["Akzeptanz"]))
                               for rid, d in model["b1"]])
     table("mvp_b1", [row(rid, tex(d["MVP"]), tex(d["MVP-Begruendung"])) for rid, d in model["b1"] if "MVP" in d])
+
+    table("stakeholders_a1", [row(sid, tex(d["Name"]), tex(d["Interesse"])) for sid, d in model["stakeholders"]])
+    for group, suffix in NEED_GROUPS.items():
+        selected = [(nid, d, src) for nid, d, src in model["needs"] if d["Gruppe"] == group]
+        table(f"needs_a1_{suffix}", [
+            row(nid, ", ".join(src), tex(d["Need"]), *([tex(d["Prioritaet"])] if group == "Initial" else []))
+            for nid, d, src in selected])
+    # The question the model answers: which needs already have a requirement?
+    table("needs_coverage_a1", [row(nid, ", ".join(src), ", ".join(model["requirements_of"][nid]) or "noch keins")
+                                for nid, _, src in model["needs"]])
 
     requirement_ids = {rid for rid, _ in model["requirements"]} | {rid for rid, _ in model["b1"]}
     assumption_rows = []
